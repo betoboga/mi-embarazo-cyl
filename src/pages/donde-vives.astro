@@ -34,7 +34,8 @@ import { municipios, zbs } from '../data/territorial';
     if (!municipio || !result || !list) { if (result) result.hidden = true; return; }
     list.innerHTML = municipio.zbs.map((codigo) => {
       const item = zbs.find((entry) => entry.codigo === codigo);
-      return `<div class="zbs-card"><strong>${item?.nombre || `ZBS ${codigo}`}</strong><span>${codigo}</span>${item ? `<small>${item.provincia} · ${item.ambito}${item.poblacion ? ` · ${item.poblacion.toLocaleString('es-ES')} habitantes` : ''}</small>` : ''}</div>`;
+      const label = item?.nombre || `ZBS ${codigo}`;
+      return `<a class="zbs-card" href="/zona/${codigo}"><strong>${label}</strong><span>${codigo}</span>${item ? `<small>${item.provincia} · ${item.ambito}${item.poblacion ? ` · ${item.poblacion.toLocaleString('es-ES')} habitantes` : ''}</small>` : ''}</a>`;
     }).join('');
     result.hidden = false;
   });
@@ -51,7 +52,8 @@ import { municipios, zbs } from '../data/territorial';
   select { width:100%; padding:17px 18px; border:1px solid #c9c7bf; border-radius:12px; background:white; font-size:1rem; color:#24231f; }
   .result { margin-top:24px; padding:22px; border:1px solid #d9d7d0; border-radius:16px; background:#fff; }
   .result-label { font-size:.7rem; letter-spacing:.14em; font-weight:800; color:#68705b; margin-bottom:12px; }
-  .zbs-card { display:grid; grid-template-columns:1fr auto; gap:4px 12px; padding:15px 0; border-top:1px solid #ebe9e3; }
+  .zbs-card { display:grid; grid-template-columns:1fr auto; gap:4px 12px; padding:15px 0; border-top:1px solid #ebe9e3; color:inherit; text-decoration:none; }
+  .zbs-card:hover strong { text-decoration:underline; }
   .zbs-card span { font-family:ui-monospace,monospace; color:#858279; font-size:.85rem; }
   .zbs-card small { grid-column:1 / -1; color:#77746c; }
   .hint, .note { margin-top:16px; font-size:.85rem; color:#88867e; }
