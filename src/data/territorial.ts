@@ -6,15 +6,8 @@ export interface ZbsSummary {
   poblacion: number;
 }
 
-export interface Municipio {
-  id: string;
-  name: string;
-  zbs: string[];
-}
+export interface Municipio { id: string; name: string; zbs: string[]; }
 
-// Datos reales extraídos de los CSV aportados al proyecto.
-// Esta primera capa permite validar el flujo de producto mientras terminamos
-// de incorporar el dataset procesado completo al repositorio.
 export const municipios: Municipio[] = [
   { id: 'barco-de-avila-el', name: 'Barco de Ávila, El', zbs: ['170108'] },
   { id: 'avila', name: 'Ávila', zbs: ['170103', '170104', '170105', '170107', '170122'] },
@@ -39,11 +32,11 @@ export const municipios: Municipio[] = [
 ];
 
 export const zbs: ZbsSummary[] = [
-  { codigo: '170108', nombre: 'ZBS El Barco de Ávila', provincia: 'Ávila', ambito: 'Rural', poblacion: 0 },
-  { codigo: '170204', nombre: 'ZBS Belorado', provincia: 'Burgos', ambito: 'Rural', poblacion: 0 },
-  { codigo: '170320', nombre: 'ZBS Riaño', provincia: 'León', ambito: 'Rural', poblacion: 0 },
-  { codigo: '170506', nombre: 'ZBS Guardo', provincia: 'Palencia', ambito: 'Rural', poblacion: 0 },
-  { codigo: '170613', nombre: 'ZBS Guijuelo', provincia: 'Salamanca', ambito: 'Rural', poblacion: 0 },
+  { codigo: '170108', nombre: 'ZBS Barco de Ávila', provincia: 'Ávila', ambito: 'Rural', poblacion: 4211 },
+  { codigo: '170204', nombre: 'ZBS Belorado', provincia: 'Burgos', ambito: 'Rural', poblacion: 3955 },
+  { codigo: '170320', nombre: 'ZBS Riaño', provincia: 'León', ambito: 'Rural', poblacion: 1327 },
+  { codigo: '170506', nombre: 'ZBS Guardo', provincia: 'Palencia', ambito: 'Rural', poblacion: 7581 },
+  { codigo: '170613', nombre: 'ZBS Guijuelo', provincia: 'Salamanca', ambito: 'Rural', poblacion: 9704 },
   { codigo: '170703', nombre: 'ZBS Cuéllar', provincia: 'Segovia', ambito: 'Urbano', poblacion: 15836 },
   { codigo: '170801', nombre: 'ZBS Ágreda', provincia: 'Soria', ambito: 'Rural', poblacion: 3607 },
   { codigo: '170915', nombre: 'ZBS Parquesol', provincia: 'Valladolid', ambito: 'Urbano', poblacion: 28758 },
@@ -52,12 +45,7 @@ export const zbs: ZbsSummary[] = [
 ];
 
 export function normalizeMunicipio(value: string) {
-  return value
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .replace(/\s+/g, ' ')
-    .trim();
+  return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
 }
 
 export function findMunicipios(query: string) {
@@ -66,6 +54,4 @@ export function findMunicipios(query: string) {
   return municipios.filter((m) => normalizeMunicipio(m.name).includes(normalized));
 }
 
-export function findZbs(codigo: string) {
-  return zbs.find((item) => item.codigo === codigo);
-}
+export function findZbs(codigo: string) { return zbs.find((item) => item.codigo === codigo); }
