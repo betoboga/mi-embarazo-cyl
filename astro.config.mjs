@@ -1,5 +1,5 @@
+// @ts-check
 import { defineConfig } from 'astro/config';
 
-export default defineConfig({
-  site: 'https://mi-embarazo-cyl.es'
-});
+// https://astro.build/config
+export default defineConfig({});
