@@ -31,7 +31,6 @@ const poblacion = readRawCsv('Poblacion_de_referencia_2026.csv');
 function rowZbsCode(row: CsvRow) {
   const explicit = value(row, 'codigo', 'zona') || value(row, 'código', 'zona');
   if (/^\d{6}$/.test(explicit)) return explicit;
-
   for (const [header, cell] of Object.entries(row)) {
     if (!/codigo|código|zona/.test(normalizeText(header))) continue;
     const match = cell.match(/\b\d{6}\b/);
@@ -49,11 +48,15 @@ function rowProvince(row: CsvRow) {
 }
 
 function rowZbsName(row: CsvRow) {
-  return value(row, 'zona', 'basica', 'salud') || value(row, 'zona', 'básica', 'salud');
+  const header = Object.keys(row).find((candidate) => {
+    const normalized = normalizeText(candidate);
+    return normalized.includes('zona') && normalized.includes('basica') && normalized.includes('salud') && !normalized.includes('codigo');
+  });
+  return header ? row[header] : '';
 }
 
-function slug(value: string) {
-  return normalizeText(value).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+function slug(input: string) {
+  return normalizeText(input).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
 
 function centerName(row: CsvRow) {
@@ -67,7 +70,7 @@ function consultorioName(row: CsvRow) {
 function numericPopulation(row: CsvRow) {
   const preferred = Object.entries(row).find(([header]) => {
     const h = normalizeText(header);
-    return h.includes('ciudadanos') || h.includes('poblacion') || h.includes('población') || h.includes('habitantes') || h.includes('total');
+    return h.includes('ciudadanos') || h.includes('poblacion') || h.includes('habitantes') || h === 'total';
   });
   return preferred ? toNumber(preferred[1]) : null;
 }
@@ -92,8 +95,6 @@ for (const row of atencion) {
 }
 
 export const municipios = [...municipalityRows.values()].sort((a, b) => a.name.localeCompare(b.name, 'es'));
-
-const municipalityByNormalized = new Map(municipios.map((item) => [normalizeText(item.name), item]));
 
 function zbsMunicipios(codigo: string) {
   return municipios.filter((municipio) => municipio.zbs.includes(codigo)).map((municipio) => municipio.name);
@@ -131,10 +132,14 @@ function consultoriosForZbs(codigo: string) {
 function centersForZbs(codigo: string, consultorios: ZoneData['consultorios']) {
   const wanted = new Set(consultorios.map((item) => normalizeText(item.centro)).filter(Boolean));
   const municipalities = new Set(zbsMunicipios(codigo).map(normalizeText));
+
   const rows = centrosRegistro.filter((row) => {
     const name = normalizeText(value(row, 'nombre', 'centro'));
     const locality = normalizeText(value(row, 'localidad'));
-    return (wanted.has(name) || [...wanted].some((candidate) => candidate && (name.includes(candidate) || candidate.includes(name)))) || municipalities.has(locality);
+    const type = normalizeText(value(row, 'tipo', 'centro'));
+    const exactAssociation = wanted.has(name) || [...wanted].some((candidate) => candidate && (name.includes(candidate) || candidate.includes(name)));
+    const relevantType = type.includes('centro de salud') || type.includes('consultorio') || type.includes('centro sanitario');
+    return exactAssociation || (municipalities.has(locality) && relevantType);
   });
 
   const seen = new Set<string>();
@@ -189,14 +194,13 @@ export function getZoneData(codigo: string): ZoneData | null {
   if (!zbsCodes.includes(codigo)) return null;
   const source = poblacion.find((row) => rowZbsCode(row) === codigo) ?? actividadZbs.find((row) => rowZbsCode(row) === codigo) ?? atencion.find((row) => rowZbsCode(row) === codigo);
   const consultorios = consultoriosForZbs(codigo);
-  const municipiosZona = zbsMunicipios(codigo);
 
   return {
     codigo,
     nombre: rowZbsName(source ?? {}) || `ZBS ${codigo}`,
     provincia: rowProvince(source ?? {}) || municipios.find((item) => item.zbs.includes(codigo))?.provincia || '',
     ambito: value(source ?? {}, 'ambito') || value(source ?? {}, 'ámbito') || 'Sin clasificar',
-    municipios: municipiosZona,
+    municipios: zbsMunicipios(codigo),
     poblacion: populationForZbs(codigo),
     consultorios,
     centros: centersForZbs(codigo, consultorios),
@@ -206,7 +210,7 @@ export function getZoneData(codigo: string): ZoneData | null {
 }
 
 export function getAllZoneCodes() {
-  return zbsCodes.sort();
+  return [...zbsCodes].sort();
 }
 
 export function findMunicipios(query: string) {
@@ -218,5 +222,3 @@ export function findMunicipios(query: string) {
 export function getMunicipioById(id: string) {
   return municipios.find((municipio) => municipio.id === id);
 }
-
-void municipalityByNormalized;
