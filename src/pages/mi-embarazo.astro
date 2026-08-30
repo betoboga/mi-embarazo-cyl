@@ -98,8 +98,8 @@ import PregnancyNextSteps from '../components/PregnancyNextSteps.astro';
         </button>
       </div>
 
- {/* PREGNANCY NEXT STEPS SECTION */}
- <PregnancyNextSteps currentWeek={1} disclaimer="Esta información es orientativa y no sustituye las indicaciones de tu matrona, obstetra u otro profesional sanitario." />
+{/* PREGNANCY NEXT STEPS SECTION */}
+  <PregnancyNextSteps />
     </div>
   </main>
   <Footer />
@@ -109,14 +109,18 @@ import PregnancyNextSteps from '../components/PregnancyNextSteps.astro';
   import data from '../data/territorial.json';
 
   const STORAGE_KEY = 'mi-embarazo-cyl-state';
-  const d = data as any;
 
-  function getStoredState() {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch { return {}; }
-  }
-
-  function saveState(s: any) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+  // Función segura para obtener el estado (maneja SSR donde localStorage no existe)
+  function getStoredState(): any {
+    // @ts-ignore - localStorage solo existe en el navegador
+    if (typeof localStorage === 'undefined') {
+      return { semana: 0 };
+    }
+    try { 
+      return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); 
+    } catch { 
+      return { semana: 0 }; 
+    }
   }
 
   const state = getStoredState();
@@ -143,8 +147,7 @@ import PregnancyNextSteps from '../components/PregnancyNextSteps.astro';
     const semana = parseInt(semanaSelect.value);
     if (!semana || semana < 1 || semana > 42) return;
     state.semana = semana;
-    state.primerEmbarazo = primerEmbarazo.checked;
-    saveState(state);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     showDashboard();
   });
 
@@ -152,7 +155,7 @@ import PregnancyNextSteps from '../components/PregnancyNextSteps.astro';
     formSection.classList.remove('hidden');
     dashboardSection.classList.add('hidden');
     if (state.semana) semanaSelect.value = String(state.semana);
-    if (state.primerEmbarazo) primerEmbarazo.checked = true;
+    if (state.primerEmbarazo) document.getElementById('primerEmbarazo')!.checked = true;
   });
 
   function showDashboard() {
@@ -180,9 +183,9 @@ import PregnancyNextSteps from '../components/PregnancyNextSteps.astro';
     const municipioNorm = normalize(state.municipio || '');
     const provCode = state.codigoZbs ? state.codigoZbs.substring(0, 2) : '';
 
-    const farmacias = d.farmacias.filter((f: any) => normalize(f.municipio) === municipioNorm);
-    const estacionesBus = d.estacionesBus.filter((b: any) => normalize(b.municipio) === municipioNorm);
-    const hospitales = d.hospitales.filter((h: any) => h.provincia === provCode);
+    const farmacias = data.farmacias.filter((f: any) => normalize(f.municipio) === municipioNorm);
+    const estacionesBus = data.estacionesBus.filter((b: any) => normalize(b.municipio) === municipioNorm);
+    const hospitales = data.hospitales.filter((h: any) => h.provincia === provCode);
 
     const resources = [
       { title: 'Farmacias', value: farmacias.length, icon: "M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" },
