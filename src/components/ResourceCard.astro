@@ -1,0 +1,22 @@
+---
+interface Props {
+  title: string;
+  value: string | number;
+  subtitle: string;
+  icon: string;
+}
+
+const { title, value, subtitle, icon } = Astro.props;
+---
+<div class="bg-card border border-border rounded-xl p-5 hover:border-primary/30 transition-colors">
+  <div class="flex items-start justify-between mb-3">
+    <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+      <svg class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d={icon} />
+      </svg>
+    </div>
+  </div>
+  <p class="text-2xl font-bold text-fg mb-1">{value}</p>
+  <p class="text-sm font-medium text-fg mb-0.5">{title}</p>
+  <p class="text-xs text-muted">{subtitle}</p>
+</div>

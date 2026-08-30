@@ -1,0 +1,206 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+<Layout title="Mi embarazo - Mi Embarazo CYL">
+  <Header />
+  <main class="flex-1 max-w-3xl mx-auto px-4 py-8 sm:py-12 w-full">
+    <div class="mb-8">
+      <h1 class="text-2xl sm:text-3xl font-bold text-fg mb-2">Tu embarazo</h1>
+      <p class="text-muted" id="pageSubtitle">Cuentanos un poco sobre tu embarazo.</p>
+    </div>
+
+    <div id="formSection">
+      <div class="bg-card border border-border rounded-xl p-6 sm:p-8">
+        <h2 class="text-lg font-semibold text-fg mb-6">Cuanto tiempo llevas?</h2>
+        <form id="embarazoForm">
+          <div class="mb-6">
+            <label for="semanaSelect" class="block text-sm font-medium text-fg mb-2">Semanas de embarazo</label>
+            <select id="semanaSelect" class="w-full px-4 py-3 text-base bg-white border-2 border-border rounded-xl focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all appearance-none cursor-pointer">
+              <option value="">Selecciona...</option>
+            </select>
+          </div>
+          <div class="mb-8">
+            <label class="flex items-center gap-3 cursor-pointer">
+              <input type="checkbox" id="primerEmbarazo" class="w-5 h-5 rounded border-border text-primary focus:ring-primary/20 cursor-pointer" />
+              <span class="text-sm text-fg">Es mi primer embarazo</span>
+            </label>
+          </div>
+          <button type="submit" class="w-full bg-primary hover:bg-primary-dark text-white font-medium px-6 py-3 rounded-xl transition-colors">
+            Guardar
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div id="dashboardSection" class="hidden">
+      <div class="space-y-6">
+        <div class="bg-card border border-border rounded-xl p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <p class="text-sm text-muted">Semana actual</p>
+              <p class="text-3xl font-bold text-primary" id="dashSemana">—</p>
+            </div>
+            <div class="text-right">
+              <p class="text-sm text-muted">Progreso</p>
+              <p class="text-3xl font-bold text-fg" id="dashProgreso">—</p>
+            </div>
+          </div>
+          <div class="w-full h-3 bg-bg-subtle rounded-full overflow-hidden">
+            <div class="h-full bg-primary rounded-full transition-all duration-500" id="dashBar" style="width: 0%"></div>
+          </div>
+          <p class="text-xs text-muted mt-3" id="dashTrimestre"></p>
+        </div>
+
+        <div id="zonaCard" class="bg-card border border-border rounded-xl p-6 hidden">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+              <svg class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm text-muted">Tu zona sanitaria</p>
+              <p class="font-semibold text-fg" id="dashZbs">—</p>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <p class="text-xs text-muted uppercase tracking-wider mb-1">Municipio</p>
+              <p class="font-medium text-fg" id="dashMunicipio">—</p>
+            </div>
+            <div>
+              <p class="text-xs text-muted uppercase tracking-wider mb-1">Codigo ZBS</p>
+              <p class="font-mono font-medium text-primary" id="dashCodigo">—</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="text-lg font-semibold text-fg mb-4">Tus recursos</h2>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-4" id="dashResources"></div>
+        </div>
+
+        <div class="bg-bg-subtle border border-border rounded-xl p-5">
+          <div class="flex items-start gap-3">
+            <svg class="w-5 h-5 text-muted mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <p class="text-sm text-muted">Consulta siempre las indicaciones de tu matrona o profesional sanitario. Esta informacion es complementaria.</p>
+          </div>
+        </div>
+
+        <button id="editBtn" class="w-full bg-transparent border-2 border-border text-muted hover:text-fg hover:border-primary/30 font-medium px-6 py-3 rounded-xl transition-colors">
+          Modificar datos
+        </button>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Layout>
+
+<script>
+  import data from '../data/territorial.json';
+
+  const STORAGE_KEY = 'mi-embarazo-cyl-state';
+  const d = data as any;
+
+  function getStoredState() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch { return {}; }
+  }
+
+  function saveState(s: any) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+  }
+
+  const state = getStoredState();
+  const formSection = document.getElementById('formSection') as HTMLElement;
+  const dashboardSection = document.getElementById('dashboardSection') as HTMLElement;
+  const semanaSelect = document.getElementById('semanaSelect') as HTMLSelectElement;
+  const primerEmbarazo = document.getElementById('primerEmbarazo') as HTMLInputElement;
+  const editBtn = document.getElementById('editBtn') as HTMLButtonElement;
+  const embarazoForm = document.getElementById('embarazoForm') as HTMLFormElement;
+
+  for (let i = 1; i <= 42; i++) {
+    const opt = document.createElement('option');
+    opt.value = String(i);
+    opt.textContent = `Semana ${i}`;
+    semanaSelect.appendChild(opt);
+  }
+
+  if (state.semana && state.semana > 0) {
+    showDashboard();
+  }
+
+  embarazoForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const semana = parseInt(semanaSelect.value);
+    if (!semana || semana < 1 || semana > 42) return;
+    state.semana = semana;
+    state.primerEmbarazo = primerEmbarazo.checked;
+    saveState(state);
+    showDashboard();
+  });
+
+  editBtn.addEventListener('click', () => {
+    formSection.classList.remove('hidden');
+    dashboardSection.classList.add('hidden');
+    if (state.semana) semanaSelect.value = String(state.semana);
+    if (state.primerEmbarazo) primerEmbarazo.checked = true;
+  });
+
+  function showDashboard() {
+    formSection.classList.add('hidden');
+    dashboardSection.classList.remove('hidden');
+
+    const semana = state.semana || 1;
+    const progreso = Math.round((semana / 40) * 100);
+    const trimestre = semana <= 12 ? 'Primer trimestre' : semana <= 27 ? 'Segundo trimestre' : 'Tercer trimestre';
+
+    document.getElementById('pageSubtitle')!.textContent = `Semana ${semana} de 40`;
+    document.getElementById('dashSemana')!.textContent = `${semana} / 40`;
+    document.getElementById('dashProgreso')!.textContent = `${progreso}%`;
+    document.getElementById('dashBar')!.style.width = `${progreso}%`;
+    document.getElementById('dashTrimestre')!.textContent = trimestre;
+
+    if (state.municipio) {
+      document.getElementById('zonaCard')!.classList.remove('hidden');
+      document.getElementById('dashZbs')!.textContent = state.zbsNombre || 'Sin datos';
+      document.getElementById('dashMunicipio')!.textContent = state.municipio;
+      document.getElementById('dashCodigo')!.textContent = state.codigoZbs || '—';
+    }
+
+    const normalize = (s: string) => (s || '').trim().toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ');
+    const municipioNorm = normalize(state.municipio || '');
+    const provCode = state.codigoZbs ? state.codigoZbs.substring(0, 2) : '';
+
+    const farmacias = d.farmacias.filter((f: any) => normalize(f.municipio) === municipioNorm);
+    const estacionesBus = d.estacionesBus.filter((b: any) => normalize(b.municipio) === municipioNorm);
+    const hospitales = d.hospitales.filter((h: any) => h.provincia === provCode);
+
+    const resources = [
+      { title: 'Farmacias', value: farmacias.length, icon: "M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" },
+      { title: 'Hospitales', value: hospitales.length, icon: "M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" },
+      { title: 'Transporte', value: estacionesBus.length, icon: "M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" }
+    ];
+
+    const grid = document.getElementById('dashResources')!;
+    grid.innerHTML = '';
+    resources.forEach(r => {
+      const div = document.createElement('div');
+      div.className = 'bg-card border border-border rounded-xl p-4';
+      div.innerHTML = `
+        <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
+          <svg class="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="${r.icon}" />
+          </svg>
+        </div>
+        <p class="text-xl font-bold text-fg mb-0.5">${r.value}</p>
+        <p class="text-xs text-muted">${r.title}</p>
+      `;
+      grid.appendChild(div);
+    });
+  }
+</script>

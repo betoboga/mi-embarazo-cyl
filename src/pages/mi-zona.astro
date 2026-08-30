@@ -1,0 +1,212 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+<Layout title="Tu zona sanitaria - Mi Embarazo CYL">
+  <Header />
+  <main class="flex-1 max-w-3xl mx-auto px-4 py-8 sm:py-12 w-full">
+    <div id="noState" class="hidden">
+      <div class="text-center py-16">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-bg-subtle mb-6">
+          <svg class="w-8 h-8 text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        </div>
+        <h1 class="text-xl font-bold text-fg mb-2">Selecciona tu municipio</h1>
+        <p class="text-muted mb-6">Primero necesitas indicar donde vives.</p>
+        <a href="/donde-vive" class="inline-flex items-center gap-2 bg-primary hover:bg-primary-dark text-white font-medium px-6 py-3 rounded-xl transition-colors no-underline">
+          Ir a buscar municipio
+        </a>
+      </div>
+    </div>
+
+    <div id="zonaContent" class="hidden">
+      <div class="mb-8">
+        <h1 class="text-2xl sm:text-3xl font-bold text-fg mb-2">Tu zona sanitaria</h1>
+        <p class="text-muted" id="subtitle"></p>
+      </div>
+
+      <div class="space-y-6">
+        <div class="bg-card border border-border rounded-xl p-6">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+              <svg class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm text-muted">Tu Zona Basica de Salud</p>
+              <p class="font-semibold text-fg" id="zbsNombre">—</p>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <p class="text-xs text-muted uppercase tracking-wider mb-1">Codigo ZBS</p>
+              <p class="font-mono font-medium text-primary text-lg" id="zbsCodigo">—</p>
+            </div>
+            <div>
+              <p class="text-xs text-muted uppercase tracking-wider mb-1">Municipio</p>
+              <p class="font-medium text-fg" id="zbsMunicipio">—</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="text-lg font-semibold text-fg mb-4">Tu red sanitaria</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="resourceGrid"></div>
+        </div>
+
+        <div id="mapSection" class="hidden">
+          <h2 class="text-lg font-semibold text-fg mb-4">Mapa</h2>
+          <div id="map" class="w-full h-72 sm:h-96 rounded-xl border border-border overflow-hidden bg-bg-subtle"></div>
+        </div>
+
+        <div class="bg-secondary-light border border-secondary/20 rounded-xl p-5">
+          <div class="flex items-start gap-3">
+            <svg class="w-5 h-5 text-secondary mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+              <p class="text-sm font-medium text-secondary mb-1">Informacion de datos abiertos</p>
+              <p class="text-sm text-secondary/80">Los datos provienen de fuentes publicas de la Junta de Castilla y Leon. Algunos recursos pueden no estar disponibles en los datasets actuales.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Layout>
+
+<script>
+  import data from '../data/territorial.json';
+
+  const STORAGE_KEY = 'mi-embarazo-cyl-state';
+  const d = data as any;
+
+  function getStoredState() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch { return {}; }
+  }
+
+  const state = getStoredState();
+  const noState = document.getElementById('noState') as HTMLElement;
+  const zonaContent = document.getElementById('zonaContent') as HTMLElement;
+
+  if (!state.municipio) {
+    noState.classList.remove('hidden');
+  } else {
+    zonaContent.classList.remove('hidden');
+    document.getElementById('subtitle')!.textContent = `${state.municipio}, ${state.provincia}`;
+    document.getElementById('zbsNombre')!.textContent = state.zbsNombre || 'Sin datos';
+    document.getElementById('zbsCodigo')!.textContent = state.codigoZbs || '—';
+    document.getElementById('zbsMunicipio')!.textContent = state.municipio || '—';
+
+    const provCode = state.codigoZbs ? state.codigoZbs.substring(0, 2) : '';
+    const normalize = (s: string) => (s || '').trim().toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ');
+    const municipioNorm = normalize(state.municipio);
+
+    const farmacias = d.farmacias.filter((f: any) => normalize(f.municipio) === municipioNorm);
+    const estacionesBus = d.estacionesBus.filter((b: any) => normalize(b.municipio) === municipioNorm);
+    const hospitales = d.hospitales.filter((h: any) => h.provincia === provCode);
+    const urgResources = d.zbs.find((z: any) => z.codigo === state.codigoZbs);
+    const centros = d.centros.filter((c: any) => c.provincia === provCode && c.coords);
+
+    const resources = [
+      {
+        title: 'Centro de salud',
+        value: urgResources ? urgResources.centros.length : 0,
+        subtitle: urgResources && urgResources.centros.length > 0 ? urgResources.centros[0].nombre : 'Informacion no disponible en los datos abiertos actuales',
+        icon: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+      },
+      {
+        title: 'Urgencias',
+        value: urgResources ? urgResources.centros.filter((c: any) => c.nombre.toLowerCase().includes('urgencia') || c.nombre.toLowerCase().includes('guardia')).length : 0,
+        subtitle: 'Centros de guardia',
+        icon: "M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+      },
+      {
+        title: 'Farmacias',
+        value: farmacias.length,
+        subtitle: farmacias.length > 0 ? `${farmacias.length} en ${state.municipio}` : 'Informacion no disponible en los datos abiertos actuales',
+        icon: "M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
+      },
+      {
+        title: 'Hospitales',
+        value: hospitales.length,
+        subtitle: hospitales.length > 0 ? `En provincia ${state.provincia}` : 'Informacion no disponible en los datos abiertos actuales',
+        icon: "M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+      },
+      {
+        title: 'Transporte',
+        value: estacionesBus.length,
+        subtitle: estacionesBus.length > 0 ? 'Estaciones de autobus' : 'Informacion no disponible en los datos abiertos actuales',
+        icon: "M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
+      },
+      {
+        title: 'Consultorios',
+        value: d.consultorioCodes ? d.consultorioCodes.filter((c: any) => c.zbsCodigo === state.codigoZbs).length : 0,
+        subtitle: 'Consultorios en tu zona',
+        icon: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+      }
+    ];
+
+    const grid = document.getElementById('resourceGrid')!;
+    grid.innerHTML = '';
+    resources.forEach(r => {
+      const div = document.createElement('div');
+      div.className = 'bg-card border border-border rounded-xl p-5 hover:border-primary/30 transition-colors';
+      div.innerHTML = `
+        <div class="flex items-start justify-between mb-3">
+          <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+            <svg class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="${r.icon}" />
+            </svg>
+          </div>
+        </div>
+        <p class="text-2xl font-bold text-fg mb-1">${r.value}</p>
+        <p class="text-sm font-medium text-fg mb-0.5">${r.title}</p>
+        <p class="text-xs text-muted">${r.subtitle}</p>
+      `;
+      grid.appendChild(div);
+    });
+
+    if (centros.length > 0) {
+      const mapSection = document.getElementById('mapSection')!;
+      mapSection.classList.remove('hidden');
+
+      const firstCenter = centros.find((c: any) => c.coords);
+      if (firstCenter) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css';
+        document.head.appendChild(link);
+
+        const script = document.createElement('script');
+        script.src = 'https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js';
+        script.onload = () => {
+          const mapEl = document.getElementById('map')!;
+          const map = new (window as any).maplibregl.Map({
+            container: mapEl,
+            center: [firstCenter.coords[1], firstCenter.coords[0]],
+            zoom: 11,
+            style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json'
+          });
+
+          centros.forEach((c: any) => {
+            if (!c.coords) return;
+            const el = document.createElement('div');
+            el.style.cssText = 'width:12px;height:12px;background:#0f766e;border:2px solid white;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,0.3);';
+            new (window as any).maplibregl.Marker({ element: el })
+              .setLngLat([c.coords[1], c.coords[0]])
+              .setPopup(new (window as any).maplibregl.Popup().setHTML(`<p style="font-weight:500">${c.nombre}</p><p style="font-size:12px;color:#64748b">${c.tipo || ''}</p>`))
+              .addTo(map);
+          });
+        };
+        document.body.appendChild(script);
+      }
+    }
+  }
+</script>

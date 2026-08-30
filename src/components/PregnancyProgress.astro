@@ -1,0 +1,26 @@
+---
+interface Props {
+  semana: number;
+}
+
+const { semana } = Astro.props;
+const progreso = Math.round((semana / 40) * 100);
+---
+<div class="bg-card border border-border rounded-xl p-6">
+  <div class="flex items-center justify-between mb-4">
+    <div>
+      <p class="text-sm text-muted">Semana actual</p>
+      <p class="text-3xl font-bold text-primary">{semana}<span class="text-base font-normal text-muted"> / 40</span></p>
+    </div>
+    <div class="text-right">
+      <p class="text-sm text-muted">Progreso</p>
+      <p class="text-3xl font-bold text-fg">{progreso}%</p>
+    </div>
+  </div>
+  <div class="w-full h-3 bg-bg-subtle rounded-full overflow-hidden">
+    <div class="h-full bg-primary rounded-full transition-all duration-500" style={`width: ${progreso}%`}></div>
+  </div>
+  <p class="text-xs text-muted mt-3">
+    {semana <= 12 ? 'Primero trimestre' : semana <= 27 ? 'Segundo trimestre' : 'Tercer trimestre'}
+  </p>
+</div>

@@ -1,0 +1,42 @@
+---
+interface Props {
+  codigo: string;
+  nombre: string;
+  municipio?: string;
+  provincia?: string;
+}
+
+const { codigo, nombre, municipio, provincia } = Astro.props;
+---
+<div class="bg-card border border-border rounded-xl p-6">
+  <div class="flex items-center gap-3 mb-4">
+    <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+      <svg class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+    </div>
+    <div>
+      <p class="text-sm text-muted">Tu Zona Basica de Salud</p>
+      <p class="font-semibold text-fg">{nombre}</p>
+    </div>
+  </div>
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <p class="text-xs text-muted uppercase tracking-wider mb-1">Codigo</p>
+      <p class="font-mono font-medium text-primary">{codigo}</p>
+    </div>
+    {municipio && (
+      <div>
+        <p class="text-xs text-muted uppercase tracking-wider mb-1">Municipio</p>
+        <p class="font-medium text-fg">{municipio}</p>
+      </div>
+    )}
+    {provincia && (
+      <div>
+        <p class="text-xs text-muted uppercase tracking-wider mb-1">Provincia</p>
+        <p class="font-medium text-fg">{provincia}</p>
+      </div>
+    )}
+  </div>
+</div>
