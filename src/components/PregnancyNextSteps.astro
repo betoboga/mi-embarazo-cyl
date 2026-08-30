@@ -1,0 +1,89 @@
+---
+interface Props {
+  currentWeek: number;
+}
+
+const { currentWeek } = Astro.props;
+
+import type { PregnancyMilestone } from '../../data/pregnancy';
+
+const milestones = [
+  { weekStart: 1, weekEnd: 4, title: 'Primeros signos', description: 'Es posible que estés experimentando algunos síntomas tempranos como cansancio, sensibilidad en los senos o náuseas. Tu cuerpo comienza a adaptarse a la gestación.' },
+  { weekStart: 5, weekEnd: 8, title: 'Desarrollo embrionario', description: 'En esta semana el embrión comienza a formar órganos vitales. Es un período crítico de desarrollo. Programa tu primera visita prenatal si aún no lo has hecho.' },
+  { weekStart: 9, weekEnd: 12, title: 'Primer trimestre', description: 'Llegas al final del primer trimestre. Es común sentir más energía y los síntomas iniciales pueden comenzar a disminuir. Primeras ecografías suelen realizarse alrededor de la semana 12.' },
+  { weekStart: 13, weekEnd: 16, title: 'Segundo trimestre', description: 'Muchas personas embarazadas informan sentirse mejor en este período. Es posible que notes el crecimiento del útero y mayor apetito. Control prenatal habitual.' },
+  { weekStart: 17, weekEnd: 20, title: 'Hitos del segundo trimestre', description: 'Puede que sientas los primeros movimientos fetales (quickening). Around week 20 suele realizarse la ecografía morfológica. Es un período de crecimiento rápido.' },
+  { weekStart: 21, weekEnd: 24, title: 'Desarrollo fetal', description: 'El bebé ya tiene caracterización facial y movimientos más coordinados. Es momento de hablarle y poner música. Las patillas mamarias pueden comenzar alrededor de la semana 22.' },
+  { weekStart: 25, weekEnd: 28, title: 'Tercer trimestre', description: 'Empieza el tercer trimestre. El bebé sigue creciendo rápidamente y sus sentidos se desarrollan. Es habitual sentir más molestias físicas por el peso.' },
+  { weekStart: 29, weekEnd: 32, title: ' Preparación para el parto', description: 'Las contracciones de Braxton Hicks pueden hacerse más notables. Es buen momento para preparar la mochila del hospital y el espacio del bebé. Clases de preparación al parto.' },
+  { weekStart: 33, weekEnd: 36, title: 'Primeras señales', description: 'El bebé se coloca cada vez más bajó (engaje). Las visitas médicas son más frecuentes. Empieza a tener claro tu plan de parto y tus preferencias para el nacimiento.' },
+  { weekStart: 37, weekEnd: 40, title: 'Termino del embarazo', description: 'Se considera que el embarazo a término comienza en la semana 37. El bebé está completamente desarrollado y listo para nacer. Mantén contacto constante con tu profesional sanitario.' },
+  { weekStart: 41, weekEnd: 42, title: 'Semanas post termino', description: 'Si el embarazo llega a la semana 42, se considera post termino. El equipo médico realizará seguimiento cercano. Se pueden considerar intervenciones para inducir el parto.' }
+] as PregnancyMilestone[];
+
+function findCurrentMilestone(week: number): { title: string; description: string } | null {
+  const m = milestones.find(x => week >= x.weekStart && week <= x.weekEnd);
+  return m ? { title: m.title, description: m.description } : null;
+}
+
+function findNextMilestones(week: number): Array<{ title: string; description: string }> {
+  const next = milestones.filter(m => m.weekStart > week);
+  return next.slice(0, 2);
+}
+
+const disclaimer = 'Esta información es orientativa y no sustituye las indicaciones de tu matrona, obstetra u otro profesional sanitario.';
+
+const currentMilestone = findCurrentMilestone(currentWeek);
+const nextMilestones = findNextMilestones(currentWeek);
+---
+<div class="bg-card border border-border rounded-xl p-6 sm:p-8 mb-8">
+
+  {/* NOW SECTION */}
+  <div class="mb-6">
+    <h3 class="text-sm font-medium text-primary uppercase tracking-wider mb-3">Ahora</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <p class="text-lg font-bold text-fg">{currentWeek}</p>
+        <p class="text-sm text-muted">Semana actual</p>
+      </div>
+      <div>
+        {currentMilestone ? (
+          <p class="text-sm text-muted line-clamp-3">{currentMilestone.description}</p>
+        ) : (
+          <p class="text-sm text-muted">No hay datos para esta semana</p>
+        )}
+      </div>
+    </div>
+  </div>
+
+  {/* PROXIMAMENTE SECTION */}
+  {currentWeek > 0 && nextMilestones.length > 0 ? (
+    <div>
+      <h3 class="text-sm font-medium text-primary uppercase tracking-wider mb-3">Próximamente</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {nextMilestones.map((m, i) => (
+          <div key={i} class="bg-bg-subtle border border-border rounded-lg p-4">
+            <p class="text-sm font-medium text-fg">{m.title}</p>
+            <p class="text-xs text-muted line-clamp-2">{m.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  ) : (
+    <p class="text-sm text-muted mb-4">No hay hitos programados para las próximas semanas</p>
+  )}
+
+  {/* CTA SECTION */}
+  <div class="mt-8 pt-8 border-t border-border">
+    <p class="text-sm text-muted mb-3">{disclaimer}</p>
+    <a
+      class="inline-flex items-center gap-2 bg-primary hover:bg-primary-dark text-white font-medium px-6 py-3 rounded-xl transition-colors no-underline"
+    >
+      ¿Tienes dudas?
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      Consúltalo con tu profesional sanitario
+    </a>
+  </div>
+</div>

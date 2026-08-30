@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import PregnancyNextSteps from '../components/PregnancyNextSteps.astro';
 ---
 <Layout title="Mi embarazo - Mi Embarazo CYL">
   <Header />
@@ -96,6 +97,9 @@ import Footer from '../components/Footer.astro';
           Modificar datos
         </button>
       </div>
+
+ {/* PREGNANCY NEXT STEPS SECTION */}
+ <PregnancyNextSteps currentWeek={1} disclaimer="Esta información es orientativa y no sustituye las indicaciones de tu matrona, obstetra u otro profesional sanitario." />
     </div>
   </main>
   <Footer />
