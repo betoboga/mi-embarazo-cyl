@@ -1,0 +1,32 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="¿Dónde vives? · Mi Embarazo CYL">
+  <main class="page">
+    <a class="back" href="/">← Mi Embarazo CYL</a>
+    <section>
+      <span class="step">PASO 1 DE 3</span>
+      <h1>¿Dónde vives?</h1>
+      <p>Selecciona tu municipio para encontrar tu zona sanitaria y los recursos que tienes cerca.</p>
+      <label for="municipio">Municipio</label>
+      <select id="municipio">
+        <option value="">Selecciona tu municipio…</option>
+        <option>Ávila</option><option>Burgos</option><option>León</option><option>Palencia</option>
+        <option>Salamanca</option><option>Segovia</option><option>Soria</option><option>Valladolid</option><option>Zamora</option>
+      </select>
+      <p class="note">En el siguiente paso conectaremos esta selección con los datos reales de las Zonas Básicas de Salud.</p>
+    </section>
+  </main>
+</Layout>
+<style>
+  :global(body) { margin:0; background:#f8f7f4; color:#24231f; font-family:Inter,ui-sans-serif,system-ui,sans-serif; }
+  .page { max-width:760px; margin:auto; padding:32px 24px 80px; }
+  .back { color:#68705b; text-decoration:none; font-weight:700; }
+  section { padding-top:16vh; }
+  .step { font-size:.75rem; letter-spacing:.16em; color:#68705b; font-weight:700; }
+  h1 { font-size:clamp(3rem,8vw,5.5rem); letter-spacing:-.06em; line-height:.95; font-weight:500; margin:24px 0 16px; }
+  section > p { color:#68665f; font-size:1.15rem; line-height:1.55; max-width:600px; }
+  label { display:block; margin-top:44px; margin-bottom:10px; font-weight:700; }
+  select { width:100%; padding:17px 18px; border:1px solid #c9c7bf; border-radius:12px; background:white; font-size:1rem; color:#24231f; }
+  .note { margin-top:18px; font-size:.9rem; color:#88867e; }
+</style>
