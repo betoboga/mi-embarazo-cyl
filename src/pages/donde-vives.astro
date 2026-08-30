@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { municipios, zbs } from '../data/territorial';
+import { municipios } from '../data/datasets';
 ---
 <Layout title="¿Dónde vives? · Mi Embarazo CYL">
   <main class="page">
@@ -8,38 +8,50 @@ import { municipios, zbs } from '../data/territorial';
     <section>
       <span class="step">PASO 1 DE 3</span>
       <h1>¿Dónde vives?</h1>
-      <p>Selecciona tu municipio para localizar tu Zona Básica de Salud y los recursos sanitarios asociados.</p>
+      <p>Empieza por tu municipio. A partir de los datos sanitarios oficiales identificaremos tu Zona Básica de Salud.</p>
+
       <label for="municipio">Municipio</label>
       <select id="municipio">
         <option value="">Selecciona tu municipio…</option>
-        {municipios.sort((a, b) => a.name.localeCompare(b.name, 'es')).map((municipio) => (
-          <option value={municipio.id}>{municipio.name}</option>
-        ))}
+        {municipios.map((municipio) => <option value={municipio.id}>{municipio.name}</option>)}
       </select>
+
       <div id="resultado" class="result" hidden>
-        <div class="result-label">TU ZONA SANITARIA</div>
+        <div class="result-label">TU ZONA BÁSICA DE SALUD</div>
         <div id="zbs-list"></div>
-        <p class="hint">Si aparecen varias ZBS, significa que el municipio está dividido entre varias zonas sanitarias. Más adelante afinaremos cuál corresponde a la usuaria.</p>
+        <p class="hint">Si aparecen varias zonas, el municipio está dividido entre varias ZBS. En el siguiente paso podremos afinar el recurso sanitario correspondiente.</p>
       </div>
-      <p class="note">Fuente: datasets de Castilla y León aportados al proyecto.</p>
+
+      <p class="note">Los municipios y sus ZBS se construyen directamente desde <code>atencion-primaria-recurso-urg.csv</code>.</p>
     </section>
   </main>
 </Layout>
-<script define:vars={{ municipios, zbs }}>
+
+<script define:vars={{ municipios }}>
   const select = document.querySelector('#municipio');
   const result = document.querySelector('#resultado');
   const list = document.querySelector('#zbs-list');
+
   select?.addEventListener('change', () => {
     const municipio = municipios.find((item) => item.id === select.value);
-    if (!municipio || !result || !list) { if (result) result.hidden = true; return; }
-    list.innerHTML = municipio.zbs.map((codigo) => {
-      const item = zbs.find((entry) => entry.codigo === codigo);
-      const label = item?.nombre || `ZBS ${codigo}`;
-      return `<a class="zbs-card" href="/zona/${codigo}"><strong>${label}</strong><span>${codigo}</span>${item ? `<small>${item.provincia} · ${item.ambito}${item.poblacion ? ` · ${item.poblacion.toLocaleString('es-ES')} habitantes` : ''}</small>` : ''}</a>`;
-    }).join('');
+    if (!municipio || !result || !list) {
+      if (result) result.hidden = true;
+      return;
+    }
+
+    list.innerHTML = municipio.zbs.map((codigo) => `
+      <a class="zbs-card" href="/zona/${codigo}">
+        <div>
+          <strong>ZBS ${codigo}</strong>
+          <small>${municipio.provincia} · ${municipio.name}</small>
+        </div>
+        <span>→</span>
+      </a>
+    `).join('');
     result.hidden = false;
   });
 </script>
+
 <style>
   :global(body) { margin:0; background:#f8f7f4; color:#24231f; font-family:Inter,ui-sans-serif,system-ui,sans-serif; }
   .page { max-width:760px; margin:auto; padding:32px 24px 80px; }
@@ -47,14 +59,15 @@ import { municipios, zbs } from '../data/territorial';
   section { padding-top:12vh; }
   .step { font-size:.75rem; letter-spacing:.16em; color:#68705b; font-weight:700; }
   h1 { font-size:clamp(3rem,8vw,5.5rem); letter-spacing:-.06em; line-height:.95; font-weight:500; margin:24px 0 16px; }
-  section > p { color:#68665f; font-size:1.15rem; line-height:1.55; max-width:600px; }
+  section > p { color:#68665f; font-size:1.15rem; line-height:1.55; max-width:650px; }
   label { display:block; margin-top:44px; margin-bottom:10px; font-weight:700; }
   select { width:100%; padding:17px 18px; border:1px solid #c9c7bf; border-radius:12px; background:white; font-size:1rem; color:#24231f; }
   .result { margin-top:24px; padding:22px; border:1px solid #d9d7d0; border-radius:16px; background:#fff; }
   .result-label { font-size:.7rem; letter-spacing:.14em; font-weight:800; color:#68705b; margin-bottom:12px; }
-  .zbs-card { display:grid; grid-template-columns:1fr auto; gap:4px 12px; padding:15px 0; border-top:1px solid #ebe9e3; color:inherit; text-decoration:none; }
+  .zbs-card { display:grid; grid-template-columns:1fr auto; align-items:center; gap:12px; padding:17px 0; border-top:1px solid #ebe9e3; color:inherit; text-decoration:none; }
   .zbs-card:hover strong { text-decoration:underline; }
-  .zbs-card span { font-family:ui-monospace,monospace; color:#858279; font-size:.85rem; }
-  .zbs-card small { grid-column:1 / -1; color:#77746c; }
+  .zbs-card small { display:block; color:#77746c; margin-top:5px; }
+  .zbs-card > span { color:#68705b; font-weight:800; }
   .hint, .note { margin-top:16px; font-size:.85rem; color:#88867e; }
+  code { font-size:.8em; }
 </style>
