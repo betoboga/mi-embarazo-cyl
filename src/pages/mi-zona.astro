@@ -86,6 +86,34 @@ import {
         </div>
 
         <div
+          id="mapaBlock"
+          class="bg-card border border-border rounded-xl p-6 sm:p-8 hidden"
+        >
+          <h3
+            class="text-sm font-medium text-primary uppercase tracking-wider mb-4"
+          >
+            Mapa de tu zona
+          </h3>
+          <div
+            id="map"
+            class="w-full h-80 sm:h-96 rounded-xl overflow-hidden border border-border"
+          >
+          </div>
+          <div class="flex gap-4 mt-3 text-xs text-muted">
+            <span class="inline-flex items-center gap-1.5"
+              ><span
+                class="w-2.5 h-2.5 rounded-full inline-block"
+                style="background:#0f766e"></span> Centros de salud</span
+            >
+            <span class="inline-flex items-center gap-1.5"
+              ><span
+                class="w-2.5 h-2.5 rounded-full inline-block"
+                style="background:#2563eb"></span> Estaciones de autobús</span
+            >
+          </div>
+        </div>
+
+        <div
           id="provinciaBlock"
           class="bg-bg-subtle border border-border rounded-xl p-6 sm:p-8 hidden"
         >
@@ -316,5 +344,57 @@ import {
       }
     }
     provinciaBlock.classList.remove("hidden");
+
+  // MAPA (solo recursos con coordenadas reales: centros de salud/hospital y estaciones de bus)
+const mapaBlock = document.getElementById("mapaBlock") as HTMLElement;
+const puntosMapa: Array<{ lat: number; lon: number; nombre: string; tipo: string; detalle: string }> = [];
+
+for (const c of centrosResult.centros) {
+  if (c.coords) {
+    puntosMapa.push({ lat: c.coords[0], lon: c.coords[1], nombre: c.nombre, tipo: "centro", detalle: c.tipo || "" });
+  }
+}
+for (const e of estaciones) {
+  if (e.coords) {
+    puntosMapa.push({ lat: e.coords[0], lon: e.coords[1], nombre: "Estación de autobuses", tipo: "estacion", detalle: e.direccion || "" });
+  }
+}
+
+if (puntosMapa.length > 0) {
+  mapaBlock.classList.remove("hidden");
+
+  const link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.href = "https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css";
+  document.head.appendChild(link);
+
+  const script = document.createElement("script");
+  script.src = "https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js";
+  script.onload = () => {
+    const mapEl = document.getElementById("map") as HTMLElement;
+    const mapa = new (window as any).maplibregl.Map({
+      container: mapEl,
+      center: [puntosMapa[0].lon, puntosMapa[0].lat],
+      zoom: 12,
+      style: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json",
+    });
+    mapa.addControl(new (window as any).maplibregl.NavigationControl(), "top-right");
+
+    puntosMapa.forEach((p) => {
+      const color = p.tipo === "centro" ? "#0f766e" : "#2563eb";
+      const el = document.createElement("div");
+      el.style.cssText = `width:14px;height:14px;background:${color};border:2px solid white;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,0.35);cursor:pointer;`;
+      new (window as any).maplibregl.Marker({ element: el })
+        .setLngLat([p.lon, p.lat])
+        .setPopup(
+          new (window as any).maplibregl.Popup({ offset: 14 }).setHTML(
+            `<p style="font-weight:600;margin:0 0 2px">${escapeHtml(p.nombre)}</p><p style="font-size:12px;color:#64748b;margin:0">${escapeHtml(p.detalle)}</p>`
+          )
+        )
+        .addTo(mapa);
+    });
+  };
+  document.body.appendChild(script);
+}
   }
 </script>
