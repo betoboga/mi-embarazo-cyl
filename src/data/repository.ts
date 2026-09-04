@@ -11,34 +11,38 @@ const farmaciasList: Farmacia[] = d.farmacias || [];
 const estacionesList: EstacionBus[] = d.estacionesBus || [];
 const hospitalesList: Hospital[] = d.hospitales || [];
 
+// Solo estos tipos de centro son relevantes para una embarazada.
+// Coincidencia EXACTA con el campo "tipo" del CSV de registro sanitario.
+const TIPOS_CENTRO_RELEVANTES = [
+  'CENTROS DE ATENCION PRIMARIA: CENTROS DE SALUD',
+  'CONSULTORIOS DE ATENCION PRIMARIA',
+  'HOSPITALES GENERALES',
+  'ESPECIALIZADOS: CENTROS DE SALUD MENTAL',
+  'ESPECIALIZADOS: CENTROS DE INTERRUPCION VOLUNTARIA DEL EMBARAZO',
+  'ESPECIALIZADOS: CENTROS DE REPRODUCCION HUMANA ASISTIDA',
+];
+
 /**
  * Devuelve el código ZBS (o códigos) asociados a un municipio.
- * Ahora soporta municipios con ZBS múltiples.
- * @param municipioNombre Nombre del municipio
- * @returns Object con códigos ZBS y nombres, o undefined si no se encuentra
  */
 export function obtenerZbsMunicipio(municipioNombre: string): { codigos: string[], nombres: string[] } | undefined {
   const mun = municipios.find(m => normalize(m.nombre) === normalize(municipioNombre));
   if (!mun) return undefined;
-  
-  // Si el municipio tiene zbs como array (nuevo modelo)
+
   if (Array.isArray(mun.zbs)) {
     return {
       codigos: mun.zbs,
       nombres: mun.zbsNombres || mun.zbs.map(() => ''),
     };
   }
-  
-  // Retrocompatibilidad: si zbs es string antiguo formato
+
   if (typeof mun.zbs === 'string') {
     return {
       codigos: [mun.zbs],
       nombres: [mun.zbsNombres || ''],
     };
   }
-  
-  // Fallback: buscar en la ZBS global por coincidencia de nombre
-  // (para casos donde el dato nuevo no está poblado aún)
+
   return undefined;
 }
 
@@ -89,27 +93,113 @@ export function obtenerHospitalesProvincia(provCodigo: string): Hospital[] {
 }
 
 /**
- * Obtiene centros de salud de una provincia (con coords)
+ * Obtiene centros de salud de una provincia (con coords),
+ * filtrados a solo los tipos relevantes para una embarazada.
  */
 export function obtenerCentrosProvincia(provCodigo: string): CentroSalud[] {
-  return centrosList.filter(c => c.provincia === provCodigo && c.coords);
+  return centrosList.filter(
+    c => c.provincia === provCodigo &&
+         c.coords &&
+         TIPOS_CENTRO_RELEVANTES.includes((c.tipo || '').trim())
+  );
 }
 
 /**
- * Obtiene todas las municipios
+ * Obtiene todos los municipios
  */
 export function obtenerMunicipios(): Municipio[] {
   return municipios;
 }
 
 /**
- * Obtiene la lista de códigos ZBS para un municipio (útil para filtros, mapa, etc.)
- * Retorna un string unido por comas si hay varios, o el string único si solo hay uno
+ * Obtiene la lista de códigos ZBS para un municipio como string
  */
 export function obtenerCodigoZbsMunicipio(municipioNombre: string): string {
   const result = obtenerZbsMunicipio(municipioNombre);
   if (!result) return '';
   if (result.codigos.length === 1) return result.codigos[0];
-  // Si hay varios, los unimos con separator para identificarlos
   return result.codigos.join(';');
+}
+
+/**
+ * Devuelve los nombres de otros municipios que comparten
+ * al menos una ZBS con el municipio dado.
+ */
+export function obtenerMunicipiosMismaZbs(municipioNombre: string): string[] {
+  const zbsResult = obtenerZbsMunicipio(municipioNombre);
+  if (!zbsResult || zbsResult.codigos.length === 0) return [];
+
+  const propioNormalizado = normalize(municipioNombre);
+  const codigosSet = new Set(zbsResult.codigos);
+
+  return municipios
+    .filter(m => {
+      if (normalize(m.nombre) === propioNormalizado) return false;
+      const mZbs = Array.isArray(m.zbs) ? m.zbs : (typeof m.zbs === 'string' ? [m.zbs] : []);
+      return mZbs.some(codigo => codigosSet.has(codigo));
+    })
+    .map(m => m.nombre);
+}
+
+/**
+ * Farmacias del municipio, o si no hay ninguna, de otros
+ * municipios de la misma ZBS.
+ */
+export function obtenerFarmaciasConFallback(municipioNombre: string): { farmacias: Farmacia[], nivel: 'municipio' | 'zona' } {
+  const propias = obtenerFarmaciasMunicipio(municipioNombre);
+  if (propias.length > 0) {
+    return { farmacias: propias, nivel: 'municipio' };
+  }
+
+  const vecinos = obtenerMunicipiosMismaZbs(municipioNombre);
+  const vistos = new Set<string>();
+  const deZona: Farmacia[] = [];
+
+  for (const vecino of vecinos) {
+    for (const f of obtenerFarmaciasMunicipio(vecino)) {
+      const clave = normalize(f.nombre) + '|' + normalize(f.direccion || '');
+      if (!vistos.has(clave)) {
+        vistos.add(clave);
+        deZona.push(f);
+      }
+    }
+  }
+
+  return { farmacias: deZona, nivel: 'zona' };
+}
+
+/**
+ * Centros de salud relevantes del municipio (por localidad), o si no
+ * hay ninguno, de otros municipios de la misma ZBS, o si tampoco,
+ * los de la provincia (nivel actual).
+ */
+export function obtenerCentrosConFallback(
+  municipioNombre: string,
+  provCodigo: string
+): { centros: CentroSalud[], nivel: 'municipio' | 'zona' | 'provincia' } {
+  const nMunicipio = normalize(municipioNombre);
+
+  const propios = centrosList.filter(
+    c => normalize(c.localidad || '') === nMunicipio &&
+         c.coords &&
+         TIPOS_CENTRO_RELEVANTES.includes((c.tipo || '').trim())
+  );
+  if (propios.length > 0) {
+    return { centros: propios, nivel: 'municipio' };
+  }
+
+  const vecinos = obtenerMunicipiosMismaZbs(municipioNombre);
+  if (vecinos.length > 0) {
+    const nVecinos = new Set(vecinos.map(normalize));
+    const deZona = centrosList.filter(
+      c => nVecinos.has(normalize(c.localidad || '')) &&
+           c.coords &&
+           TIPOS_CENTRO_RELEVANTES.includes((c.tipo || '').trim())
+    );
+    if (deZona.length > 0) {
+      return { centros: deZona, nivel: 'zona' };
+    }
+  }
+
+  return { centros: obtenerCentrosProvincia(provCodigo), nivel: 'provincia' };
 }

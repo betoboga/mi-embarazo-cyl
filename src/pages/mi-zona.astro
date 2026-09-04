@@ -3,10 +3,10 @@ import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import {
-  obtenerFarmaciasMunicipio,
+  obtenerFarmaciasConFallback,
   obtenerEstacionesMunicipio,
   obtenerHospitalesProvincia,
-  obtenerCentrosProvincia,
+  obtenerCentrosConFallback,
   obtenerZbsMunicipio,
   obtenerMunicipio,
 } from "../data/repository";
@@ -19,22 +19,6 @@ import {
       <div
         class="bg-card border border-border rounded-xl p-6 sm:p-8 mx-auto text-center"
       >
-        <div
-          class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-bg-subtle mb-4"
-        >
-          <svg
-            class="w-7 h-7 text-muted"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="1.5"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-          </svg>
-        </div>
         <h2 class="text-xl font-semibold text-fg mb-2">
           Selecciona un municipio
         </h2>
@@ -64,27 +48,28 @@ import {
           class="bg-card border border-border rounded-xl p-6 sm:p-8 hidden"
         >
           <h3
-            class="text-sm font-medium text-primary uppercase tracking-wider mb-3"
+            class="text-sm font-medium text-primary uppercase tracking-wider mb-4"
           >
             En tu municipio
           </h3>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <p class="text-xs text-muted uppercase tracking-wider mb-1">
-                Farmacias
-              </p>
-              <p class="text-3xl font-bold text-fg" id="munFarmacias">
-                Cargando...
-              </p>
-            </div>
-            <div>
-              <p class="text-xs text-muted uppercase tracking-wider mb-1">
-                Estaciones de bus
-              </p>
-              <p class="text-3xl font-bold text-fg" id="munEstaciones">
-                Cargando...
-              </p>
-            </div>
+
+          <div class="mb-6">
+            <p class="text-xs text-muted uppercase tracking-wider mb-3">
+              Farmacias
+            </p>
+            <div id="farmaciasList" class="space-y-3"></div>
+            <button
+              id="farmaciasVerMas"
+              class="hidden mt-3 text-sm text-primary font-medium"
+              >Ver todas</button
+            >
+          </div>
+
+          <div>
+            <p class="text-xs text-muted uppercase tracking-wider mb-3">
+              Estaciones de autobús
+            </p>
+            <div id="estacionesList" class="space-y-3"></div>
           </div>
         </div>
 
@@ -97,7 +82,7 @@ import {
           >
             En tu Zona Básica
           </h3>
-          <div id="zbsList"></div>
+          <div id="zbsList" class="space-y-2"></div>
         </div>
 
         <div
@@ -105,27 +90,28 @@ import {
           class="bg-bg-subtle border border-border rounded-xl p-6 sm:p-8 hidden"
         >
           <h3
-            class="text-sm font-medium text-primary uppercase tracking-wider mb-3"
+            class="text-sm font-medium text-primary uppercase tracking-wider mb-4"
           >
             En tu provincia
           </h3>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <p class="text-xs text-muted uppercase tracking-wider mb-1">
-                Hospitales
-              </p>
-              <p class="text-3xl font-bold text-fg" id="provHospitales">
-                Cargando...
-              </p>
-            </div>
-            <div>
-              <p class="text-xs text-muted uppercase tracking-wider mb-1">
-                Centros de salud
-              </p>
-              <p class="text-3xl font-bold text-fg" id="provCentros">
-                Cargando...
-              </p>
-            </div>
+
+          <div class="mb-6">
+            <p class="text-xs text-muted uppercase tracking-wider mb-3">
+              Hospitales
+            </p>
+            <div id="hospitalesList" class="space-y-3"></div>
+          </div>
+
+          <div>
+            <p class="text-xs text-muted uppercase tracking-wider mb-3">
+              Centros de salud
+            </p>
+            <div id="centrosList" class="space-y-3"></div>
+            <button
+              id="centrosVerMas"
+              class="hidden mt-3 text-sm text-primary font-medium"
+              >Ver más centros</button
+            >
           </div>
         </div>
       </div>
@@ -135,17 +121,15 @@ import {
 </Layout>
 
 <script>
-  // Cliente: imports directos en el script (no frontmatter)
   import {
-    obtenerFarmaciasMunicipio,
+    obtenerFarmaciasConFallback,
     obtenerEstacionesMunicipio,
     obtenerHospitalesProvincia,
-    obtenerCentrosProvincia,
+    obtenerCentrosConFallback,
     obtenerZbsMunicipio,
     obtenerMunicipio,
   } from "../data/repository";
 
-  // Estado desde localStorage (misma clave que donde-vive.astro)
   const STORAGE_KEY = "mi-embarazo-cyl-state";
   function getStoredState() {
     try {
@@ -153,6 +137,38 @@ import {
     } catch {
       return {};
     }
+  }
+
+  function escapeHtml(s: string) {
+    return (s || "").replace(
+      /[&<>"']/g,
+      (c) =>
+        ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;",
+        })[c] || c,
+    );
+  }
+
+  // Tarjeta genérica reutilizable para un recurso
+  function tarjeta(nombre: string, lineas: string[], telefono?: string) {
+    const tel = telefono
+      ? `<a href="tel:${telefono.replace(/\s+/g, "")}" class="inline-flex items-center gap-1 text-primary text-sm font-medium mt-1">📞 ${escapeHtml(telefono)}</a>`
+      : "";
+    return `
+      <div class="bg-white border border-border rounded-lg p-4">
+        <p class="font-semibold text-fg">${escapeHtml(nombre)}</p>
+        ${lineas
+          .filter(Boolean)
+          .map(
+            (l) => `<p class="text-sm text-muted mt-0.5">${escapeHtml(l)}</p>`,
+          )
+          .join("")}
+        ${tel}
+      </div>`;
   }
 
   const state = getStoredState();
@@ -166,19 +182,21 @@ import {
     "provinciaBlock",
   ) as HTMLElement;
   const subtitle = document.getElementById("subtitle") as HTMLParagraphElement;
-  const munFarmacias = document.getElementById(
-    "munFarmacias",
-  ) as HTMLParagraphElement;
-  const munEstaciones = document.getElementById(
-    "munEstaciones",
-  ) as HTMLParagraphElement;
+  const farmaciasList = document.getElementById("farmaciasList") as HTMLElement;
+  const farmaciasVerMas = document.getElementById(
+    "farmaciasVerMas",
+  ) as HTMLButtonElement;
+  const estacionesList = document.getElementById(
+    "estacionesList",
+  ) as HTMLElement;
   const zbsList = document.getElementById("zbsList") as HTMLElement;
-  const provHospitales = document.getElementById(
-    "provHospitales",
-  ) as HTMLParagraphElement;
-  const provCentros = document.getElementById(
-    "provCentros",
-  ) as HTMLParagraphElement;
+  const hospitalesList = document.getElementById(
+    "hospitalesList",
+  ) as HTMLElement;
+  const centrosList = document.getElementById("centrosList") as HTMLElement;
+  const centrosVerMas = document.getElementById(
+    "centrosVerMas",
+  ) as HTMLButtonElement;
 
   if (!state.municipio) {
     noState.classList.remove("hidden");
@@ -190,60 +208,113 @@ import {
     const provNombre = state.provincia || "Sin datos";
     subtitle.textContent = `${munNombre}, ${provNombre}`;
 
-    // 1. Farmacias (llamada síncrona - no usa .then())
-    const farmacias = obtenerFarmaciasMunicipio(munNombre);
-    munFarmacias.textContent =
-      farmacias.length > 0 ? String(farmacias.length) : "No disponible";
+    // FARMACIAS (con fallback a la ZBS si el municipio no tiene ninguna)
+    const farmResult = obtenerFarmaciasConFallback(munNombre);
+    const farmacias = farmResult.farmacias;
+    if (farmacias.length === 0) {
+      farmaciasList.innerHTML = `<p class="text-sm text-muted">No hay farmacias registradas en tu municipio ni en tu zona.</p>`;
+    } else {
+      const aviso =
+        farmResult.nivel === "zona"
+          ? `<p class="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg p-3 mb-3">No hay farmacias en tu municipio. Estas son las más cercanas dentro de tu Zona Básica de Salud:</p>`
+          : "";
+      const LIMITE = 8;
+      const renderFarmacias = (lista: typeof farmacias) => {
+        farmaciasList.innerHTML =
+          aviso +
+          lista
+            .map((f) =>
+              tarjeta(
+                f.nombre,
+                [f.direccion, f.cp ? `CP ${f.cp}` : ""],
+                f.telefono,
+              ),
+            )
+            .join("");
+      };
+      renderFarmacias(farmacias.slice(0, LIMITE));
+      if (farmacias.length > LIMITE) {
+        farmaciasVerMas.textContent = `Ver todas (${farmacias.length})`;
+        farmaciasVerMas.classList.remove("hidden");
+        farmaciasVerMas.addEventListener("click", () => {
+          renderFarmacias(farmacias);
+          farmaciasVerMas.classList.add("hidden");
+        });
+      }
+    }
     municipioBlock.classList.remove("hidden");
 
-    // 2. Estaciones de bus (llamada síncrona - no usa .then/)
+    // ESTACIONES DE BUS (sin campo nombre propio en los datos)
     const estaciones = obtenerEstacionesMunicipio(munNombre);
-    munEstaciones.textContent =
-      estaciones.length > 0 ? String(estaciones.length) : "No disponible";
-
-    // 3. ZBS MUNICIPIO - mostrar TODAS las ZBS asociadas
-    const zbsResult = obtenerZbsMunicipio(munNombre);
-    if (zbsResult && zbsResult.codigos.length > 0) {
-      const zbsHtml = zbsResult.codigos
-        .map((code, i) => {
-          const name = zbsResult.nombres[i] || `ZBS ${i + 1}`;
-          return `<div class="bg-white p-2 rounded mb-1 text-sm"><strong>${code}</strong>: ${name}</div>`;
-        })
-        .join("");
-      zbsList.innerHTML = zbsHtml;
-      // Actualizar zbsNombre para retrocompatibilidad (mostrar cuántas ZBS hay)
-      const zbsNombreEl = document.getElementById(
-        "zbsNombre",
-      ) as HTMLParagraphElement;
-      if (zbsNombreEl) {
-        zbsNombreEl.textContent =
-          zbsResult.codigos.length > 1
-            ? `${zbsResult.codigos.length} ZBS asociadas`
-            : zbsResult.codigos[0];
-      }
+    if (estaciones.length === 0) {
+      estacionesList.innerHTML = `<p class="text-sm text-muted">No hay estaciones de autobús registradas en tu municipio.</p>`;
     } else {
-      const zbsListInner = document.getElementById("zbsList") as HTMLElement;
-      zbsList.innerHTML = "No disponibles";
+      estacionesList.innerHTML = estaciones
+        .map((e) => tarjeta("Estación de autobuses", [e.direccion]))
+        .join("");
     }
 
-    // 4. Centros de la ZBS (NIVEL ACTUAL: provincia, no ZBS puRO)
-    // ADVERTENCIA: repository.ts no tiene función distinta para centros por ZBS.
-    // obtenerCentrosProvincia filtra por código de provincia (2 dígitos).
-    // Como resultado, los centros mostrados aquí son de la provincia, no estrictamente de la ZBS.
-    // Si se necesita filtrado puro por ZBS, requiere función nueva en repository.ts.
+    // ZBS (sin cambios respecto a lo que ya funcionaba)
+    const zbsResult = obtenerZbsMunicipio(munNombre);
+    if (zbsResult && zbsResult.codigos.length > 0) {
+      zbsList.innerHTML = zbsResult.codigos
+        .map((code, i) => {
+          const name = zbsResult.nombres[i] || `ZBS ${i + 1}`;
+          return `<div class="bg-white p-2 rounded mb-1 text-sm"><strong>${code}</strong>: ${escapeHtml(name)}</div>`;
+        })
+        .join("");
+    } else {
+      zbsList.innerHTML = `<p class="text-sm text-muted">No disponible</p>`;
+    }
+    zbsBlock.classList.remove("hidden");
+
+    // PROVINCIA
     const municipioObj = obtenerMunicipio(munNombre);
     const provCode = municipioObj?.provincia || "";
-    const centros = obtenerCentrosProvincia(provCode);
-    provCentros.textContent =
-      centros.length > 0 ? String(centros.length) : "No disponible";
 
-    // 5. Hospitales (llamada síncrona)
+    // HOSPITALES (solo nombre + nivel, no hay dirección/teléfono reales)
     const hospitales = obtenerHospitalesProvincia(provCode);
-    provHospitales.textContent =
-      hospitales.length > 0 ? String(hospitales.length) : "No disponible";
+    if (hospitales.length === 0) {
+      hospitalesList.innerHTML = `<p class="text-sm text-muted">No hay hospitales registrados en tu provincia.</p>`;
+    } else {
+      hospitalesList.innerHTML = hospitales
+        .map((h) => tarjeta(h.nombre, [h.nivel ? `Nivel ${h.nivel}` : ""]))
+        .join("");
+    }
 
-    // Mostrar todos los bloques
-    zbsBlock.classList.remove("hidden");
+    // CENTROS DE SALUD (municipio -> zona -> provincia, con aviso de nivel)
+    const centrosResult = obtenerCentrosConFallback(munNombre, provCode);
+    const centros = centrosResult.centros;
+    const etiquetaNivel = {
+      municipio: "en tu municipio",
+      zona: "en tu Zona Básica",
+      provincia: "en tu provincia",
+    };
+    if (centros.length === 0) {
+      centrosList.innerHTML = `<p class="text-sm text-muted">No hay centros de salud con ubicación disponible cerca de ti.</p>`;
+    } else {
+      const aviso =
+        centrosResult.nivel !== "municipio"
+          ? `<p class="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg p-3 mb-3">No hay centros de salud en tu municipio. Mostrando los disponibles ${etiquetaNivel[centrosResult.nivel]}:</p>`
+          : "";
+      const LIMITE_CENTROS = 8;
+      const renderCentros = (lista: typeof centros) => {
+        centrosList.innerHTML =
+          aviso +
+          lista
+            .map((c) => tarjeta(c.nombre, [c.direccion, c.localidad, c.tipo]))
+            .join("");
+      };
+      renderCentros(centros.slice(0, LIMITE_CENTROS));
+      if (centros.length > LIMITE_CENTROS) {
+        centrosVerMas.textContent = `Ver más (${centros.length} ${etiquetaNivel[centrosResult.nivel]})`;
+        centrosVerMas.classList.remove("hidden");
+        centrosVerMas.addEventListener("click", () => {
+          renderCentros(centros);
+          centrosVerMas.classList.add("hidden");
+        });
+      }
+    }
     provinciaBlock.classList.remove("hidden");
   }
 </script>
