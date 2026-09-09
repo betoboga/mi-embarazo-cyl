@@ -7,6 +7,7 @@ export interface Municipio {
   zbs: string[]; // Array de códigos ZBS
   // También guardamos los nombres para display
   zbsNombres: string[]; // Array de nombres ZBS correspondientes
+  coords: [number, number] | null;
 }
 
 export interface ZBS {

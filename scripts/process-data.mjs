@@ -1,10 +1,24 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import proj4 from "proj4";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const RAW = join(__dirname, "..", "public", "data", "raw");
 const OUT = join(__dirname, "..", "src", "data");
+
+proj4.defs(
+  "EPSG:25830",
+  "+proj=utm +zone=30 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs",
+);
+
+function utmToLatLon(x, y) {
+  const nx = Number(x);
+  const ny = Number(y);
+  if (!nx || !ny || isNaN(nx) || isNaN(ny)) return null;
+  const [lon, lat] = proj4("EPSG:25830", "EPSG:4326", [nx, ny]);
+  return [lat, lon];
+}
 
 function stripBom(str) {
   return str.replace(/^\uFEFF/, "");
@@ -31,19 +45,14 @@ function parseCsv(file, delimiter = ";") {
 const PROVINCIAS = {
   "05": "Ávila",
   "09": "Burgos",
-  24: "León",
-  34: "Palencia",
-  37: "Salamanca",
-  40: "Segovia",
-  42: "Soria",
-  47: "Valladolid",
-  49: "Zamora",
+  "24": "León",
+  "34": "Palencia",
+  "37": "Salamanca",
+  "40": "Segovia",
+  "42": "Soria",
+  "47": "Valladolid",
+  "49": "Zamora",
 };
-
-const PROV_NAME_TO_CODE = {};
-for (const [k, v] of Object.entries(PROVINCIAS)) {
-  PROV_NAME_TO_CODE[normalize(v)] = k;
-}
 
 function normalize(str) {
   return (str || "")
@@ -52,6 +61,11 @@ function normalize(str) {
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/\s+/g, " ");
+}
+
+const PROV_NAME_TO_CODE = {};
+for (const [k, v] of Object.entries(PROVINCIAS)) {
+  PROV_NAME_TO_CODE[normalize(v)] = k;
 }
 
 function parseCoords(coordStr) {
@@ -63,11 +77,42 @@ function parseCoords(coordStr) {
   return null;
 }
 
-// 1. ZBS + municipios from atencion-primaria-recurso-urg.csv
-console.log("1. atencion-primaria-recurso-urg.csv...");
+// 1. Lista COMPLETA y oficial de municipios (nucleos_cyl_ine.csv)
+console.log("1. nucleos_cyl_ine.csv...");
+const nucleosData = parseCsv("nucleos_cyl_ine.csv");
+const municipiosMap = new Map();
+
+for (const row of nucleosData) {
+  const esCapitalMunicipio = normalize(row["capital_municipio"]) === "SI";
+  if (!esCapitalMunicipio) continue;
+
+  const municipio = (row["municipio"] || "").trim();
+  const provincia = (row["provincia"] || "").trim();
+  const codigoIne = (row["codigo_ine"] || "").trim();
+  if (!municipio) continue;
+
+  const key = normalize(municipio);
+  const provCode = PROV_NAME_TO_CODE[normalize(provincia)] || "";
+  const coords = utmToLatLon(row["coordenada_x"], row["coordenada_y"]);
+
+  if (!municipiosMap.has(key)) {
+    municipiosMap.set(key, {
+      nombre: municipio,
+      provincia: provCode,
+      provinciaNombre: provincia,
+      codigoIne,
+      coords,
+      zbs: [],
+      zbsNombres: [],
+    });
+  }
+}
+console.log(`   -> ${municipiosMap.size} municipios oficiales cargados`);
+
+// 2. ZBS + relleno de ZBS por municipio (atencion-primaria-recurso-urg.csv)
+console.log("2. atencion-primaria-recurso-urg.csv...");
 const urgData = parseCsv("atencion-primaria-recurso-urg.csv");
 const zbsMap = new Map();
-const municipiosMap = new Map();
 
 for (const row of urgData) {
   const zbsCode = (row["Codigo Zona"] || "").trim();
@@ -76,7 +121,6 @@ for (const row of urgData) {
   const provincia = (row["PROVINCIA"] || "").trim();
   const centro = (row["NOMBRE DE CENTRO DE GUARDIA"] || "").trim();
   const coords = parseCoords(row["COORDENADAS"]);
-  const horario = (row["HORARIO"] || "").trim();
   const direccion = (row["DIRECCION"] || "").trim();
   const localidad = (row["LOCALIDAD"] || "").trim();
   const codpostal = (row["CODPOSTAL"] || "").trim();
@@ -87,23 +131,20 @@ for (const row of urgData) {
   if (zbsCode && centro && zbsMap.has(zbsCode)) {
     const existing = zbsMap.get(zbsCode).centros;
     if (!existing.find((c) => c.nombre === centro)) {
-      existing.push({
-        nombre: centro,
-        coords,
-        direccion,
-        localidad,
-        codpostal,
-      });
+      existing.push({ nombre: centro, coords, direccion, localidad, codpostal });
     }
   }
+
   if (municipio && zbsCode) {
     const key = normalize(municipio);
-    const provCode = PROV_NAME_TO_CODE[normalize(provincia)] || '';
+    const provCode = PROV_NAME_TO_CODE[normalize(provincia)] || "";
+
     if (!municipiosMap.has(key)) {
       municipiosMap.set(key, {
         nombre: municipio,
         provincia: provCode,
         provinciaNombre: provincia,
+        coords: null,
         zbs: [zbsCode],
         zbsNombres: [zbsName],
       });
@@ -117,11 +158,9 @@ for (const row of urgData) {
   }
 }
 
-// 2. Consultorio-centro relationships
-console.log("2. dependencia-entre-consultorios-y-centros-de-salud.csv...");
-const depData = parseCsv(
-  "dependencia-entre-consultorios-y-centros-de-salud.csv",
-);
+// 2b. Consultorio-centro relationships
+console.log("2b. dependencia-entre-consultorios-y-centros-de-salud.csv...");
+const depData = parseCsv("dependencia-entre-consultorios-y-centros-de-salud.csv");
 const centrosMap = new Map();
 const consultorios = [];
 
@@ -140,26 +179,19 @@ for (const row of depData) {
 
 // 3. Health centers with coordinates
 console.log("3. registro-de-centros-sanitarios...");
-const centrosRaw = parseCsv(
-  "registro-de-centros-sanitarios-de-castilla-y-leon.csv",
-);
+const centrosRaw = parseCsv("registro-de-centros-sanitarios-de-castilla-y-leon.csv");
 const centrosSanitarios = [];
 
 for (const row of centrosRaw) {
   const nombre = (row["Nombre del Centro"] || "").trim();
-  const registro = (
-    row["Nº de Registro"] ||
-    row["N? de Registro"] ||
-    ""
-  ).trim();
+  const registro = (row["Nº de Registro"] || row["N? de Registro"] || "").trim();
   const direccion = (row["Dirección"] || row["Direccion"] || "").trim();
   const cp = (row["Código postal"] || row["Codigo postal"] || "").trim();
   const localidad = (row["Localidad"] || "").trim();
   const provincia = (row["Provincia"] || "").trim();
   const tipo = (row["Tipo de Centro"] || "").trim();
   const coords = parseCoords(row["Posición"] || row["Posicion"] || "");
- const provCode = PROV_NAME_TO_CODE[normalize(provincia)] || '';
-
+  const provCode = PROV_NAME_TO_CODE[normalize(provincia)] || "";
 
   if (nombre && provCode) {
     centrosSanitarios.push({
@@ -190,14 +222,7 @@ for (const row of farmaciasRaw) {
   const provCode = PROV_NAME_TO_CODE[normalize(provincia)] || "";
 
   if (municipio && provCode) {
-    farmacias.push({
-      nombre,
-      municipio,
-      cp,
-      provincia: provCode,
-      telefono,
-      direccion: calle,
-    });
+    farmacias.push({ nombre, municipio, cp, provincia: provCode, telefono, direccion: calle });
   }
 }
 
@@ -210,9 +235,7 @@ for (const row of busRaw) {
   const provincia = (row["PROVINCIA"] || "").trim();
   const municipio = (row["MUNICIPIOS*"] || "").trim();
   const direccion = (row["DIRECCIÓN"] || row["DIRECCION"] || "").trim();
-  const coords = parseCoords(
-    row["geolocalización"] || row["geolocalizacion"] || "",
-  );
+  const coords = parseCoords(row["geolocalización"] || row["geolocalizacion"] || "");
   const provCode = PROV_NAME_TO_CODE[normalize(provincia)] || "";
 
   if (municipio && provCode) {
@@ -232,12 +255,7 @@ for (const row of hospRaw) {
   const provCode = PROV_NAME_TO_CODE[normalize(provincia)] || "";
 
   if (hospital && provCode && !hospitalesMap.has(hospital)) {
-    hospitalesMap.set(hospital, {
-      nombre: hospital,
-      provincia: provCode,
-      provinciaNombre: provincia,
-      nivel,
-    });
+    hospitalesMap.set(hospital, { nombre: hospital, provincia: provCode, provinciaNombre: provincia, nivel });
   }
 }
 
@@ -247,59 +265,27 @@ const pobRaw = parseCsv("Poblacion_de_referencia_2026.csv");
 const poblacionByZbs = new Map();
 
 for (const row of pobRaw) {
-  const zbsCode = (
-    row["Zona Básica de Salud (Código)"] ||
-    row["Zona Basica de Salud (Codigo)"] ||
-    ""
-  ).trim();
-  const zbsName = (
-    row["Zona Básica de Salud"] ||
-    row["Zona Basica de Salud"] ||
-    ""
-  ).trim();
-  const ambito = (
-    row["Ámbito de procedencia"] ||
-    row["Ambito de procedencia"] ||
-    ""
-  ).trim();
+  const zbsCode = (row["Zona Básica de Salud (Código)"] || row["Zona Basica de Salud (Codigo)"] || "").trim();
+  const zbsName = (row["Zona Básica de Salud"] || row["Zona Basica de Salud"] || "").trim();
+  const ambito = (row["Ámbito de procedencia"] || row["Ambito de procedencia"] || "").trim();
   const area = (row["Área"] || row["Area"] || "").trim();
   const provincia = (row["Provincia"] || "").trim();
 
   if (zbsCode && !poblacionByZbs.has(zbsCode)) {
-    poblacionByZbs.set(zbsCode, {
-      codigo: zbsCode,
-      nombre: zbsName,
-      ambito,
-      area,
-      provincia: normalize(provincia),
-    });
+    poblacionByZbs.set(zbsCode, { codigo: zbsCode, nombre: zbsName, ambito, area, provincia: normalize(provincia) });
   }
 }
 
 // 8. Consultorio activity (real ZBS codes)
 console.log("8. Actividad_de_enfermeria...");
-const consultorioActivity = parseCsv(
-  "Actividad_de_enfermeria_a_nivel_de_consultorio_2026.csv",
-);
+const consultorioActivity = parseCsv("Actividad_de_enfermeria_a_nivel_de_consultorio_2026.csv");
 const consultorioCodes = new Map();
 
 for (const row of consultorioActivity) {
-  const codigo = (
-    row["Código Consultorio"] ||
-    row["Codigo Consultorio"] ||
-    ""
-  ).trim();
+  const codigo = (row["Código Consultorio"] || row["Codigo Consultorio"] || "").trim();
   const nombre = (row["Consultorio"] || "").trim();
-  const zbsCodigo = (
-    row["Código Zona Básica de Salud"] ||
-    row["Codigo Zona Basica de Salud"] ||
-    ""
-  ).trim();
-  const zbsNombre = (
-    row["Zona Básica de Salud"] ||
-    row["Zona Basica de Salud"] ||
-    ""
-  ).trim();
+  const zbsCodigo = (row["Código Zona Básica de Salud"] || row["Codigo Zona Basica de Salud"] || "").trim();
+  const zbsNombre = (row["Zona Básica de Salud"] || row["Zona Basica de Salud"] || "").trim();
 
   if (codigo && zbsCodigo && !consultorioCodes.has(codigo)) {
     consultorioCodes.set(codigo, { codigo, nombre, zbsCodigo, zbsNombre });
@@ -309,18 +295,16 @@ for (const row of consultorioActivity) {
 // BUILD OUTPUT
 console.log("\nBuilding comprehensive territorial.json...");
 
-// Merge all municipios
 for (const f of farmacias) {
   const key = normalize(f.municipio);
   if (!municipiosMap.has(key)) {
-    let zbsCode = "17" + f.provincia + "00";
-    let zbsName = "ZBS " + f.municipio;
     municipiosMap.set(key, {
       nombre: f.municipio,
       provincia: f.provincia,
       provinciaNombre: PROVINCIAS[f.provincia] || "",
-      codigoZbs: zbsCode,
-      zbsNombre: zbsName,
+      coords: null,
+      zbs: [],
+      zbsNombres: [],
     });
   }
 }
@@ -332,8 +316,9 @@ for (const b of estacionesBus) {
       nombre: b.municipio,
       provincia: b.provincia,
       provinciaNombre: PROVINCIAS[b.provincia] || "",
-      codigoZbs: "17" + b.provincia + "00",
-      zbsNombre: "ZBS " + b.municipio,
+      coords: null,
+      zbs: [],
+      zbsNombres: [],
     });
   }
 }
@@ -367,9 +352,5 @@ const output = {
   poblacion: Array.from(poblacionByZbs.values()),
 };
 
-writeFileSync(
-  join(OUT, "territorial.json"),
-  JSON.stringify(output, null, 2),
-  "utf8",
-);
+writeFileSync(join(OUT, "territorial.json"), JSON.stringify(output, null, 2), "utf8");
 console.log("Done!", JSON.stringify(output.stats));

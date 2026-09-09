@@ -14,7 +14,8 @@
   "dependencies": {
     "astro": "^7.2.9",
     "autoprefixer": "^10.5.4",
-    "postcss": "^8.5.26"
+    "postcss": "^8.5.26",
+    "proj4": "^2.22.0"
   },
   "allowScripts": {
     "esbuild": true

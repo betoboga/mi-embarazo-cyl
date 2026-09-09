@@ -12,7 +12,7 @@ import {
 } from "../data/repository";
 ---
 
-<Layout title="Tu zona sanitaria - Mi Embarazo CYL">
+<Layout title="Tu zona sanitaria - CyLMaterna">
   <Header />
   <main class="flex-1 max-w-3xl mx-auto px-4 py-8 sm:py-12 w-full">
     <div id="noState" class="hidden">
@@ -345,56 +345,120 @@ import {
     }
     provinciaBlock.classList.remove("hidden");
 
-  // MAPA (solo recursos con coordenadas reales: centros de salud/hospital y estaciones de bus)
-const mapaBlock = document.getElementById("mapaBlock") as HTMLElement;
-const puntosMapa: Array<{ lat: number; lon: number; nombre: string; tipo: string; detalle: string }> = [];
+    // MAPA (solo recursos con coordenadas reales: centros de salud/hospital y estaciones de bus)
+    const mapaBlock = document.getElementById("mapaBlock") as HTMLElement;
+    const puntosMapa: Array<{
+      lat: number;
+      lon: number;
+      nombre: string;
+      tipo: string;
+      detalle: string;
+    }> = [];
 
-for (const c of centrosResult.centros) {
-  if (c.coords) {
-    puntosMapa.push({ lat: c.coords[0], lon: c.coords[1], nombre: c.nombre, tipo: "centro", detalle: c.tipo || "" });
-  }
-}
-for (const e of estaciones) {
-  if (e.coords) {
-    puntosMapa.push({ lat: e.coords[0], lon: e.coords[1], nombre: "Estación de autobuses", tipo: "estacion", detalle: e.direccion || "" });
-  }
-}
+    for (const c of centrosResult.centros) {
+      if (c.coords) {
+        puntosMapa.push({
+          lat: c.coords[0],
+          lon: c.coords[1],
+          nombre: c.nombre,
+          tipo: "centro",
+          detalle: c.tipo || "",
+        });
+      }
+    }
+    for (const e of estaciones) {
+      if (e.coords) {
+        puntosMapa.push({
+          lat: e.coords[0],
+          lon: e.coords[1],
+          nombre: "Estación de autobuses",
+          tipo: "estacion",
+          detalle: e.direccion || "",
+        });
+      }
+    }
 
-if (puntosMapa.length > 0) {
-  mapaBlock.classList.remove("hidden");
+    // Límite razonable para que el mapa no se sature si el fallback
+    // llega a nivel provincia con muchos centros
+    const LIMITE_MAPA = 60;
+    const puntosMapaVisibles = puntosMapa.slice(0, LIMITE_MAPA);
 
-  const link = document.createElement("link");
-  link.rel = "stylesheet";
-  link.href = "https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css";
-  document.head.appendChild(link);
+    if (puntosMapaVisibles.length > 0) {
+      mapaBlock.classList.remove("hidden");
 
-  const script = document.createElement("script");
-  script.src = "https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js";
-  script.onload = () => {
-    const mapEl = document.getElementById("map") as HTMLElement;
-    const mapa = new (window as any).maplibregl.Map({
-      container: mapEl,
-      center: [puntosMapa[0].lon, puntosMapa[0].lat],
-      zoom: 12,
-      style: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json",
-    });
-    mapa.addControl(new (window as any).maplibregl.NavigationControl(), "top-right");
+      if (puntosMapa.length > LIMITE_MAPA) {
+        const aviso = document.createElement("p");
+        aviso.className = "text-xs text-muted mb-2";
+        aviso.textContent = `Mostrando ${LIMITE_MAPA} de ${puntosMapa.length} puntos en el mapa.`;
+        mapaBlock.insertBefore(aviso, document.getElementById("map"));
+      }
 
-    puntosMapa.forEach((p) => {
-      const color = p.tipo === "centro" ? "#0f766e" : "#2563eb";
-      const el = document.createElement("div");
-      el.style.cssText = `width:14px;height:14px;background:${color};border:2px solid white;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,0.35);cursor:pointer;`;
-      new (window as any).maplibregl.Marker({ element: el })
-        .setLngLat([p.lon, p.lat])
-        .setPopup(
-          new (window as any).maplibregl.Popup({ offset: 14 }).setHTML(
-            `<p style="font-weight:600;margin:0 0 2px">${escapeHtml(p.nombre)}</p><p style="font-size:12px;color:#64748b;margin:0">${escapeHtml(p.detalle)}</p>`
-          )
-        )
-        .addTo(mapa);
-    });
-  };
-  document.body.appendChild(script);
-}
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = "https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css";
+      document.head.appendChild(link);
+
+      const script = document.createElement("script");
+      script.src = "https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js";
+      script.onload = () => {
+        const maplibregl = (window as any).maplibregl;
+        const mapEl = document.getElementById("map") as HTMLElement;
+
+        const mapa = new maplibregl.Map({
+          container: mapEl,
+          style: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json",
+          center: [puntosMapaVisibles[0].lon, puntosMapaVisibles[0].lat],
+          zoom: 11,
+        });
+        mapa.addControl(new maplibregl.NavigationControl(), "top-right");
+
+        const bounds = new maplibregl.LngLatBounds();
+
+        puntosMapaVisibles.forEach((p) => {
+          bounds.extend([p.lon, p.lat]);
+
+          const esCentro = p.tipo === "centro";
+          const color = esCentro ? "#0f766e" : "#2563eb";
+          const icono = esCentro ? "🏥" : "🚌";
+
+          const el = document.createElement("div");
+          el.style.cssText = `
+            width: 30px; height: 30px;
+            background: ${color};
+            border: 2px solid white;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.35);
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+          `;
+          const iconoSpan = document.createElement("span");
+          iconoSpan.textContent = icono;
+          iconoSpan.style.cssText = "transform: rotate(45deg); font-size: 14px;";
+          el.appendChild(iconoSpan);
+
+          const comoLlegarUrl = `https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lon}`;
+          const popupHtml = `
+            <div style="min-width:180px">
+              <p style="font-weight:600;margin:0 0 2px">${escapeHtml(p.nombre)}</p>
+              <p style="font-size:12px;color:#64748b;margin:0 0 8px">${escapeHtml(p.detalle)}</p>
+              <a href="${comoLlegarUrl}" target="_blank" rel="noopener"
+                 style="font-size:12px;font-weight:600;color:${color};text-decoration:none">
+                📍 Cómo llegar
+              </a>
+            </div>`;
+
+          new maplibregl.Marker({ element: el, anchor: "bottom" })
+            .setLngLat([p.lon, p.lat])
+            .setPopup(new maplibregl.Popup({ offset: 20 }).setHTML(popupHtml))
+            .addTo(mapa);
+        });
+
+        if (puntosMapaVisibles.length > 1) {
+          mapa.fitBounds(bounds, { padding: 50, maxZoom: 14 });
+        }
+      };
+      document.body.appendChild(script);
+    }
   }
 </script>

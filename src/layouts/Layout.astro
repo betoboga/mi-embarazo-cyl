@@ -6,7 +6,7 @@ interface Props {
   description?: string;
 }
 
-const { title = 'Mi Embarazo CYL', description = 'Descubre los recursos sanitarios y territoriales que tienes cerca durante tu embarazo en Castilla y Leon.' } = Astro.props;
+const { title = 'CyLMaterna', description = 'Descubre los recursos sanitarios y territoriales que tienes cerca durante tu embarazo en Castilla y Leon.' } = Astro.props;
 ---
 <!DOCTYPE html>
 <html lang="es">
@@ -20,7 +20,7 @@ const { title = 'Mi Embarazo CYL', description = 'Descubre los recursos sanitari
     <title>{title}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   </head>
   <body class="min-h-screen flex flex-col">
     <slot />
