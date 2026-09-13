@@ -73,15 +73,15 @@ export const pregnancyMilestones = [
   {
     weekStart: 37,
     weekEnd: 40,
-    title: 'Termino del embarazo',
+    title: 'Término del embarazo',
     description: 'Se considera que el embarazo a término comienza en la semana 37. El bebé está completamente desarrollado y listo para nacer. Mantén contacto constante con tu profesional sanitario.',
     category: 'bienestar'
   },
   {
     weekStart: 41,
     weekEnd: 42,
-    title: 'Semanas post termino',
-    description: 'Si el embarazo llega a la semana 42, se considera post termino. El equipo médico realizará seguimiento cercano. Se pueden considerar intervenciones para inducir el parto.',
+    title: 'Semanas post término',
+    description: 'Si el embarazo llega a la semana 42, se considera post término. El equipo médico realizará seguimiento cercano. Se pueden considerar intervenciones para inducir el parto.',
     category: 'bienestar'
   }
 ];

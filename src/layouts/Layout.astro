@@ -1,23 +1,31 @@
 ---
 import '../styles/global.css';
+import { arabicTranslations } from '../data/i18n';
 
 interface Props {
   title?: string;
   description?: string;
 }
 
-const { title = 'CyLMaterna', description = 'Descubre los recursos sanitarios y territoriales que tienes cerca durante tu embarazo en Castilla y Leon.' } = Astro.props;
+const { title = 'CyLMaterna', description = 'Descubre los recursos sanitarios y territoriales que tienes cerca durante tu embarazo en Castilla y León.' } = Astro.props;
+const isArabic = Astro.url.pathname.startsWith('/ar');
+const spanishPath = isArabic ? Astro.url.pathname.replace(/^\/ar/, '') || '/' : Astro.url.pathname;
+const arabicPath = `/ar${spanishPath === '/' ? '/' : spanishPath}`;
+const localizedTitle = isArabic ? arabicTranslations[title] ?? title : title;
+const localizedDescription = isArabic ? arabicTranslations[description] ?? description : description;
 ---
 <!DOCTYPE html>
-<html lang="es">
+<html lang={isArabic ? 'ar' : 'es'} dir={isArabic ? 'rtl' : 'ltr'}>
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content={description} />
+    <meta name="description" content={localizedDescription} />
     <meta name="generator" content={Astro.generator} />
-    <title>{title}</title>
+    <link rel="alternate" hreflang="es" href={spanishPath} />
+    <link rel="alternate" hreflang="ar" href={arabicPath} />
+    <title>{localizedTitle}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -26,3 +34,8 @@ const { title = 'CyLMaterna', description = 'Descubre los recursos sanitarios y 
     <slot />
   </body>
 </html>
+
+<script>
+  import { localizePage } from '../data/i18n';
+  localizePage();
+</script>

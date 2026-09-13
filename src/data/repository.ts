@@ -23,6 +23,38 @@ const TIPOS_CENTRO_RELEVANTES = [
 ];
 
 /**
+ * Distancia en km entre dos puntos [lat, lon] (fórmula de Haversine).
+ */
+function distanciaKm(a: [number, number], b: [number, number]): number {
+  const R = 6371;
+  const dLat = ((b[0] - a[0]) * Math.PI) / 180;
+  const dLon = ((b[1] - a[1]) * Math.PI) / 180;
+  const lat1 = (a[0] * Math.PI) / 180;
+  const lat2 = (b[0] * Math.PI) / 180;
+  const h =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+
+/**
+ * Ordena una lista de centros por cercanía real al origen dado,
+ * si el origen tiene coordenadas. Si no las tiene, no reordena
+ * (no podemos afirmar cercanía sin datos).
+ */
+function ordenarPorCercania(
+  centros: CentroSalud[],
+  origen: [number, number] | null | undefined
+): CentroSalud[] {
+  if (!origen) return centros;
+  return [...centros]
+    .filter((c) => c.coords)
+    .map((c) => ({ c, d: distanciaKm(origen, c.coords as [number, number]) }))
+    .sort((a, b) => a.d - b.d)
+    .map((x) => x.c);
+}
+
+/**
  * Devuelve el código ZBS (o códigos) asociados a un municipio.
  */
 export function obtenerZbsMunicipio(municipioNombre: string): { codigos: string[], nombres: string[] } | undefined {
@@ -169,15 +201,18 @@ export function obtenerFarmaciasConFallback(municipioNombre: string): { farmacia
 }
 
 /**
- * Centros de salud relevantes del municipio (por localidad), o si no
- * hay ninguno, de otros municipios de la misma ZBS, o si tampoco,
- * los de la provincia (nivel actual).
+ * Centros de salud relevantes del municipio (por localidad), ordenados
+ * por cercanía real cuando hay coordenadas del municipio. Si no hay
+ * ninguno propio, busca en otros municipios de la misma ZBS, o si
+ * tampoco, cae a los de la provincia — siempre ordenados por cercanía
+ * si es posible.
  */
 export function obtenerCentrosConFallback(
   municipioNombre: string,
   provCodigo: string
 ): { centros: CentroSalud[], nivel: 'municipio' | 'zona' | 'provincia' } {
   const nMunicipio = normalize(municipioNombre);
+  const origen = obtenerMunicipio(municipioNombre)?.coords || null;
 
   const propios = centrosList.filter(
     c => normalize(c.localidad || '') === nMunicipio &&
@@ -185,7 +220,7 @@ export function obtenerCentrosConFallback(
          TIPOS_CENTRO_RELEVANTES.includes((c.tipo || '').trim())
   );
   if (propios.length > 0) {
-    return { centros: propios, nivel: 'municipio' };
+    return { centros: ordenarPorCercania(propios, origen), nivel: 'municipio' };
   }
 
   const vecinos = obtenerMunicipiosMismaZbs(municipioNombre);
@@ -197,9 +232,9 @@ export function obtenerCentrosConFallback(
            TIPOS_CENTRO_RELEVANTES.includes((c.tipo || '').trim())
     );
     if (deZona.length > 0) {
-      return { centros: deZona, nivel: 'zona' };
+      return { centros: ordenarPorCercania(deZona, origen), nivel: 'zona' };
     }
   }
 
-  return { centros: obtenerCentrosProvincia(provCodigo), nivel: 'provincia' };
+  return { centros: ordenarPorCercania(obtenerCentrosProvincia(provCodigo), origen), nivel: 'provincia' };
 }

@@ -85,6 +85,40 @@ import {
           <div id="zbsList" class="space-y-2"></div>
         </div>
 
+        <section
+          id="guiaSinZbs"
+          class="bg-secondary-light border border-secondary/20 rounded-xl p-6 sm:p-8 hidden"
+          aria-labelledby="guiaSinZbsTitulo"
+        >
+          <h2
+            id="guiaSinZbsTitulo"
+            class="text-lg font-semibold text-fg mb-3"
+          >
+            No hemos encontrado una Zona Básica de Salud asignada
+          </h2>
+          <p class="text-sm text-muted leading-relaxed mb-5">
+            No te preocupes. Puedes seguir estos pasos para saber dónde acudir
+            durante tu embarazo:
+          </p>
+          <ol class="space-y-4 text-sm text-fg">
+            <li class="flex gap-3">
+              <span class="flex-none w-7 h-7 rounded-full bg-secondary text-white inline-flex items-center justify-center font-semibold">1</span>
+              <span><strong>Consulta el mapa:</strong> localiza el centro de salud o consultorio más cercano a tu municipio.</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="flex-none w-7 h-7 rounded-full bg-secondary text-white inline-flex items-center justify-center font-semibold">2</span>
+              <span><strong>Contacta con el centro:</strong> pregunta por la matrona y explica que estás embarazada para que te indiquen cómo pedir cita.</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="flex-none w-7 h-7 rounded-full bg-secondary text-white inline-flex items-center justify-center font-semibold">3</span>
+              <span><strong>Prepara tu documentación:</strong> lleva tu tarjeta sanitaria y, si la tienes, la información de tu embarazo.</span>
+            </li>
+          </ol>
+          <p class="mt-5 pt-4 border-t border-secondary/20 text-sm text-muted leading-relaxed">
+            Si tienes una urgencia médica, llama al <strong class="text-fg">112</strong> o acude al servicio de urgencias más cercano.
+          </p>
+        </section>
+
         <div
           id="mapaBlock"
           class="bg-card border border-border rounded-xl p-6 sm:p-8 hidden"
@@ -109,6 +143,11 @@ import {
               ><span
                 class="w-2.5 h-2.5 rounded-full inline-block"
                 style="background:#2563eb"></span> Estaciones de autobús</span
+            >
+            <span class="inline-flex items-center gap-1.5"
+              ><span
+                class="w-2.5 h-2.5 rounded-full inline-block"
+                style="background:#dc2626"></span> Tu ubicación</span
             >
           </div>
         </div>
@@ -206,6 +245,7 @@ import {
     "municipioBlock",
   ) as HTMLElement;
   const zbsBlock = document.getElementById("zbsBlock") as HTMLElement;
+  const guiaSinZbs = document.getElementById("guiaSinZbs") as HTMLElement;
   const provinciaBlock = document.getElementById(
     "provinciaBlock",
   ) as HTMLElement;
@@ -239,9 +279,8 @@ import {
     // FARMACIAS (con fallback a la ZBS si el municipio no tiene ninguna)
     const farmResult = obtenerFarmaciasConFallback(munNombre);
     const farmacias = farmResult.farmacias;
-    if (farmacias.length === 0) {
-      farmaciasList.innerHTML = `<p class="text-sm text-muted">No hay farmacias registradas en tu municipio ni en tu zona.</p>`;
-    } else {
+    const estaciones = obtenerEstacionesMunicipio(munNombre);
+    if (farmacias.length > 0) {
       const aviso =
         farmResult.nivel === "zona"
           ? `<p class="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg p-3 mb-3">No hay farmacias en tu municipio. Estas son las más cercanas dentro de tu Zona Básica de Salud:</p>`
@@ -270,16 +309,15 @@ import {
         });
       }
     }
-    municipioBlock.classList.remove("hidden");
 
     // ESTACIONES DE BUS (sin campo nombre propio en los datos)
-    const estaciones = obtenerEstacionesMunicipio(munNombre);
-    if (estaciones.length === 0) {
-      estacionesList.innerHTML = `<p class="text-sm text-muted">No hay estaciones de autobús registradas en tu municipio.</p>`;
-    } else {
+    if (estaciones.length > 0) {
       estacionesList.innerHTML = estaciones
         .map((e) => tarjeta("Estación de autobuses", [e.direccion]))
         .join("");
+    }
+    if (farmacias.length > 0 || estaciones.length > 0) {
+      municipioBlock.classList.remove("hidden");
     }
 
     // ZBS (sin cambios respecto a lo que ya funcionaba)
@@ -291,10 +329,10 @@ import {
           return `<div class="bg-white p-2 rounded mb-1 text-sm"><strong>${code}</strong>: ${escapeHtml(name)}</div>`;
         })
         .join("");
+      zbsBlock.classList.remove("hidden");
     } else {
-      zbsList.innerHTML = `<p class="text-sm text-muted">No disponible</p>`;
+      guiaSinZbs.classList.remove("hidden");
     }
-    zbsBlock.classList.remove("hidden");
 
     // PROVINCIA
     const municipioObj = obtenerMunicipio(munNombre);
@@ -347,6 +385,13 @@ import {
 
     // MAPA (solo recursos con coordenadas reales: centros de salud/hospital y estaciones de bus)
     const mapaBlock = document.getElementById("mapaBlock") as HTMLElement;
+
+    // Caja delimitadora aproximada de Castilla y León (con margen).
+    // Cualquier coordenada fuera de esto es un dato corrupto del CSV
+    // (p.ej. lat/lon invertidos) y se descarta en vez de mostrarse mal.
+    const dentroDeCyL = (lat: number, lon: number) =>
+      lat >= 39.5 && lat <= 43.5 && lon >= -7.5 && lon <= -1.5;
+
     const puntosMapa: Array<{
       lat: number;
       lon: number;
@@ -355,8 +400,20 @@ import {
       detalle: string;
     }> = [];
 
+    console.log(
+      "DEBUG centros con coords:",
+      centrosResult.centros.filter((c) => c.coords).length,
+      "ejemplo:",
+      centrosResult.centros.find((c) => c.coords)?.coords,
+    );
+    console.log(
+      "DEBUG estaciones con coords:",
+      estaciones.filter((e) => e.coords).length,
+      "ejemplo:",
+      estaciones.find((e) => e.coords)?.coords,
+    );
     for (const c of centrosResult.centros) {
-      if (c.coords) {
+      if (c.coords && dentroDeCyL(c.coords[0], c.coords[1])) {
         puntosMapa.push({
           lat: c.coords[0],
           lon: c.coords[1],
@@ -367,7 +424,7 @@ import {
       }
     }
     for (const e of estaciones) {
-      if (e.coords) {
+      if (e.coords && dentroDeCyL(e.coords[0], e.coords[1])) {
         puntosMapa.push({
           lat: e.coords[0],
           lon: e.coords[1],
@@ -378,10 +435,40 @@ import {
       }
     }
 
-    // Límite razonable para que el mapa no se sature si el fallback
-    // llega a nivel provincia con muchos centros
     const LIMITE_MAPA = 60;
-    const puntosMapaVisibles = puntosMapa.slice(0, LIMITE_MAPA);
+/*     const puntosMapaVisibles = puntosMapa.slice(0, LIMITE_MAPA);
+    console.log(
+      "DEBUG puntosMapa:",
+      puntosMapa.length,
+      "visibles:",
+      puntosMapaVisibles.length,
+    ); */
+        const origenMarcador = municipioObj?.coords || null;
+
+    function distanciaKmMapa(a: [number, number], b: [number, number]): number {
+      const R = 6371;
+      const dLat = ((b[0] - a[0]) * Math.PI) / 180;
+      const dLon = ((b[1] - a[1]) * Math.PI) / 180;
+      const lat1 = (a[0] * Math.PI) / 180;
+      const lat2 = (b[0] * Math.PI) / 180;
+      const h = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) ** 2;
+      return 2 * R * Math.asin(Math.sqrt(h));
+    }
+
+    let puntosMapaVisibles = puntosMapa;
+    if (origenMarcador) {
+      const RADIO_KM = 20;
+      const conDistancia = puntosMapa
+        .map((p) => ({ p, d: distanciaKmMapa(origenMarcador, [p.lat, p.lon]) }))
+        .sort((a, b) => a.d - b.d);
+
+      const dentroDelRadio = conDistancia.filter((x) => x.d <= RADIO_KM);
+      // Si dentro del radio no hay ninguno (zona muy despoblada), al menos
+      // muestra los 5 más cercanos que haya, aunque estén más lejos.
+      puntosMapaVisibles = (dentroDelRadio.length > 0 ? dentroDelRadio : conDistancia.slice(0, 5)).map((x) => x.p);
+    } else {
+      puntosMapaVisibles = puntosMapa.slice(0, 60);
+    }
 
     if (puntosMapaVisibles.length > 0) {
       mapaBlock.classList.remove("hidden");
@@ -401,18 +488,58 @@ import {
       const script = document.createElement("script");
       script.src = "https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js";
       script.onload = () => {
+        console.log(
+          "DEBUG maplibre cargado:",
+          typeof (window as any).maplibregl,
+        );
         const maplibregl = (window as any).maplibregl;
         const mapEl = document.getElementById("map") as HTMLElement;
 
         const mapa = new maplibregl.Map({
           container: mapEl,
-          style: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json",
-          center: [puntosMapaVisibles[0].lon, puntosMapaVisibles[0].lat],
-          zoom: 11,
+          style: {
+            version: 8,
+            sources: {
+              satelite: {
+                type: "raster",
+                tiles: [
+                  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+                ],
+                tileSize: 256,
+                attribution: "Tiles © Esri",
+              },
+            },
+            layers: [{ id: "satelite", type: "raster", source: "satelite" }],
+          },
+          center: origenMarcador
+            ? [origenMarcador[1], origenMarcador[0]]
+            : [puntosMapaVisibles[0].lon, puntosMapaVisibles[0].lat],
+          zoom: 14,
         });
         mapa.addControl(new maplibregl.NavigationControl(), "top-right");
 
         const bounds = new maplibregl.LngLatBounds();
+        if (origenMarcador) {
+          bounds.extend([origenMarcador[1], origenMarcador[0]]);
+
+          const elOrigen = document.createElement("div");
+          elOrigen.style.cssText = `
+            width: 22px; height: 22px;
+            background: #dc2626;
+            border: 3px solid white;
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px rgba(220,38,38,0.25), 0 2px 6px rgba(0,0,0,0.4);
+          `;
+
+          new maplibregl.Marker({ element: elOrigen, anchor: "center" })
+            .setLngLat([origenMarcador[1], origenMarcador[0]])
+            .setPopup(
+              new maplibregl.Popup({ offset: 14 }).setHTML(
+                `<p style="font-weight:600;margin:0">${escapeHtml(munNombre)}</p><p style="font-size:12px;color:#64748b;margin:0">Tu ubicación</p>`,
+              ),
+            )
+            .addTo(mapa);
+        }
 
         puntosMapaVisibles.forEach((p) => {
           bounds.extend([p.lon, p.lat]);
@@ -428,13 +555,14 @@ import {
             border: 2px solid white;
             border-radius: 50% 50% 50% 0;
             transform: rotate(-45deg);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.35);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
             cursor: pointer;
             display: flex; align-items: center; justify-content: center;
           `;
           const iconoSpan = document.createElement("span");
           iconoSpan.textContent = icono;
-          iconoSpan.style.cssText = "transform: rotate(45deg); font-size: 14px;";
+          iconoSpan.style.cssText =
+            "transform: rotate(45deg); font-size: 14px;";
           el.appendChild(iconoSpan);
 
           const comoLlegarUrl = `https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lon}`;
@@ -455,7 +583,10 @@ import {
         });
 
         if (puntosMapaVisibles.length > 1) {
-          mapa.fitBounds(bounds, { padding: 50, maxZoom: 14 });
+          console.log("DEBUG primeros 5 puntos:", puntosMapaVisibles.slice(0, 5).map(p => `${p.nombre}: [${p.lat}, ${p.lon}]`));
+if (origenMarcador) console.log("DEBUG origen (Tormellas):", origenMarcador);
+console.log("DEBUG primeros 5 puntos:", JSON.stringify(puntosMapaVisibles.slice(0, 5).map(p => ({nombre: p.nombre, lat: p.lat, lon: p.lon}))));
+          mapa.fitBounds(bounds, { padding: 15, maxZoom: 19 });
         }
       };
       document.body.appendChild(script);

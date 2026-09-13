@@ -105,6 +105,6 @@ export function normalize(str: string): string {
 }
 
 export const PROVINCIAS: Record<string, string> = {
-  '05': 'Avila', '09': 'Burgos', '24': 'Leon', '34': 'Palencia',
+  '05': 'Ávila', '09': 'Burgos', '24': 'León', '34': 'Palencia',
   '37': 'Salamanca', '40': 'Segovia', '42': 'Soria', '47': 'Valladolid', '49': 'Zamora'
 };

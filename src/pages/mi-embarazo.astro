@@ -9,12 +9,155 @@ import PregnancyNextSteps from '../components/PregnancyNextSteps.astro';
   <main class="flex-1 max-w-3xl mx-auto px-4 py-8 sm:py-12 w-full">
     <div class="mb-8">
       <h1 class="text-2xl sm:text-3xl font-bold text-fg mb-2">Tu embarazo</h1>
-      <p class="text-muted" id="pageSubtitle">Cuentanos un poco sobre tu embarazo.</p>
+      <p class="text-muted" id="pageSubtitle">Cuéntanos un poco sobre tu embarazo.</p>
     </div>
+
+    <section class="bg-card border-2 border-primary/20 rounded-xl p-6 sm:p-8 mb-8" aria-labelledby="signos-sintomas-alarma-title">
+      <div class="flex items-start gap-3 mb-6">
+        <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0" aria-hidden="true">
+          <svg class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86l-8.1 14a2 2 0 001.73 3h16.16a2 2 0 001.73-3l-8.1-14a2 2 0 00-3.46 0z" />
+          </svg>
+        </div>
+        <div>
+          <h2 id="signos-sintomas-alarma-title" class="text-xl sm:text-2xl font-bold text-fg">Signos y síntomas de alarma</h2>
+          <p class="text-muted mt-1">Durante el embarazo, ciertos síntomas pueden indicar complicaciones y requieren de atención médica.</p>
+        </div>
+      </div>
+
+      <div class="space-y-7 text-fg leading-relaxed">
+        <div>
+          <h3 class="text-lg font-semibold text-fg mb-3">Síntomas que requieren atención médica</h3>
+          <ul class="list-disc pl-5 space-y-2">
+            <li><strong>Sangrado vaginal:</strong> un leve manchado puede ser normal, pero ante un sangrado abundante acompañado de dolor es importante acudir a urgencias hospitalarias, especialmente durante el tercer trimestre.</li>
+            <li>Dolor abdominal intenso o persistente.</li>
+            <li>Fiebre (temperatura superior a 38º)</li>
+            <li>Dolor de cabeza intenso y cambios en la visión</li>
+            <li>Mareos desmayos o pérdida de conciencia</li>
+            <li>Hinchazón súbita de manos, cara o pies, especialmente si se acompaña de dolor de cabeza o cambios en la visión.</li>
+            <li>Disminución de movimientos fetales, a partir de la semana 20.</li>
+            <li>Contracciones regulares o dolorosas antes de la semana 37</li>
+            <li>Vómitos incontrolables persistentes</li>
+            <li>Sensación de pérdida de líquido</li>
+            <li>Pensamientos acerca de hacerse daños o hacerle daño al bebé</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-semibold text-fg mb-3">A partir de la semana 37:</h3>
+          <ul class="list-disc pl-5 space-y-3">
+            <li>
+              <span>Contracciones</span>
+              <ul class="list-[circle] pl-5 mt-2 space-y-2">
+                <li><strong>Si es mi primer hijo:</strong> regulares cada 3-4 minutos, que duran entre 30 y 60 segundos y que no ceden tras al menos 1 hora.</li>
+                <li><strong>Si ya he tenido un parto o más:</strong> cuando sean regulares cada 3-4 minutos y no ceden, especialmente si aumentan de intensidad o si tardo 1h o más en llegar al hospital de referencia.</li>
+              </ul>
+            </li>
+            <li>
+              <span>Si noto pérdida de líquido --&gt; observo el color del líquido:</span>
+              <ul class="list-[circle] pl-5 mt-2 space-y-2">
+                <li><strong>Líquido claro/transparente:</strong> preparo las cosas y voy tranquilamente al hospital</li>
+                <li><strong>Líquido verde, marrón o mal olor:</strong> debo ir con urgencia al hospital</li>
+              </ul>
+            </li>
+            <li>Si se mueve menos de lo normal o no se mueve</li>
+            <li>Si sangrado vaginal (ligero flujo o moco sanguinolento es normal)</li>
+          </ul>
+        </div>
+
+        <div class="bg-primary-light border-l-4 border-primary rounded-r-lg p-4 sm:p-5">
+          <p>Recuerda que debes conocer tu fecha de última regla y si tu embarazo tiene algún factor de riesgo para poder facilitar la atención.</p>
+        </div>
+
+        <div class="space-y-3">
+          <p>Intenta planificar el traslado al hospital con antelación, sobre todo si vives en una zona rural y recuerda llevar tu documentación médica (especialmente si te has controlado el embarazo en otro hospital).</p>
+          <p>En caso de haber llevado el control en el extranjero, nos sería especialmente útil tener los informes impresos y traducidos.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="atencion-embarazo" class="bg-card border-2 border-secondary/20 rounded-xl p-6 sm:p-8 mb-8" aria-labelledby="atencion-embarazo-heading">
+      <div class="flex items-start gap-3 mb-6">
+        <div class="w-10 h-10 rounded-lg bg-secondary-light flex items-center justify-center shrink-0" aria-hidden="true">
+          <svg class="w-5 h-5 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-3-3v6m8-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <div>
+          <h2 id="atencion-embarazo-heading" class="text-xl sm:text-2xl font-bold text-fg">Atención y seguimiento del embarazo</h2>
+          <p class="text-muted mt-1">El proceso de atención al embarazo desde atención primaria actualmente se desarrolla con un enfoque multidisciplinar, centrado en las necesidades de la mujer, la familia y garantizando la continuidad en la asistencia.</p>
+        </div>
+      </div>
+
+      <div class="space-y-7 text-fg leading-relaxed">
+        <p>El seguimiento del embarazo se lleva a cabo entre atención primaria y atención especializada, con los compañeros ginecólogos en el hospital. Además, se irán realizando varios controles analíticos durante el embarazo.</p>
+
+        <div>
+          <h3 class="text-lg font-semibold text-fg mb-3">Consulta preconcepcional</h3>
+          <div class="space-y-3">
+            <p>Acudir a la consulta de la matrona si se está <strong>planeando</strong> embarazo es ideal para conocer su estado de salud previo, la existencia de enfermedades que requieran un control adecuado e iniciar acciones de educación sanitaria.</p>
+            <p>Se deben iniciar medidas de prevención de los defectos del tubo neural entre 3-4 meses <strong>antes</strong> de la concepción (toma de <strong>ácido fólico y yodo</strong>).</p>
+            <p>El objetivo de esta consulta es prevenir las complicaciones y un mejor desarrollo del embarazo.</p>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-semibold text-fg mb-3">Primera consulta de la matrona</h3>
+          <p><strong>¿Cuándo?</strong> En cuanto te enteras de que estás embarazada.</p>
+          <p class="mt-3">El resto de las consultas serán citadas por tu matrona correspondiente.</p>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-semibold text-fg mb-3">Citas en la consulta de Obstetricia (en el hospital)</h3>
+          <div class="space-y-3">
+            <p>En embarazos de bajo riesgo se llevarán a cabo tres ecografías, su asistencia es de vital importancia.</p>
+            <p>Sin olvidar las analíticas de control.</p>
+            <p>Si has empezado a controlar el embarazo tarde y vienes de hacerlo en otro centro, contacta cuanto antes con la matrona de tu centro de salud.</p>
+            <p>Además puedes consultar en cualquier momento con tu matrona información sobre clases de educación maternal, prenatal y clases de preparación al parto.</p>
+          </div>
+        </div>
+
+        <div class="bg-secondary-light border-l-4 border-secondary rounded-r-lg p-4 sm:p-5">
+          <p class="mb-4">Para conocer detalladamente cuál va a ser el seguimiento de tu embarazo ponte en contacto con tu matrona de referencia.</p>
+          <a href="/donde-vive" class="inline-flex items-center justify-center gap-2 bg-secondary hover:bg-primary-dark text-white font-medium px-5 py-3 rounded-xl transition-colors no-underline focus-visible:outline-3 focus-visible:outline-secondary focus-visible:outline-offset-3">
+            ¿Cuál es mi matrona de referencia?
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="site" class="bg-card border-2 border-primary/20 rounded-xl p-6 sm:p-8 mb-8" aria-labelledby="site-heading">
+      <div class="flex items-start gap-3 mb-6">
+        <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0" aria-hidden="true">
+          <svg class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9.247a4.75 4.75 0 117.544 0M12 14v.01M12 18h.01M5.636 5.636l-.707-.707m14.142.707l.707-.707M12 2v1" />
+          </svg>
+        </div>
+        <div>
+          <h2 id="site-heading" class="text-xl sm:text-2xl font-bold text-fg">¿Has estado en contacto con sustancias peligrosas o factores de riesgo?</h2>
+          <p class="text-muted mt-1">Servicio de Información Telefónica para la Embarazada (SITE)</p>
+        </div>
+      </div>
+
+      <div class="space-y-5 text-fg leading-relaxed">
+        <p>El <strong>SITE</strong> es un servicio de información sobre factores de riesgo para el desarrollo del niño antes del nacimiento.</p>
+        <p>Las embarazadas pueden recibir información telefónica llamando al teléfono <a href="tel:918222436" class="font-bold text-primary hover:text-primary-dark underline underline-offset-2">91 822 24 36</a>, en <strong>horario de 9 a 15 horas de lunes a viernes</strong>.</p>
+        <p>Serán atendidas por médicos especialistas pertenecientes al grupo científico de la asociación Estudio Colaborativo Español de Malformaciones Congénitas (ECEMC), quienes responderán sobre los peligros para el embrión o feto de los diferentes agentes ambientales (químicos/tratamientos farmacológicos, físicos, biológicos, …) que pueden afectar a la mujer embarazada, así como sobre aquellas otras cuestiones relacionadas con el cuidado y atención del embarazo.</p>
+
+        <div class="bg-primary-light border-l-4 border-primary rounded-r-lg p-4 sm:p-5">
+          <p class="font-semibold text-fg mb-2">Información de contacto</p>
+          <p class="text-fg">Teléfono SITE: <a href="tel:918222436" class="text-primary hover:text-primary-dark underline underline-offset-2 font-bold">91 822 24 36</a></p>
+          <p class="text-fg">Horario: de 9 a 15 horas, de lunes a viernes</p>
+        </div>
+      </div>
+    </section>
 
     <div id="formSection">
       <div class="bg-card border border-border rounded-xl p-6 sm:p-8">
-        <h2 class="text-lg font-semibold text-fg mb-6">Cuanto tiempo llevas?</h2>
+        <h2 class="text-lg font-semibold text-fg mb-6">¿Cuánto tiempo llevas?</h2>
         <form id="embarazoForm">
           <div class="mb-6">
             <label for="semanaSelect" class="block text-sm font-medium text-fg mb-2">Semanas de embarazo</label>
@@ -89,7 +232,7 @@ import PregnancyNextSteps from '../components/PregnancyNextSteps.astro';
             <svg class="w-5 h-5 text-muted mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <p class="text-sm text-muted">Consulta siempre las indicaciones de tu matrona o profesional sanitario. Esta informacion es complementaria.</p>
+            <p class="text-sm text-muted">Consulta siempre las indicaciones de tu matrona o profesional sanitario. Esta información es complementaria.</p>
           </div>
         </div>
 

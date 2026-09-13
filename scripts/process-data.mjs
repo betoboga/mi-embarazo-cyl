@@ -72,7 +72,7 @@ function parseCoords(coordStr) {
   if (!coordStr) return null;
   const parts = coordStr.split(",").map((s) => parseFloat(s.trim()));
   if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
-    return [parts[1], parts[0]];
+    return [parts[0], parts[1]];   // ya vienen como "lat,lon", sin invertir
   }
   return null;
 }

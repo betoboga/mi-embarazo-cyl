@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 ---
-<Layout title="CyLMaterna - Tu embarazo, mas cerca">
+<Layout title="CyLMaterna - Tu embarazo, más cerca">
   <Header />
   <main class="flex-1">
     <section class="relative overflow-hidden bg-gradient-to-b from-primary/5 to-transparent">
@@ -13,13 +13,13 @@ import Footer from '../components/Footer.astro';
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
             </svg>
-            Datos abiertos de Castilla y Leon
+            Datos abiertos de Castilla y León
           </div>
           <h1 class="text-4xl sm:text-5xl font-bold text-fg mb-6 leading-tight">
-            Tu embarazo,<br /><span class="text-primary">mas cerca</span>
+            Tu embarazo,<br /><span class="text-primary">más cerca</span>
           </h1>
           <p class="text-lg text-muted max-w-xl mx-auto leading-relaxed mb-10">
-            Descubre los recursos sanitarios y territoriales que tienes cerca durante tu embarazo en Castilla y Leon.
+            Descubre los recursos sanitarios y territoriales que tienes cerca durante tu embarazo en Castilla y León.
           </p>
           <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
             <a href="/donde-vive" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark text-white font-medium px-6 py-3 rounded-xl transition-colors no-underline">
@@ -29,37 +29,103 @@ import Footer from '../components/Footer.astro';
               </svg>
             </a>
             <a href="#como-funciona" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-transparent border-2 border-primary/30 text-primary hover:bg-primary/5 font-medium px-6 py-3 rounded-xl transition-colors no-underline">
-              Como funciona
+              Cómo funciona
             </a>
           </div>
         </div>
       </div>
     </section>
 
+    <section class="max-w-3xl mx-auto px-4 pb-16 sm:pb-20" aria-labelledby="signos-sintomas-alarma-title">
+      <a href="/mi-embarazo" class="group block bg-card border-2 border-primary/20 rounded-xl p-6 sm:p-8 no-underline transition-colors hover:border-primary/50 focus-visible:border-primary">
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0" aria-hidden="true">
+            <svg class="w-6 h-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86l-8.1 14a2 2 0 001.73 3h16.16a2 2 0 001.73-3l-8.1-14a2 2 0 00-3.46 0z" />
+            </svg>
+          </div>
+          <div class="flex-1">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <h2 id="signos-sintomas-alarma-title" class="text-xl font-bold text-fg">Signos y síntomas de alarma</h2>
+              <svg class="w-5 h-5 text-primary transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </div>
+            <p class="text-muted leading-relaxed mt-2">Consulta las señales de alarma y cuándo debes acudir al hospital durante el embarazo.</p>
+            <span class="inline-block text-primary font-medium mt-4">Leer la información completa</span>
+          </div>
+        </div>
+      </a>
+    </section>
+
+    <section class="max-w-3xl mx-auto px-4 pb-16 sm:pb-20" aria-labelledby="atencion-embarazo-title">
+      <a href="/mi-embarazo#atencion-embarazo" class="group block bg-card border-2 border-secondary/20 rounded-xl p-6 sm:p-8 no-underline transition-colors hover:border-secondary/50 focus-visible:border-secondary">
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-xl bg-secondary-light flex items-center justify-center shrink-0" aria-hidden="true">
+            <svg class="w-6 h-6 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-3-3v6m8-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div class="flex-1">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <h2 id="atencion-embarazo-title" class="text-xl font-bold text-fg">Atención y seguimiento del embarazo</h2>
+              <svg class="w-5 h-5 text-secondary transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </div>
+            <p class="text-muted leading-relaxed mt-2">Conoce las consultas, controles y ecografías que forman parte del seguimiento del embarazo.</p>
+            <span class="inline-block text-secondary font-medium mt-4">Leer la información completa</span>
+          </div>
+        </div>
+      </a>
+    </section>
+
+    <section class="max-w-3xl mx-auto px-4 pb-16 sm:pb-20" aria-labelledby="site-title">
+      <a href="/mi-embarazo#site" class="group block bg-card border-2 border-primary/20 rounded-xl p-6 sm:p-8 no-underline transition-colors hover:border-primary/50 focus-visible:border-primary">
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0" aria-hidden="true">
+            <svg class="w-6 h-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9.247a4.75 4.75 0 117.544 0M12 14v.01M12 18h.01M5.636 5.636l-.707-.707m14.142.707l.707-.707M12 2v1" />
+            </svg>
+          </div>
+          <div class="flex-1">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <h2 id="site-title" class="text-xl font-bold text-fg">¿Has estado en contacto con sustancias peligrosas o factores de riesgo?</h2>
+              <svg class="w-5 h-5 text-primary transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </div>
+            <p class="text-muted leading-relaxed mt-2">Conoce el Servicio de Información Telefónica para la Embarazada (SITE) y cómo resolver tus dudas.</p>
+            <span class="inline-block text-primary font-medium mt-4">Consultar el servicio SITE</span>
+          </div>
+        </div>
+      </a>
+    </section>
+
     <section id="como-funciona" class="max-w-3xl mx-auto px-4 py-16 sm:py-20">
-      <h2 class="text-2xl font-bold text-fg text-center mb-4">Como funciona</h2>
+      <h2 class="text-2xl font-bold text-fg text-center mb-4">Cómo funciona</h2>
       <p class="text-muted text-center mb-12 max-w-lg mx-auto">En tres pasos sencillos descubres tu entorno sanitario.</p>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
         <div class="text-center">
           <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
             <span class="text-lg font-bold text-primary">01</span>
           </div>
-          <h3 class="font-semibold text-fg mb-2">Donde vives</h3>
-          <p class="text-sm text-muted leading-relaxed">Selecciona tu municipio y la app identifica tu zona sanitaria automaticamente.</p>
+          <h3 class="font-semibold text-fg mb-2">Dónde vives</h3>
+          <p class="text-sm text-muted leading-relaxed">Selecciona tu municipio y la app identifica tu zona sanitaria automáticamente.</p>
         </div>
         <div class="text-center">
           <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
             <span class="text-lg font-bold text-primary">02</span>
           </div>
           <h3 class="font-semibold text-fg mb-2">Conoce tu zona</h3>
-          <p class="text-sm text-muted leading-relaxed">Tu Zona Basica de Salud, centro de salud, consultorios y recursos cercanos.</p>
+          <p class="text-sm text-muted leading-relaxed">Tu Zona Básica de Salud, centro de salud, consultorios y recursos cercanos.</p>
         </div>
         <div class="text-center">
           <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
             <span class="text-lg font-bold text-primary">03</span>
           </div>
           <h3 class="font-semibold text-fg mb-2">Descubre tus recursos</h3>
-          <p class="text-sm text-muted leading-relaxed">Farmacias, hospitales, transporte y atencion urgente en tu territorio.</p>
+          <p class="text-sm text-muted leading-relaxed">Farmacias, hospitales, transporte y atención urgente en tu territorio.</p>
         </div>
       </div>
     </section>
@@ -72,13 +138,13 @@ import Footer from '../components/Footer.astro';
             Vivir un embarazo en una zona rural puede significar tener que desplazarse para acceder a determinados servicios.
           </p>
           <p class="text-muted leading-relaxed mb-6">
-            <strong class="text-fg">CyLMaterna</strong> reune informacion publica para ayudarte a conocer mejor tu entorno sanitario durante el embarazo en Castilla y Leon.
+            <strong class="text-fg">CyLMaterna</strong> reúne información pública para ayudarte a conocer mejor tu entorno sanitario durante el embarazo en Castilla y León.
           </p>
           <div class="inline-flex items-center gap-2 bg-secondary-light text-secondary rounded-lg px-4 py-2 text-sm">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            Informacion de datos abiertos. No sustituye el consejo medico.
+            Información de datos abiertos. No sustituye el consejo médico.
           </div>
         </div>
       </div>
