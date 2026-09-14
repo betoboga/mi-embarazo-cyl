@@ -16,7 +16,6 @@ const hospitalesList: Hospital[] = d.hospitales || [];
 const TIPOS_CENTRO_RELEVANTES = [
   'CENTROS DE ATENCION PRIMARIA: CENTROS DE SALUD',
   'CONSULTORIOS DE ATENCION PRIMARIA',
-  'HOSPITALES GENERALES',
   'ESPECIALIZADOS: CENTROS DE SALUD MENTAL',
   'ESPECIALIZADOS: CENTROS DE INTERRUPCION VOLUNTARIA DEL EMBARAZO',
   'ESPECIALIZADOS: CENTROS DE REPRODUCCION HUMANA ASISTIDA',
@@ -122,6 +121,17 @@ export function obtenerEstacionesMunicipio(municipioNombre: string): EstacionBus
  */
 export function obtenerHospitalesProvincia(provCodigo: string): Hospital[] {
   return hospitalesList.filter(h => h.provincia === provCodigo);
+}
+
+/**
+ * Obtiene hospitales generales del registro sanitario para mostrarlos
+ * separados de los centros de atención primaria.
+ */
+export function obtenerHospitalesSanitariosProvincia(provCodigo: string): CentroSalud[] {
+  return centrosList.filter(
+    c => c.provincia === provCodigo &&
+         (c.tipo || '').trim() === 'HOSPITALES GENERALES'
+  );
 }
 
 /**
