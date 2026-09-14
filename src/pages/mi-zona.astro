@@ -2,15 +2,16 @@
 import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
-  import {
-    obtenerFarmaciasConFallback,
-    obtenerEstacionesMunicipio,
-    obtenerEstacionesCercanas,
-    obtenerHospitalesProvincia,
-    obtenerCentrosConFallback,
-    obtenerZbsMunicipio,
-    obtenerMunicipio,
-  } from "../data/repository";
+import {
+  obtenerFarmaciasConFallback,
+  obtenerEstacionesCercanas,
+  obtenerHospitalesProvincia,
+  obtenerHospitalesSanitariosProvincia,
+  obtenerZbs,
+  obtenerCentrosConFallback,
+  obtenerZbsMunicipio,
+  obtenerMunicipio,
+} from "../data/repository";
 ---
 
 <Layout title="Tu zona sanitaria - CyLMaterna">
@@ -210,8 +211,9 @@ import Footer from "../components/Footer.astro";
 <script>
   import {
     obtenerFarmaciasConFallback,
-    obtenerEstacionesMunicipio,
     obtenerHospitalesProvincia,
+    obtenerHospitalesSanitariosProvincia,
+    obtenerZbs,
     obtenerCentrosConFallback,
     obtenerZbsMunicipio,
     obtenerMunicipio,
@@ -296,11 +298,14 @@ import Footer from "../components/Footer.astro";
     const munNombre = state.municipio || "Sin datos";
     const provNombre = state.provincia || "Sin datos";
     subtitle.textContent = `${munNombre}, ${provNombre}`;
+    municipioBlock.classList.remove("hidden");
 
     // FARMACIAS (con fallback a la ZBS si el municipio no tiene ninguna)
     const farmResult = obtenerFarmaciasConFallback(munNombre);
     const farmacias = farmResult.farmacias;
-    if (farmacias.length > 0) {
+    if (farmacias.length === 0) {
+      farmaciasList.innerHTML = `<p class="text-sm text-muted">No hay farmacias registradas en tu municipio ni en su Zona Básica de Salud.</p>`;
+    } else {
       const aviso =
         farmResult.nivel === "zona"
           ? `<p class="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg p-3 mb-3">No hay farmacias en tu municipio. Estas son las más cercanas dentro de tu Zona Básica de Salud:</p>`
@@ -349,17 +354,48 @@ import Footer from "../components/Footer.astro";
           .join("");
     }
 
+    // ZONA BÁSICA DE SALUD
+    const zbsResult = obtenerZbsMunicipio(munNombre);
+    if (zbsResult && zbsResult.codigos.length > 0) {
+      const zonas = zbsResult.codigos.map((codigo, index) => {
+        const zona = obtenerZbs(codigo);
+        const nombre = zona?.nombre || zbsResult.nombres[index] || `Zona ${codigo}`;
+        const centrosZona = zona?.centros || [];
+        const detalles = centrosZona.length > 0
+          ? centrosZona.map((centro) => tarjeta(centro.nombre, [centro.direccion, centro.localidad])).join("")
+          : `<p class="text-sm text-muted mt-2">No hay un centro de guardia asociado en los datos disponibles.</p>`;
+        return `<div><p class="font-semibold text-fg">${escapeHtml(nombre)}</p><p class="text-xs text-muted mb-2">Código ${escapeHtml(codigo)}</p>${detalles}</div>`;
+      });
+      zbsList.innerHTML = zonas.join("");
+      zbsBlock.classList.remove("hidden");
+    } else {
+      guiaSinZbs.classList.remove("hidden");
+    }
+
     // PROVINCIA
     const municipioObj = obtenerMunicipio(munNombre);
     const provCode = municipioObj?.provincia || "";
 
     // HOSPITALES (solo nombre + nivel, no hay dirección/teléfono reales)
     const hospitales = obtenerHospitalesProvincia(provCode);
-    if (hospitales.length === 0) {
+    const hospitalesSanitarios = obtenerHospitalesSanitariosProvincia(provCode);
+    const hospitalesRenderizados = [
+      ...hospitales.map((h) => ({
+        nombre: h.nombre,
+        lineas: [h.nivel || ""],
+      })),
+      ...hospitalesSanitarios.map((h) => ({
+        nombre: h.nombre,
+        lineas: [h.direccion, h.localidad],
+      })),
+    ].filter((hospital, index, lista) =>
+      lista.findIndex((otro) => otro.nombre === hospital.nombre) === index
+    );
+    if (hospitalesRenderizados.length === 0) {
       hospitalesList.innerHTML = `<p class="text-sm text-muted">No hay hospitales registrados en tu provincia.</p>`;
     } else {
-      hospitalesList.innerHTML = hospitales
-        .map((h) => tarjeta(h.nombre, [h.nivel ? `Nivel ${h.nivel}` : ""]))
+      hospitalesList.innerHTML = hospitalesRenderizados
+        .map((h) => tarjeta(h.nombre, h.lineas))
         .join("");
     }
 
@@ -415,18 +451,6 @@ import Footer from "../components/Footer.astro";
       detalle: string;
     }> = [];
 
-    console.log(
-      "DEBUG centros con coords:",
-      centrosResult.centros.filter((c) => c.coords).length,
-      "ejemplo:",
-      centrosResult.centros.find((c) => c.coords)?.coords,
-    );
-    console.log(
-      "DEBUG estaciones con coords:",
-      estaciones.filter((e) => e.coords).length,
-      "ejemplo:",
-      estaciones.find((e) => e.coords)?.coords,
-    );
     for (const c of centrosResult.centros) {
       if (c.coords && dentroDeCyL(c.coords[0], c.coords[1])) {
         puntosMapa.push({
@@ -451,13 +475,6 @@ import Footer from "../components/Footer.astro";
     }
 
     const LIMITE_MAPA = 60;
-    /*     const puntosMapaVisibles = puntosMapa.slice(0, LIMITE_MAPA);
-    console.log(
-      "DEBUG puntosMapa:",
-      puntosMapa.length,
-      "visibles:",
-      puntosMapaVisibles.length,
-    ); */
     const origenMarcador = municipioObj?.coords || null;
 
     function distanciaKmMapa(a: [number, number], b: [number, number]): number {
@@ -492,13 +509,6 @@ import Footer from "../components/Footer.astro";
     if (puntosMapaVisibles.length > 0) {
       mapaBlock.classList.remove("hidden");
 
-      if (puntosMapa.length > LIMITE_MAPA) {
-        const aviso = document.createElement("p");
-        aviso.className = "text-xs text-muted mb-2";
-        aviso.textContent = `Mostrando ${LIMITE_MAPA} de ${puntosMapa.length} puntos en el mapa.`;
-        mapaBlock.insertBefore(aviso, document.getElementById("map"));
-      }
-
       const link = document.createElement("link");
       link.rel = "stylesheet";
       link.href = "https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css";
@@ -507,10 +517,6 @@ import Footer from "../components/Footer.astro";
       const script = document.createElement("script");
       script.src = "https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js";
       script.onload = () => {
-        console.log(
-          "DEBUG maplibre cargado:",
-          typeof (window as any).maplibregl,
-        );
         const maplibregl = (window as any).maplibregl;
         const mapEl = document.getElementById("map") as HTMLElement;
 
@@ -602,22 +608,6 @@ import Footer from "../components/Footer.astro";
         });
 
         if (puntosMapaVisibles.length > 1) {
-          console.log(
-            "DEBUG primeros 5 puntos:",
-            puntosMapaVisibles
-              .slice(0, 5)
-              .map((p) => `${p.nombre}: [${p.lat}, ${p.lon}]`),
-          );
-          if (origenMarcador)
-            console.log("DEBUG origen (Tormellas):", origenMarcador);
-          console.log(
-            "DEBUG primeros 5 puntos:",
-            JSON.stringify(
-              puntosMapaVisibles
-                .slice(0, 5)
-                .map((p) => ({ nombre: p.nombre, lat: p.lat, lon: p.lon })),
-            ),
-          );
           mapa.fitBounds(bounds, { padding: 15, maxZoom: 19 });
         }
       };
