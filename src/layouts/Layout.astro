@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import { arabicTranslations } from '../data/i18n';
+import { arabicTranslations, englishTranslations } from '../data/i18n';
 
 interface Props {
   title?: string;
@@ -9,13 +9,16 @@ interface Props {
 
 const { title = 'CyLMaterna', description = 'Descubre los recursos sanitarios y territoriales que tienes cerca durante tu embarazo en Castilla y León.' } = Astro.props;
 const isArabic = Astro.url.pathname.startsWith('/ar');
+const isEnglish = Astro.url.pathname.startsWith('/en');
 const spanishPath = isArabic ? Astro.url.pathname.replace(/^\/ar/, '') || '/' : Astro.url.pathname;
-const arabicPath = `/ar${spanishPath === '/' ? '/' : spanishPath}`;
-const localizedTitle = isArabic ? arabicTranslations[title] ?? title : title;
-const localizedDescription = isArabic ? arabicTranslations[description] ?? description : description;
+const pagePath = isEnglish ? Astro.url.pathname.replace(/^\/en/, '') || '/' : spanishPath;
+const arabicPath = `/ar${pagePath === '/' ? '/' : pagePath}`;
+const englishPath = `/en${pagePath === '/' ? '/' : pagePath}`;
+const localizedTitle = isArabic ? arabicTranslations[title] ?? title : isEnglish ? englishTranslations[title] ?? title : title;
+const localizedDescription = isArabic ? arabicTranslations[description] ?? description : isEnglish ? englishTranslations[description] ?? description : description;
 ---
 <!DOCTYPE html>
-<html lang={isArabic ? 'ar' : 'es'} dir={isArabic ? 'rtl' : 'ltr'}>
+<html lang={isArabic ? 'ar' : isEnglish ? 'en' : 'es'} dir={isArabic ? 'rtl' : 'ltr'}>
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -25,6 +28,7 @@ const localizedDescription = isArabic ? arabicTranslations[description] ?? descr
     <meta name="generator" content={Astro.generator} />
     <link rel="alternate" hreflang="es" href={spanishPath} />
     <link rel="alternate" hreflang="ar" href={arabicPath} />
+    <link rel="alternate" hreflang="en" href={englishPath} />
     <title>{localizedTitle}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

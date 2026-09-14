@@ -36,8 +36,11 @@ import Footer from '../components/Footer.astro';
       </div>
     </section>
 
-    <section class="max-w-3xl mx-auto px-4 pb-16 sm:pb-20" aria-labelledby="signos-sintomas-alarma-title">
-      <a href="/mi-embarazo" class="group block bg-card border-2 border-primary/20 rounded-xl p-6 sm:p-8 no-underline transition-colors hover:border-primary/50 focus-visible:border-primary">
+    <section class="max-w-3xl mx-auto px-4 pb-12 sm:pb-16" aria-labelledby="guias-embarazo-title">
+      <h2 id="guias-embarazo-title" class="text-2xl font-bold text-fg text-center mb-6">Guía de ayuda durante el embarazo</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+      <a href="/mi-embarazo#signos-sintomas-alarma" class="group block h-full bg-card border-2 border-primary/20 rounded-xl p-5 no-underline transition-colors hover:border-primary/50 focus-visible:border-primary">
         <div class="flex items-start gap-4">
           <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0" aria-hidden="true">
             <svg class="w-6 h-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -46,7 +49,7 @@ import Footer from '../components/Footer.astro';
           </div>
           <div class="flex-1">
             <div class="flex flex-wrap items-center justify-between gap-2">
-              <h2 id="signos-sintomas-alarma-title" class="text-xl font-bold text-fg">Signos y síntomas de alarma</h2>
+              <h3 id="signos-sintomas-alarma-title" class="text-lg font-bold text-fg">Signos y síntomas de alarma</h3>
               <svg class="w-5 h-5 text-primary transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
@@ -56,10 +59,10 @@ import Footer from '../components/Footer.astro';
           </div>
         </div>
       </a>
-    </section>
+      </div>
 
-    <section class="max-w-3xl mx-auto px-4 pb-16 sm:pb-20" aria-labelledby="atencion-embarazo-title">
-      <a href="/mi-embarazo#atencion-embarazo" class="group block bg-card border-2 border-secondary/20 rounded-xl p-6 sm:p-8 no-underline transition-colors hover:border-secondary/50 focus-visible:border-secondary">
+      <div>
+      <a href="/mi-embarazo#atencion-embarazo" class="group block h-full bg-card border-2 border-secondary/20 rounded-xl p-5 no-underline transition-colors hover:border-secondary/50 focus-visible:border-secondary">
         <div class="flex items-start gap-4">
           <div class="w-12 h-12 rounded-xl bg-secondary-light flex items-center justify-center shrink-0" aria-hidden="true">
             <svg class="w-6 h-6 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -68,7 +71,7 @@ import Footer from '../components/Footer.astro';
           </div>
           <div class="flex-1">
             <div class="flex flex-wrap items-center justify-between gap-2">
-              <h2 id="atencion-embarazo-title" class="text-xl font-bold text-fg">Atención y seguimiento del embarazo</h2>
+              <h3 id="atencion-embarazo-title" class="text-lg font-bold text-fg">Atención y seguimiento del embarazo</h3>
               <svg class="w-5 h-5 text-secondary transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
@@ -78,10 +81,10 @@ import Footer from '../components/Footer.astro';
           </div>
         </div>
       </a>
-    </section>
+      </div>
 
-    <section class="max-w-3xl mx-auto px-4 pb-16 sm:pb-20" aria-labelledby="site-title">
-      <a href="/mi-embarazo#site" class="group block bg-card border-2 border-primary/20 rounded-xl p-6 sm:p-8 no-underline transition-colors hover:border-primary/50 focus-visible:border-primary">
+      <div>
+      <a href="/mi-embarazo#site" class="group block h-full bg-card border-2 border-primary/20 rounded-xl p-5 no-underline transition-colors hover:border-primary/50 focus-visible:border-primary">
         <div class="flex items-start gap-4">
           <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0" aria-hidden="true">
             <svg class="w-6 h-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -90,7 +93,7 @@ import Footer from '../components/Footer.astro';
           </div>
           <div class="flex-1">
             <div class="flex flex-wrap items-center justify-between gap-2">
-              <h2 id="site-title" class="text-xl font-bold text-fg">¿Has estado en contacto con sustancias peligrosas o factores de riesgo?</h2>
+              <h3 id="site-title" class="text-lg font-bold text-fg">¿Has estado en contacto con sustancias peligrosas o factores de riesgo?</h3>
               <svg class="w-5 h-5 text-primary transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
@@ -100,6 +103,42 @@ import Footer from '../components/Footer.astro';
           </div>
         </div>
       </a>
+      </div>
+      <div>
+      <a href="/mi-embarazo#alimentacion-segura" class="group block h-full bg-card border-2 border-secondary/20 rounded-xl p-5 no-underline transition-colors hover:border-secondary/50 focus-visible:border-secondary">
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-xl bg-secondary-light flex items-center justify-center shrink-0" aria-hidden="true">
+            <svg class="w-6 h-6 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18m-6-6h12M6 9h12M8 5l4-2 4 2" />
+            </svg>
+          </div>
+          <div class="flex-1">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <h3 id="alimentacion-segura-title" class="text-lg font-bold text-fg">Alimentación segura durante el embarazo</h3>
+              <svg class="w-5 h-5 text-secondary transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </div>
+            <p class="text-muted leading-relaxed mt-2">Consejos sencillos sobre higiene, alimentos seguros y nutrición.</p>
+            <span class="inline-block text-secondary font-medium mt-4">Consultar la guía</span>
+          </div>
+        </div>
+      </a>
+      </div>
+      </div>
+      <div class="mt-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-bg-subtle border border-border rounded-xl px-4 py-3">
+        <div>
+          <p class="text-sm font-semibold text-fg">Información oficial sobre salud materno-infantil</p>
+          <p class="text-xs text-muted mt-0.5">Recursos de la Junta de Castilla y León</p>
+        </div>
+        <a href="https://www.saludcastillayleon.es/es/protege-salud/salud-materno-infantil" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary-dark no-underline focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-3 rounded">
+          Consultar información
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+          <span class="sr-only">(se abre en una nueva pestaña)</span>
+        </a>
+      </div>
     </section>
 
     <section id="como-funciona" class="max-w-3xl mx-auto px-4 py-16 sm:py-20">

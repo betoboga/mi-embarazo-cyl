@@ -238,3 +238,31 @@ export function obtenerCentrosConFallback(
 
   return { centros: ordenarPorCercania(obtenerCentrosProvincia(provCodigo), origen), nivel: 'provincia' };
 }
+
+/**
+ * Estaciones de bus del municipio exacto, o si no hay ninguna,
+ * las más cercanas por distancia real a las coordenadas del municipio.
+ */
+export function obtenerEstacionesCercanas(
+  municipioNombre: string,
+  limite: number = 3
+): { estaciones: EstacionBus[], nivel: 'municipio' | 'cercania' } {
+  const propias = obtenerEstacionesMunicipio(municipioNombre);
+  if (propias.length > 0) {
+    return { estaciones: propias, nivel: 'municipio' };
+  }
+
+  const origen = obtenerMunicipio(municipioNombre)?.coords;
+  if (!origen) {
+    return { estaciones: [], nivel: 'municipio' };
+  }
+
+  const cercanas = estacionesList
+    .filter((e) => e.coords)
+    .map((e) => ({ e, d: distanciaKm(origen, e.coords as [number, number]) }))
+    .sort((a, b) => a.d - b.d)
+    .slice(0, limite)
+    .map((x) => x.e);
+
+  return { estaciones: cercanas, nivel: 'cercania' };
+}

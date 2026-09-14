@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import PregnancyNextSteps from '../components/PregnancyNextSteps.astro';
+import NutritionGuide from '../components/NutritionGuide.astro';
 ---
 <Layout title="Mi embarazo - CyLMaterna">
   <Header />
@@ -12,8 +13,8 @@ import PregnancyNextSteps from '../components/PregnancyNextSteps.astro';
       <p class="text-muted" id="pageSubtitle">Cuéntanos un poco sobre tu embarazo.</p>
     </div>
 
-    <section class="bg-card border-2 border-primary/20 rounded-xl p-6 sm:p-8 mb-8" aria-labelledby="signos-sintomas-alarma-title">
-      <div class="flex items-start gap-3 mb-6">
+    <details id="signos-sintomas-alarma" class="bg-card border-2 border-primary/20 rounded-xl p-6 sm:p-8 mb-4" aria-labelledby="signos-sintomas-alarma-title">
+      <summary class="flex items-start gap-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
         <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0" aria-hidden="true">
           <svg class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86l-8.1 14a2 2 0 001.73 3h16.16a2 2 0 001.73-3l-8.1-14a2 2 0 00-3.46 0z" />
@@ -23,7 +24,7 @@ import PregnancyNextSteps from '../components/PregnancyNextSteps.astro';
           <h2 id="signos-sintomas-alarma-title" class="text-xl sm:text-2xl font-bold text-fg">Signos y síntomas de alarma</h2>
           <p class="text-muted mt-1">Durante el embarazo, ciertos síntomas pueden indicar complicaciones y requieren de atención médica.</p>
         </div>
-      </div>
+      </summary>
 
       <div class="space-y-7 text-fg leading-relaxed">
         <div>
@@ -74,10 +75,10 @@ import PregnancyNextSteps from '../components/PregnancyNextSteps.astro';
           <p>En caso de haber llevado el control en el extranjero, nos sería especialmente útil tener los informes impresos y traducidos.</p>
         </div>
       </div>
-    </section>
+    </details>
 
-    <section id="atencion-embarazo" class="bg-card border-2 border-secondary/20 rounded-xl p-6 sm:p-8 mb-8" aria-labelledby="atencion-embarazo-heading">
-      <div class="flex items-start gap-3 mb-6">
+    <details id="atencion-embarazo" class="bg-card border-2 border-secondary/20 rounded-xl p-6 sm:p-8 mb-4" aria-labelledby="atencion-embarazo-heading">
+      <summary class="flex items-start gap-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
         <div class="w-10 h-10 rounded-lg bg-secondary-light flex items-center justify-center shrink-0" aria-hidden="true">
           <svg class="w-5 h-5 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-3-3v6m8-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -87,7 +88,7 @@ import PregnancyNextSteps from '../components/PregnancyNextSteps.astro';
           <h2 id="atencion-embarazo-heading" class="text-xl sm:text-2xl font-bold text-fg">Atención y seguimiento del embarazo</h2>
           <p class="text-muted mt-1">El proceso de atención al embarazo desde atención primaria actualmente se desarrolla con un enfoque multidisciplinar, centrado en las necesidades de la mujer, la familia y garantizando la continuidad en la asistencia.</p>
         </div>
-      </div>
+      </summary>
 
       <div class="space-y-7 text-fg leading-relaxed">
         <p>El seguimiento del embarazo se lleva a cabo entre atención primaria y atención especializada, con los compañeros ginecólogos en el hospital. Además, se irán realizando varios controles analíticos durante el embarazo.</p>
@@ -111,9 +112,18 @@ import PregnancyNextSteps from '../components/PregnancyNextSteps.astro';
           <h3 class="text-lg font-semibold text-fg mb-3">Citas en la consulta de Obstetricia (en el hospital)</h3>
           <div class="space-y-3">
             <p>En embarazos de bajo riesgo se llevarán a cabo tres ecografías, su asistencia es de vital importancia.</p>
-            <p>Sin olvidar las analíticas de control.</p>
-            <p>Si has empezado a controlar el embarazo tarde y vienes de hacerlo en otro centro, contacta cuanto antes con la matrona de tu centro de salud.</p>
-            <p>Además puedes consultar en cualquier momento con tu matrona información sobre clases de educación maternal, prenatal y clases de preparación al parto.</p>
+          </div>
+        </div>
+
+        <div class="grid gap-3" aria-label="Información importante sobre el seguimiento">
+          <div class="bg-secondary-light border-l-4 border-secondary rounded-r-lg p-4">
+            <h3 class="font-semibold text-fg">Sin olvidar las analíticas de control.</h3>
+          </div>
+          <div class="bg-secondary-light border-l-4 border-secondary rounded-r-lg p-4">
+            <h3 class="font-semibold text-fg">Si has empezado a controlar el embarazo tarde y vienes de hacerlo en otro centro, contacta cuanto antes con la matrona de tu centro de salud.</h3>
+          </div>
+          <div class="bg-secondary-light border-l-4 border-secondary rounded-r-lg p-4">
+            <h3 class="font-semibold text-fg">Además puedes consultar en cualquier momento con tu matrona información sobre clases de educación maternal, prenatal y clases de preparación al parto.</h3>
           </div>
         </div>
 
@@ -127,10 +137,10 @@ import PregnancyNextSteps from '../components/PregnancyNextSteps.astro';
           </a>
         </div>
       </div>
-    </section>
+    </details>
 
-    <section id="site" class="bg-card border-2 border-primary/20 rounded-xl p-6 sm:p-8 mb-8" aria-labelledby="site-heading">
-      <div class="flex items-start gap-3 mb-6">
+    <details id="site" class="bg-card border-2 border-primary/20 rounded-xl p-6 sm:p-8 mb-8" aria-labelledby="site-heading">
+      <summary class="flex items-start gap-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
         <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0" aria-hidden="true">
           <svg class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9.247a4.75 4.75 0 117.544 0M12 14v.01M12 18h.01M5.636 5.636l-.707-.707m14.142.707l.707-.707M12 2v1" />
@@ -140,7 +150,7 @@ import PregnancyNextSteps from '../components/PregnancyNextSteps.astro';
           <h2 id="site-heading" class="text-xl sm:text-2xl font-bold text-fg">¿Has estado en contacto con sustancias peligrosas o factores de riesgo?</h2>
           <p class="text-muted mt-1">Servicio de Información Telefónica para la Embarazada (SITE)</p>
         </div>
-      </div>
+      </summary>
 
       <div class="space-y-5 text-fg leading-relaxed">
         <p>El <strong>SITE</strong> es un servicio de información sobre factores de riesgo para el desarrollo del niño antes del nacimiento.</p>
@@ -153,7 +163,9 @@ import PregnancyNextSteps from '../components/PregnancyNextSteps.astro';
           <p class="text-fg">Horario: de 9 a 15 horas, de lunes a viernes</p>
         </div>
       </div>
-    </section>
+    </details>
+
+    <NutritionGuide />
 
     <div id="formSection">
       <div class="bg-card border border-border rounded-xl p-6 sm:p-8">
