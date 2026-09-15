@@ -1,5 +1,5 @@
 import type { Municipio, ZBS, CentroSalud, Farmacia, EstacionBus, Hospital } from './types';
-import { normalize } from './types';
+import { normalize, PROVINCIAS } from './types';
 import territorialData from './territorial.json';
 
 const d = territorialData as any;
@@ -135,39 +135,120 @@ export function obtenerHospitalesSanitariosProvincia(provCodigo: string): Centro
 }
 
 /**
- * Hospitales públicos de SACYL con atención al parto, contrastados con las
- * páginas oficiales de Obstetricia/paritorio de cada complejo. La plantilla
- * de urgencias aporta los niveles II/III-IV; Valladolid se completa con el
- * Registro de centros sanitarios y las carteras oficiales de ambos hospitales.
+ * Referencia para el parto — regla dinámica sobre datos oficiales de la JCyL.
+ *
+ * QUÉ hospitales se marcan no va a mano: se deriva del dataset oficial
+ * "Plantilla atención urgente hospitalaria" (hospitales-plantilla-urgencias,
+ * ya procesado en territorial.json). Es referencia para el parto todo
+ * hospital con nivel de urgencias II o superior (II, III, III-IV, IV);
+ * los de Nivel I se muestran como recursos hospitalarios generales.
+ *
+ * El dataset de urgencias usa nombres de complejo ("COMPLEJO ASISTENCIAL DE
+ * ÁVILA") que no son el hospital físico que la gente conoce ("Hospital
+ * Nuestra Señora de Sonsoles"). Para el nombre visible y las coordenadas,
+ * cada complejo se reconcilia con el Registro oficial de centros sanitarios
+ * (tipo HOSPITALES GENERALES, también en territorial.json). Las cadenas
+ * `urgencias` y `registro` son verbatim de sus datasets oficiales —incluidas
+ * las erratas del origen, como "VALLLADOLID" o "UNIVERITARIO"— y `display`
+ * es solo presentación. Si la Junta añade un hospital de nivel II+, se
+ * marcará automáticamente aunque aún no tenga reconciliación.
  */
-const HOSPITALES_REFERENCIA_PARTO = [
-  { nombre: 'Hospital Nuestra Señora de Sonsoles', provincia: '05', localidad: 'Ávila', aliases: ['SONSOLES', 'COMPLEJO ASISTENCIAL DE ÁVILA'], coords: [40.656478, -4.7002172] },
-  { nombre: 'Hospital Universitario de Burgos', provincia: '09', localidad: 'Burgos', aliases: ['UNIVERSITARIO DE BURGOS', 'COMPLEJO ASISTENCIAL DE BURGOS'], coords: [42.3593305, -3.6875636] },
-  { nombre: 'Complejo Asistencial Universitario de León', provincia: '24', localidad: 'León', aliases: ['HOSPITAL DE LEON COMPLEJO', 'COMPLEJO ASISTENCIAL DE LEÓN'], coords: [42.59706, -5.577024] },
-  { nombre: 'Hospital El Bierzo', provincia: '24', localidad: 'Ponferrada', aliases: ['HOSPITAL EL BIERZO'], coords: [42.572359, -6.643689] },
-  { nombre: 'Hospital Río Carrión', provincia: '34', localidad: 'Palencia', aliases: ['RIO CARRION', 'COMPLEJO ASISTENCIAL DE PALENCIA'], coords: [42.0025986, -4.5372164] },
-  { nombre: 'Hospital Universitario de Salamanca', provincia: '37', localidad: 'Salamanca', aliases: ['UNIVERSITARIO DE SALAMANCA', 'COMPLEJO ASISTENCIAL DE SALAMANCA'], coords: [40.9641961, -5.6729494] },
-  { nombre: 'Hospital General de Segovia', provincia: '40', localidad: 'Segovia', aliases: ['HOSPITAL GENERAL DE SEGOVIA', 'COMPLEJO ASISTENCIAL DE SEGOVIA'], coords: [40.943175, -4.1190603] },
-  { nombre: 'Hospital Santa Bárbara', provincia: '42', localidad: 'Soria', aliases: ['SANTA BARBARA', 'COMPLEJO ASISTENCIAL DE SORIA'], coords: [41.7698416, -2.4719148] },
-  { nombre: 'Hospital Clínico Universitario de Valladolid', provincia: '47', localidad: 'Valladolid', aliases: ['CLINICO UNIVERSITARIO DE VALLADOLID'], coords: [41.6559672, -4.7203513] },
-  { nombre: 'Hospital Universitario Río Hortega', provincia: '47', localidad: 'Valladolid', aliases: ['UNIVERSITARIO RIO HORTEGA'], coords: [41.6310306, -4.7121825] },
-  { nombre: 'Hospital Virgen de la Concha', provincia: '49', localidad: 'Zamora', aliases: ['VIRGEN DE LA CONCHA', 'COMPLEJO ASISTENCIAL DE ZAMORA'], coords: [41.5155325, -5.7288313] },
-] as const;
 
+const NIVEL_REFERENCIA_PARTO = /^NIVEL\s+(II|III|IV)\b/;
+
+export function esNivelReferenciaParto(nivel: string): boolean {
+  return NIVEL_REFERENCIA_PARTO.test(normalize(nivel));
+}
+
+const RECONCILIACION_REGISTRO: Record<string, { registro: string; display: string }> = {
+  'COMPLEJO ASISTENCIAL DE AVILA': { registro: 'HOSPITAL NUESTRA SEÑORA DE SONSOLES', display: 'Hospital Nuestra Señora de Sonsoles' },
+  'COMPLEJO ASISTENCIAL DE BURGOS': { registro: 'HOSPITAL UNIVERSITARIO DE BURGOS COMPLEJO ASISTENCIAL UNIVER. DE BURGOS', display: 'Hospital Universitario de Burgos' },
+  'COMPLEJO ASISTENCIAL DE LEON': { registro: 'HOSPITAL DE LEON COMPLEJO ASISTENCIAL UNIVERSITARIO DE LEON', display: 'Hospital de León' },
+  'HOSPITAL EL BIERZO': { registro: 'HOSPITAL EL BIERZO', display: 'Hospital El Bierzo' },
+  'COMPLEJO ASISTENCIAL DE PALENCIA': { registro: 'HOSPITAL RIO CARRION COMPLEJO ASISTENCIAL UNIVERSITARIO DE PALENCIA', display: 'Hospital Río Carrión' },
+  'COMPLEJO ASISTENCIAL DE SALAMANCA': { registro: 'HOSPITAL UNIVERSITARIO DE SALAMANCA (COMPLEJO ASISTENCIAL UNIVERSITARIO DE', display: 'Hospital Universitario de Salamanca' },
+  'COMPLEJO ASISTENCIAL DE SEGOVIA': { registro: 'HOSPITAL GENERAL DE SEGOVIA COMPLEJO ASISTENCIAL UNIVERSITARIO DE SEGOVIA', display: 'Hospital General de Segovia' },
+  'COMPLEJO ASISTENCIAL DE SORIA': { registro: 'HOSPITAL SANTA BARBARA (COMPLEJO ASISTENCIAL UNIVERSITARIO DE SORIA)', display: 'Hospital Santa Bárbara' },
+  'COMPLEJO ASISTENCIAL DE ZAMORA': { registro: 'HOSPITAL VIRGEN DE LA CONCHA COMPLEJO ASISTENCIAL DE ZAMORA', display: 'Hospital Virgen de la Concha' },
+  'HOSPITAL CLINICO UNIVERITARIO DE VALLADOLID': { registro: 'HOSPITAL CLINICO UNIVERSITARIO DE VALLADOLID', display: 'Hospital Clínico Universitario de Valladolid' },
+  'HOSPITAL UNIVERSITARIO DEL RIO HORTEGA': { registro: 'HOSPITAL UNIVERSITARIO RIO HORTEGA', display: 'Hospital Universitario Río Hortega' },
+};
+
+/** Fallback de presentación para nombres oficiales en mayúsculas. */
+function tituloCasa(nombre: string): string {
+  const minusculas = new Set(['DE', 'DEL', 'LA', 'LAS', 'EL', 'LOS', 'Y', 'EN']);
+  return normalize(nombre)
+    .split(' ')
+    .map((palabra, i) => {
+      const lower = palabra.toLowerCase();
+      if (i > 0 && minusculas.has(palabra)) return lower;
+      return lower.charAt(0).toUpperCase() + lower.slice(1);
+    })
+    .join(' ');
+}
+
+/** Nombre de localidad bien escrito, tomado del listado oficial de municipios. */
+function nombreLocalidadBonito(localidad: string, provincia: string): string {
+  const municipio = municipios.find(
+    (m) => normalize(m.nombre) === normalize(localidad) && (!provincia || m.provincia === provincia)
+  );
+  return municipio?.nombre ?? tituloCasa(localidad);
+}
+
+export interface HospitalReferenciaParto {
+  /** Nombre oficial en el dataset de urgencias (clave de la regla dinámica). */
+  nombreUrgencias: string;
+  /** Nombre oficial en el registro de centros sanitarios, si hay reconciliación. */
+  nombreRegistro: string | null;
+  nombreDisplay: string;
+  provincia: string;
+  provinciaNombre: string;
+  localidad: string;
+  nivel: string;
+  coords: [number, number] | null;
+}
+
+/** Todos los hospitales que la regla dinámica marca como referencia de parto. */
+export function obtenerHospitalesReferenciaParto(): HospitalReferenciaParto[] {
+  return hospitalesList
+    .filter((hospital) => esNivelReferenciaParto(hospital.nivel))
+    .map((hospital) => {
+      const reconciliacion = RECONCILIACION_REGISTRO[normalize(hospital.nombre)];
+      const centroRegistro = reconciliacion
+        ? centrosList.find(
+            (c) =>
+              c.tipo?.trim() === 'HOSPITALES GENERALES' &&
+              normalize(c.nombre) === normalize(reconciliacion.registro)
+          )
+        : undefined;
+      return {
+        nombreUrgencias: hospital.nombre,
+        nombreRegistro: centroRegistro?.nombre ?? null,
+        nombreDisplay: reconciliacion?.display ?? tituloCasa(hospital.nombre),
+        provincia: hospital.provincia,
+        provinciaNombre: PROVINCIAS[hospital.provincia] ?? hospital.provinciaNombre,
+        localidad: centroRegistro
+          ? nombreLocalidadBonito(centroRegistro.localidad, hospital.provincia)
+          : PROVINCIAS[hospital.provincia] ?? hospital.provinciaNombre,
+        nivel: hospital.nivel,
+        coords: centroRegistro?.coords ?? null,
+      };
+    });
+}
+
+/**
+ * Hospital de referencia para el parto más cercano al municipio, por
+ * distancia geográfica real y sin límite de provincia. Es orientación
+ * territorial, no la asignación sanitaria oficial individual.
+ */
 export function obtenerHospitalReferenciaParto(municipioNombre: string) {
   const municipio = obtenerMunicipio(municipioNombre);
   if (!municipio?.coords) return null;
   const [lat, lon] = municipio.coords;
-  const rad = (grados: number) => grados * Math.PI / 180;
-  const distanciaKm = (destino: readonly [number, number]) => {
-    const [lat2, lon2] = destino;
-    const dLat = rad(lat2 - lat);
-    const dLon = rad(lon2 - lon);
-    const a = Math.sin(dLat / 2) ** 2 + Math.cos(rad(lat)) * Math.cos(rad(lat2)) * Math.sin(dLon / 2) ** 2;
-    return 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  };
-  return HOSPITALES_REFERENCIA_PARTO
-    .map(hospital => ({ ...hospital, distanciaKm: distanciaKm(hospital.coords) }))
+  const candidatos = obtenerHospitalesReferenciaParto().filter((hospital) => hospital.coords);
+  if (candidatos.length === 0) return null;
+  return candidatos
+    .map((hospital) => ({ ...hospital, distanciaKm: distanciaKm([lat, lon], hospital.coords as [number, number]) }))
     .sort((a, b) => a.distanciaKm - b.distanciaKm)[0];
 }
 

@@ -219,6 +219,7 @@ import {
     obtenerHospitalesProvincia,
     obtenerHospitalesSanitariosProvincia,
     obtenerHospitalReferenciaParto,
+    obtenerHospitalesReferenciaParto,
     obtenerZbs,
     obtenerCentrosConFallback,
     obtenerCentrosProvincia,
@@ -383,10 +384,18 @@ import {
     const municipioObj = obtenerMunicipio(munNombre);
     const provCode = municipioObj?.provincia || "";
 
-    // HOSPITAL DE REFERENCIA PARA EL PARTO: se calcula por distancia real,
-    // aunque esté en otra provincia. Los demás hospitales se mantienen como
-    // recursos generales, sin dar a entender que todos atienden partos.
+    // HOSPITAL DE REFERENCIA PARA EL PARTO: la regla es dinámica —todo
+    // hospital con nivel de urgencias II o superior en el dataset oficial—
+    // y se elige el más cercano por distancia real, aunque esté en otra
+    // provincia. Los demás hospitales se mantienen como recursos generales,
+    // sin dar a entender que todos atienden partos.
     const hospitalParto = obtenerHospitalReferenciaParto(munNombre);
+    const norm = (t: string) =>
+      (t || "").toLocaleUpperCase("es").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " ").trim();
+    const hospitalesConParto = obtenerHospitalesReferenciaParto();
+    const nombresConParto = new Set(
+      hospitalesConParto.flatMap((h) => [h.nombreUrgencias, h.nombreRegistro].filter(Boolean)).map((n) => norm(n as string))
+    );
     const hospitales = obtenerHospitalesProvincia(provCode);
     const hospitalesSanitarios = obtenerHospitalesSanitariosProvincia(provCode);
     const hospitalesRenderizados = [
@@ -404,19 +413,25 @@ import {
     const referenciaParto = hospitalParto
       ? `<div class="bg-emerald-50 border-2 border-emerald-600 rounded-lg p-4 mb-4">
           <p class="text-xs font-semibold uppercase tracking-wider text-emerald-800 mb-1">Referencia para el parto</p>
-          <p class="font-semibold text-fg">${escapeHtml(hospitalParto.nombre)}</p>
-          <p class="text-sm text-muted mt-0.5">${escapeHtml(hospitalParto.localidad)} · a unos ${Math.round(hospitalParto.distanciaKm)} km en línea recta</p>
+          <p class="font-semibold text-fg">${escapeHtml(hospitalParto.nombreDisplay)}</p>
+          <p class="text-sm text-muted mt-0.5">${escapeHtml(hospitalParto.localidad)} · a unos ${Math.round(hospitalParto.distanciaKm)} km en línea recta · ${escapeHtml(hospitalParto.nivel)}</p>
           ${hospitalParto.provincia !== provCode ? `<p class="text-sm text-emerald-900 mt-2">Es el hospital de referencia con paritorio más cercano, aunque está en otra provincia.</p>` : ""}
         </div>`
       : "";
-    const avisoHospitales = `<p class="text-sm text-muted bg-white border border-border rounded-lg p-3 mb-3"><strong>Importante:</strong> no todos los hospitales atienden partos. Los demás se muestran como recursos hospitalarios generales.</p>`;
+    const otrosConPartoProvincia = hospitalesConParto.filter(
+      (h) => h.provincia === provCode && hospitalParto && norm(h.nombreUrgencias) !== norm(hospitalParto.nombreUrgencias)
+    );
+    const tambienConParto = otrosConPartoProvincia.length
+      ? `<p class="text-sm text-emerald-900 bg-emerald-50 border border-emerald-200 rounded-lg p-3 mb-3">También con paritorio en tu provincia: ${otrosConPartoProvincia.map((h) => escapeHtml(h.nombreDisplay)).join(", ")}.</p>`
+      : "";
+    const avisoHospitales = `<p class="text-sm text-muted bg-white border border-border rounded-lg p-3 mb-3"><strong>Importante:</strong> no todos los hospitales atienden partos. La referencia es el hospital de nivel II o superior más cercano según los datos oficiales de la Junta; los demás se muestran como recursos hospitalarios generales.</p>`;
     const otrosHospitales = hospitalesRenderizados.length === 0
       ? `<p class="text-sm text-muted">No hay otros hospitales registrados en tu provincia.</p>`
       : hospitalesRenderizados
-          .filter((h) => !hospitalParto || !hospitalParto.aliases.some((alias) => h.nombre.toLocaleUpperCase('es').includes(alias)))
+          .filter((h) => !nombresConParto.has(norm(h.nombre)))
           .map((h) => tarjeta(h.nombre, h.lineas))
           .join("");
-    hospitalesList.innerHTML = referenciaParto + avisoHospitales + otrosHospitales;
+    hospitalesList.innerHTML = referenciaParto + tambienConParto + avisoHospitales + otrosHospitales;
 
     // CENTROS DE SALUD (municipio -> zona -> provincia, con aviso de nivel)
     const centrosResult = obtenerCentrosConFallback(munNombre, provCode);
