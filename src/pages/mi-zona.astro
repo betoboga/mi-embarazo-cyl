@@ -163,6 +163,11 @@ import {
             <span class="inline-flex items-center gap-1.5"
               ><span
                 class="w-2.5 h-2.5 rounded-full inline-block"
+                style="background:#d97706"></span> Tu centro de salud</span
+            >
+            <span class="inline-flex items-center gap-1.5"
+              ><span
+                class="w-2.5 h-2.5 rounded-full inline-block"
                 style="background:#2563eb"></span> Estaciones de autobús</span
             >
             <span class="inline-flex items-center gap-1.5"
@@ -215,6 +220,7 @@ import {
     obtenerHospitalesSanitariosProvincia,
     obtenerZbs,
     obtenerCentrosConFallback,
+    obtenerCentrosProvincia,
     obtenerZbsMunicipio,
     obtenerMunicipio,
     obtenerEstacionesCercanas,
@@ -449,9 +455,30 @@ import {
       nombre: string;
       tipo: string;
       detalle: string;
+      propio: boolean;
     }> = [];
 
-    for (const c of centrosResult.centros) {
+    // En el mapa mostramos todos los centros de la provincia (el filtro de
+    // 20 km de más abajo deja solo los cercanos), no solo los del municipio.
+    // Los del propio municipio van destacados con otro color.
+    const claveCentro = (c: { nombre: string; localidad?: string }) =>
+      `${c.nombre}|${c.localidad || ""}`.toLowerCase();
+    const clavesPropias =
+      centrosResult.nivel === "municipio"
+        ? new Set(centrosResult.centros.map(claveCentro))
+        : new Set<string>();
+    const clavesVistas = new Set<string>();
+    const centrosParaMapa = [
+      ...centrosResult.centros,
+      ...obtenerCentrosProvincia(provCode),
+    ].filter((c) => {
+      const clave = claveCentro(c);
+      if (clavesVistas.has(clave)) return false;
+      clavesVistas.add(clave);
+      return true;
+    });
+
+    for (const c of centrosParaMapa) {
       if (c.coords && dentroDeCyL(c.coords[0], c.coords[1])) {
         puntosMapa.push({
           lat: c.coords[0],
@@ -459,6 +486,7 @@ import {
           nombre: c.nombre,
           tipo: "centro",
           detalle: c.tipo || "",
+          propio: clavesPropias.has(claveCentro(c)),
         });
       }
     }
@@ -470,6 +498,7 @@ import {
           nombre: "Estación de autobuses",
           tipo: "estacion",
           detalle: e.direccion || "",
+          propio: false,
         });
       }
     }
@@ -501,10 +530,17 @@ import {
       // muestra los 5 más cercanos que haya, aunque estén más lejos.
       puntosMapaVisibles = (
         dentroDelRadio.length > 0 ? dentroDelRadio : conDistancia.slice(0, 5)
-      ).map((x) => x.p);
+      )
+        .slice(0, LIMITE_MAPA)
+        .map((x) => x.p);
     } else {
-      puntosMapaVisibles = puntosMapa.slice(0, 60);
+      puntosMapaVisibles = puntosMapa.slice(0, LIMITE_MAPA);
     }
+    // Los centros del propio municipio se dibujan los últimos para que
+    // queden por encima del resto de marcadores.
+    puntosMapaVisibles = puntosMapaVisibles.sort(
+      (a, b) => Number(a.propio) - Number(b.propio),
+    );
 
     if (puntosMapaVisibles.length > 0) {
       mapaBlock.classList.remove("hidden");
@@ -544,6 +580,49 @@ import {
         mapa.addControl(new maplibregl.NavigationControl(), "top-right");
 
         const bounds = new maplibregl.LngLatBounds();
+        puntosMapaVisibles.forEach((p) => {
+          bounds.extend([p.lon, p.lat]);
+
+          const esCentro = p.tipo === "centro";
+          const color = esCentro ? (p.propio ? "#d97706" : "#0f766e") : "#2563eb";
+          const icono = esCentro ? "🏥" : "🚌";
+          const tamano = p.propio ? 38 : 30;
+
+          const el = document.createElement("div");
+          el.style.cssText = `
+            width: ${tamano}px; height: ${tamano}px;
+            background: ${color};
+            border: 2px solid white;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            box-shadow: ${p.propio ? "0 0 0 4px rgba(217,119,6,0.35), " : ""}0 2px 5px rgba(0,0,0,0.5);
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+          `;
+          const iconoSpan = document.createElement("span");
+          iconoSpan.textContent = icono;
+          iconoSpan.style.cssText =
+            "transform: rotate(45deg); font-size: 14px;";
+          el.appendChild(iconoSpan);
+
+          const comoLlegarUrl = `https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lon}`;
+          const popupHtml = `
+            <div style="min-width:180px">
+              ${p.propio ? '<p style="font-size:11px;font-weight:700;color:#d97706;margin:0 0 2px">EN TU MUNICIPIO</p>' : ""}
+              <p style="font-weight:600;margin:0 0 2px">${escapeHtml(p.nombre)}</p>
+              <p style="font-size:12px;color:#64748b;margin:0 0 8px">${escapeHtml(p.detalle)}</p>
+              <a href="${comoLlegarUrl}" target="_blank" rel="noopener"
+                 style="font-size:12px;font-weight:600;color:${color};text-decoration:none">
+                📍 Cómo llegar
+              </a>
+            </div>`;
+
+          new maplibregl.Marker({ element: el, anchor: "bottom" })
+            .setLngLat([p.lon, p.lat])
+            .setPopup(new maplibregl.Popup({ offset: 20 }).setHTML(popupHtml))
+            .addTo(mapa);
+        });
+
         if (origenMarcador) {
           bounds.extend([origenMarcador[1], origenMarcador[0]]);
 
@@ -566,46 +645,6 @@ import {
             .addTo(mapa);
         }
 
-        puntosMapaVisibles.forEach((p) => {
-          bounds.extend([p.lon, p.lat]);
-
-          const esCentro = p.tipo === "centro";
-          const color = esCentro ? "#0f766e" : "#2563eb";
-          const icono = esCentro ? "🏥" : "🚌";
-
-          const el = document.createElement("div");
-          el.style.cssText = `
-            width: 30px; height: 30px;
-            background: ${color};
-            border: 2px solid white;
-            border-radius: 50% 50% 50% 0;
-            transform: rotate(-45deg);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-          `;
-          const iconoSpan = document.createElement("span");
-          iconoSpan.textContent = icono;
-          iconoSpan.style.cssText =
-            "transform: rotate(45deg); font-size: 14px;";
-          el.appendChild(iconoSpan);
-
-          const comoLlegarUrl = `https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lon}`;
-          const popupHtml = `
-            <div style="min-width:180px">
-              <p style="font-weight:600;margin:0 0 2px">${escapeHtml(p.nombre)}</p>
-              <p style="font-size:12px;color:#64748b;margin:0 0 8px">${escapeHtml(p.detalle)}</p>
-              <a href="${comoLlegarUrl}" target="_blank" rel="noopener"
-                 style="font-size:12px;font-weight:600;color:${color};text-decoration:none">
-                📍 Cómo llegar
-              </a>
-            </div>`;
-
-          new maplibregl.Marker({ element: el, anchor: "bottom" })
-            .setLngLat([p.lon, p.lat])
-            .setPopup(new maplibregl.Popup({ offset: 20 }).setHTML(popupHtml))
-            .addTo(mapa);
-        });
 
         if (puntosMapaVisibles.length > 1) {
           mapa.fitBounds(bounds, { padding: 15, maxZoom: 19 });
