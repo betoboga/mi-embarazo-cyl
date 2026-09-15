@@ -398,6 +398,13 @@ import {
     );
     const hospitales = obtenerHospitalesProvincia(provCode);
     const hospitalesSanitarios = obtenerHospitalesSanitariosProvincia(provCode);
+    // El mismo hospital físico puede aparecer en los dos datasets con nombres
+    // ligeramente distintos ("HOSPITAL DE MEDINA DEL CAMPO" en urgencias vs
+    // "HOSPITAL MEDINA DEL CAMPO" en el registro): deduplicamos por nombre
+    // normalizado sin artículos y conservamos la ficha del registro, que
+    // lleva dirección y localidad.
+    const normHospital = (t: string) =>
+      norm(t).replace(/\b(DE|DEL|LA|EL|LOS|LAS)\b/g, "").replace(/\s+/g, " ").trim();
     const hospitalesRenderizados = [
       ...hospitales.map((h) => ({
         nombre: h.nombre,
@@ -408,7 +415,7 @@ import {
         lineas: [h.direccion, h.localidad],
       })),
     ].filter((hospital, index, lista) =>
-      lista.findIndex((otro) => otro.nombre === hospital.nombre) === index
+      lista.findLastIndex((otro) => normHospital(otro.nombre) === normHospital(hospital.nombre)) === index
     );
     const referenciaParto = hospitalParto
       ? `<div class="bg-emerald-50 border-2 border-emerald-600 rounded-lg p-4 mb-4">
