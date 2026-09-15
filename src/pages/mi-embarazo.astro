@@ -14,8 +14,9 @@ import NutritionGuide from '../components/NutritionGuide.astro';
     </div>
 
     <details id="signos-sintomas-alarma" class="bg-card border-2 border-primary/20 rounded-xl p-6 sm:p-8 mb-4" aria-labelledby="signos-sintomas-alarma-title">
-      <summary class="flex items-start gap-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-        <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0" aria-hidden="true">
+      <summary class="group cursor-pointer list-none [&::-webkit-details-marker]:hidden rounded-lg focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-4" aria-expanded="false">
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0" aria-hidden="true">
           <svg class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86l-8.1 14a2 2 0 001.73 3h16.16a2 2 0 001.73-3l-8.1-14a2 2 0 00-3.46 0z" />
           </svg>
@@ -23,10 +24,17 @@ import NutritionGuide from '../components/NutritionGuide.astro';
         <div>
           <h2 id="signos-sintomas-alarma-title" class="text-xl sm:text-2xl font-bold text-fg">Signos y síntomas de alarma</h2>
           <p class="text-muted mt-1">Durante el embarazo, ciertos síntomas pueden indicar complicaciones y requieren de atención médica.</p>
+          </div>
         </div>
+        <span class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary group-hover:text-primary-dark">
+          <span data-details-label>Ver más</span>
+          <svg class="w-4 h-4 transition-transform duration-200 group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </span>
       </summary>
 
-      <div class="space-y-7 text-fg leading-relaxed">
+      <div class="mt-6 space-y-7 text-fg leading-relaxed">
         <div>
           <h3 class="text-lg font-semibold text-fg mb-3">Síntomas que requieren atención médica</h3>
           <ul class="list-disc pl-5 space-y-2">
@@ -78,8 +86,9 @@ import NutritionGuide from '../components/NutritionGuide.astro';
     </details>
 
     <details id="atencion-embarazo" class="bg-card border-2 border-secondary/20 rounded-xl p-6 sm:p-8 mb-4" aria-labelledby="atencion-embarazo-heading">
-      <summary class="flex items-start gap-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-        <div class="w-10 h-10 rounded-lg bg-secondary-light flex items-center justify-center shrink-0" aria-hidden="true">
+      <summary class="group cursor-pointer list-none [&::-webkit-details-marker]:hidden rounded-lg focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-4" aria-expanded="false">
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 rounded-lg bg-secondary-light flex items-center justify-center shrink-0" aria-hidden="true">
           <svg class="w-5 h-5 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-3-3v6m8-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -87,10 +96,17 @@ import NutritionGuide from '../components/NutritionGuide.astro';
         <div>
           <h2 id="atencion-embarazo-heading" class="text-xl sm:text-2xl font-bold text-fg">Atención y seguimiento del embarazo</h2>
           <p class="text-muted mt-1">El proceso de atención al embarazo desde atención primaria actualmente se desarrolla con un enfoque multidisciplinar, centrado en las necesidades de la mujer, la familia y garantizando la continuidad en la asistencia.</p>
+          </div>
         </div>
+        <span class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-secondary group-hover:text-primary-dark">
+          <span data-details-label>Ver más</span>
+          <svg class="w-4 h-4 transition-transform duration-200 group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </span>
       </summary>
 
-      <div class="space-y-7 text-fg leading-relaxed">
+      <div class="mt-6 space-y-7 text-fg leading-relaxed">
         <p>El seguimiento del embarazo se lleva a cabo entre atención primaria y atención especializada, con los compañeros ginecólogos en el hospital. Además, se irán realizando varios controles analíticos durante el embarazo.</p>
 
         <div>
@@ -140,8 +156,9 @@ import NutritionGuide from '../components/NutritionGuide.astro';
     </details>
 
     <details id="site" class="bg-card border-2 border-primary/20 rounded-xl p-6 sm:p-8 mb-8" aria-labelledby="site-heading">
-      <summary class="flex items-start gap-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-        <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0" aria-hidden="true">
+      <summary class="group cursor-pointer list-none [&::-webkit-details-marker]:hidden rounded-lg focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-4" aria-expanded="false">
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0" aria-hidden="true">
           <svg class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9.247a4.75 4.75 0 117.544 0M12 14v.01M12 18h.01M5.636 5.636l-.707-.707m14.142.707l.707-.707M12 2v1" />
           </svg>
@@ -149,10 +166,17 @@ import NutritionGuide from '../components/NutritionGuide.astro';
         <div>
           <h2 id="site-heading" class="text-xl sm:text-2xl font-bold text-fg">¿Has estado en contacto con sustancias peligrosas o factores de riesgo?</h2>
           <p class="text-muted mt-1">Servicio de Información Telefónica para la Embarazada (SITE)</p>
+          </div>
         </div>
+        <span class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary group-hover:text-primary-dark">
+          <span data-details-label>Ver más</span>
+          <svg class="w-4 h-4 transition-transform duration-200 group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </span>
       </summary>
 
-      <div class="space-y-5 text-fg leading-relaxed">
+      <div class="mt-6 space-y-5 text-fg leading-relaxed">
         <p>El <strong>SITE</strong> es un servicio de información sobre factores de riesgo para el desarrollo del niño antes del nacimiento.</p>
         <p>Las embarazadas pueden recibir información telefónica llamando al teléfono <a href="tel:918222436" class="font-bold text-primary hover:text-primary-dark underline underline-offset-2">91 822 24 36</a>, en <strong>horario de 9 a 15 horas de lunes a viernes</strong>.</p>
         <p>Serán atendidas por médicos especialistas pertenecientes al grupo científico de la asociación Estudio Colaborativo Español de Malformaciones Congénitas (ECEMC), quienes responderán sobre los peligros para el embrión o feto de los diferentes agentes ambientales (químicos/tratamientos farmacológicos, físicos, biológicos, …) que pueden afectar a la mujer embarazada, así como sobre aquellas otras cuestiones relacionadas con el cuidado y atención del embarazo.</p>
@@ -264,6 +288,22 @@ import NutritionGuide from '../components/NutritionGuide.astro';
   import data from '../data/territorial.json';
 
   const STORAGE_KEY = 'mi-embarazo-cyl-state';
+
+  // Los <details> conservan la interacción nativa por teclado. Sincronizamos
+  // el estado y el texto para que el control sea claro también para lectores de pantalla.
+  document.querySelectorAll<HTMLDetailsElement>('main > details').forEach((details) => {
+    const summary = details.querySelector<HTMLElement>('summary');
+    const label = details.querySelector<HTMLElement>('[data-details-label]');
+    if (!summary || !label) return;
+
+    const syncExpandedState = () => {
+      summary.setAttribute('aria-expanded', String(details.open));
+      label.textContent = details.open ? 'Ver menos' : 'Ver más';
+    };
+
+    details.addEventListener('toggle', syncExpandedState);
+    syncExpandedState();
+  });
 
   // Función segura para obtener el estado (maneja SSR donde localStorage no existe)
   function getStoredState(): any {
