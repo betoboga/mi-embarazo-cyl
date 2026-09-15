@@ -218,6 +218,7 @@ import {
     obtenerFarmaciasConFallback,
     obtenerHospitalesProvincia,
     obtenerHospitalesSanitariosProvincia,
+    obtenerHospitalReferenciaParto,
     obtenerZbs,
     obtenerCentrosConFallback,
     obtenerCentrosProvincia,
@@ -382,7 +383,10 @@ import {
     const municipioObj = obtenerMunicipio(munNombre);
     const provCode = municipioObj?.provincia || "";
 
-    // HOSPITALES (solo nombre + nivel, no hay dirección/teléfono reales)
+    // HOSPITAL DE REFERENCIA PARA EL PARTO: se calcula por distancia real,
+    // aunque esté en otra provincia. Los demás hospitales se mantienen como
+    // recursos generales, sin dar a entender que todos atienden partos.
+    const hospitalParto = obtenerHospitalReferenciaParto(munNombre);
     const hospitales = obtenerHospitalesProvincia(provCode);
     const hospitalesSanitarios = obtenerHospitalesSanitariosProvincia(provCode);
     const hospitalesRenderizados = [
@@ -397,13 +401,22 @@ import {
     ].filter((hospital, index, lista) =>
       lista.findIndex((otro) => otro.nombre === hospital.nombre) === index
     );
-    if (hospitalesRenderizados.length === 0) {
-      hospitalesList.innerHTML = `<p class="text-sm text-muted">No hay hospitales registrados en tu provincia.</p>`;
-    } else {
-      hospitalesList.innerHTML = hospitalesRenderizados
-        .map((h) => tarjeta(h.nombre, h.lineas))
-        .join("");
-    }
+    const referenciaParto = hospitalParto
+      ? `<div class="bg-emerald-50 border-2 border-emerald-600 rounded-lg p-4 mb-4">
+          <p class="text-xs font-semibold uppercase tracking-wider text-emerald-800 mb-1">Referencia para el parto</p>
+          <p class="font-semibold text-fg">${escapeHtml(hospitalParto.nombre)}</p>
+          <p class="text-sm text-muted mt-0.5">${escapeHtml(hospitalParto.localidad)} · a unos ${Math.round(hospitalParto.distanciaKm)} km en línea recta</p>
+          ${hospitalParto.provincia !== provCode ? `<p class="text-sm text-emerald-900 mt-2">Es el hospital de referencia con paritorio más cercano, aunque está en otra provincia.</p>` : ""}
+        </div>`
+      : "";
+    const avisoHospitales = `<p class="text-sm text-muted bg-white border border-border rounded-lg p-3 mb-3"><strong>Importante:</strong> no todos los hospitales atienden partos. Los demás se muestran como recursos hospitalarios generales.</p>`;
+    const otrosHospitales = hospitalesRenderizados.length === 0
+      ? `<p class="text-sm text-muted">No hay otros hospitales registrados en tu provincia.</p>`
+      : hospitalesRenderizados
+          .filter((h) => !hospitalParto || !hospitalParto.aliases.some((alias) => h.nombre.toLocaleUpperCase('es').includes(alias)))
+          .map((h) => tarjeta(h.nombre, h.lineas))
+          .join("");
+    hospitalesList.innerHTML = referenciaParto + avisoHospitales + otrosHospitales;
 
     // CENTROS DE SALUD (municipio -> zona -> provincia, con aviso de nivel)
     const centrosResult = obtenerCentrosConFallback(munNombre, provCode);

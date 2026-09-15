@@ -135,6 +135,43 @@ export function obtenerHospitalesSanitariosProvincia(provCodigo: string): Centro
 }
 
 /**
+ * Hospitales públicos de SACYL con atención al parto, contrastados con las
+ * páginas oficiales de Obstetricia/paritorio de cada complejo. La plantilla
+ * de urgencias aporta los niveles II/III-IV; Valladolid se completa con el
+ * Registro de centros sanitarios y las carteras oficiales de ambos hospitales.
+ */
+const HOSPITALES_REFERENCIA_PARTO = [
+  { nombre: 'Hospital Nuestra Señora de Sonsoles', provincia: '05', localidad: 'Ávila', aliases: ['SONSOLES', 'COMPLEJO ASISTENCIAL DE ÁVILA'], coords: [40.656478, -4.7002172] },
+  { nombre: 'Hospital Universitario de Burgos', provincia: '09', localidad: 'Burgos', aliases: ['UNIVERSITARIO DE BURGOS', 'COMPLEJO ASISTENCIAL DE BURGOS'], coords: [42.3593305, -3.6875636] },
+  { nombre: 'Complejo Asistencial Universitario de León', provincia: '24', localidad: 'León', aliases: ['HOSPITAL DE LEON COMPLEJO', 'COMPLEJO ASISTENCIAL DE LEÓN'], coords: [42.59706, -5.577024] },
+  { nombre: 'Hospital El Bierzo', provincia: '24', localidad: 'Ponferrada', aliases: ['HOSPITAL EL BIERZO'], coords: [42.572359, -6.643689] },
+  { nombre: 'Hospital Río Carrión', provincia: '34', localidad: 'Palencia', aliases: ['RIO CARRION', 'COMPLEJO ASISTENCIAL DE PALENCIA'], coords: [42.0025986, -4.5372164] },
+  { nombre: 'Hospital Universitario de Salamanca', provincia: '37', localidad: 'Salamanca', aliases: ['UNIVERSITARIO DE SALAMANCA', 'COMPLEJO ASISTENCIAL DE SALAMANCA'], coords: [40.9641961, -5.6729494] },
+  { nombre: 'Hospital General de Segovia', provincia: '40', localidad: 'Segovia', aliases: ['HOSPITAL GENERAL DE SEGOVIA', 'COMPLEJO ASISTENCIAL DE SEGOVIA'], coords: [40.943175, -4.1190603] },
+  { nombre: 'Hospital Santa Bárbara', provincia: '42', localidad: 'Soria', aliases: ['SANTA BARBARA', 'COMPLEJO ASISTENCIAL DE SORIA'], coords: [41.7698416, -2.4719148] },
+  { nombre: 'Hospital Clínico Universitario de Valladolid', provincia: '47', localidad: 'Valladolid', aliases: ['CLINICO UNIVERSITARIO DE VALLADOLID'], coords: [41.6559672, -4.7203513] },
+  { nombre: 'Hospital Universitario Río Hortega', provincia: '47', localidad: 'Valladolid', aliases: ['UNIVERSITARIO RIO HORTEGA'], coords: [41.6310306, -4.7121825] },
+  { nombre: 'Hospital Virgen de la Concha', provincia: '49', localidad: 'Zamora', aliases: ['VIRGEN DE LA CONCHA', 'COMPLEJO ASISTENCIAL DE ZAMORA'], coords: [41.5155325, -5.7288313] },
+] as const;
+
+export function obtenerHospitalReferenciaParto(municipioNombre: string) {
+  const municipio = obtenerMunicipio(municipioNombre);
+  if (!municipio?.coords) return null;
+  const [lat, lon] = municipio.coords;
+  const rad = (grados: number) => grados * Math.PI / 180;
+  const distanciaKm = (destino: readonly [number, number]) => {
+    const [lat2, lon2] = destino;
+    const dLat = rad(lat2 - lat);
+    const dLon = rad(lon2 - lon);
+    const a = Math.sin(dLat / 2) ** 2 + Math.cos(rad(lat)) * Math.cos(rad(lat2)) * Math.sin(dLon / 2) ** 2;
+    return 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  };
+  return HOSPITALES_REFERENCIA_PARTO
+    .map(hospital => ({ ...hospital, distanciaKm: distanciaKm(hospital.coords) }))
+    .sort((a, b) => a.distanciaKm - b.distanciaKm)[0];
+}
+
+/**
  * Obtiene centros de salud de una provincia (con coords),
  * filtrados a solo los tipos relevantes para una embarazada.
  */
