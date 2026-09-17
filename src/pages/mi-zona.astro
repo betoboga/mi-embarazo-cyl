@@ -218,8 +218,7 @@ import {
     obtenerFarmaciasConFallback,
     obtenerHospitalesProvincia,
     obtenerHospitalesSanitariosProvincia,
-    obtenerHospitalReferenciaParto,
-    obtenerHospitalesReferenciaParto,
+    obtenerHospitalReferenciaArea,
     obtenerZbs,
     obtenerCentrosConFallback,
     obtenerCentrosProvincia,
@@ -384,25 +383,20 @@ import {
     const municipioObj = obtenerMunicipio(munNombre);
     const provCode = municipioObj?.provincia || "";
 
-    // HOSPITAL DE REFERENCIA PARA EL PARTO: la regla es dinámica —todo
-    // hospital con nivel de urgencias II o superior en el dataset oficial—
-    // y se elige el más cercano por distancia real, aunque esté en otra
-    // provincia. Los demás hospitales se mantienen como recursos generales,
-    // sin dar a entender que todos atienden partos.
-    const hospitalParto = obtenerHospitalReferenciaParto(munNombre);
+    // HOSPITALES: la web no deduce el hospital de referencia para el parto.
+    // Se asigna segun el area sanitaria y el circuito asistencial de Sacyl
+    // (no por nivel de urgencias ni por distancia) y debe confirmarse con la
+    // matrona u Obstetricia. Se muestra la nota orientativa aprobada por la
+    // revision clinica y, debajo, la lista general de hospitales.
     const norm = (t: string) =>
       (t || "").toLocaleUpperCase("es").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " ").trim();
-    const hospitalesConParto = obtenerHospitalesReferenciaParto();
-    const nombresConParto = new Set(
-      hospitalesConParto.flatMap((h) => [h.nombreUrgencias, h.nombreRegistro].filter(Boolean)).map((n) => norm(n as string))
-    );
     const hospitales = obtenerHospitalesProvincia(provCode);
     const hospitalesSanitarios = obtenerHospitalesSanitariosProvincia(provCode);
-    // El mismo hospital físico puede aparecer en los dos datasets con nombres
+    // El mismo hospital fisico puede aparecer en los dos datasets con nombres
     // ligeramente distintos ("HOSPITAL DE MEDINA DEL CAMPO" en urgencias vs
     // "HOSPITAL MEDINA DEL CAMPO" en el registro): deduplicamos por nombre
-    // normalizado sin artículos y conservamos la ficha del registro, que
-    // lleva dirección y localidad.
+    // normalizado sin articulos y conservamos la ficha del registro, que
+    // lleva direccion y localidad.
     const normHospital = (t: string) =>
       norm(t).replace(/\b(DE|DEL|LA|EL|LOS|LAS)\b/g, "").replace(/\s+/g, " ").trim();
     const hospitalesRenderizados = [
@@ -417,28 +411,29 @@ import {
     ].filter((hospital, index, lista) =>
       lista.findLastIndex((otro) => normHospital(otro.nombre) === normHospital(hospital.nombre)) === index
     );
-    const referenciaParto = hospitalParto
+    // La correspondencia municipio -> hospital de referencia es una lista
+    // curada de registros oficiales (area sanitaria de Avila -> Hospital
+    // Nuestra Senora de Sonsoles), no una inferencia por provincia ni
+    // distancia. Donde no hay correspondencia verificada, la web pide
+    // confirmarlo con la matrona u Obstetricia.
+    const hospitalArea = obtenerHospitalReferenciaArea(munNombre);
+    const referenciaParto = hospitalArea
       ? `<div class="bg-emerald-50 border-2 border-emerald-600 rounded-lg p-4 mb-4">
-          <p class="text-xs font-semibold uppercase tracking-wider text-emerald-800 mb-1">Referencia para el parto</p>
-          <p class="font-semibold text-fg">${escapeHtml(hospitalParto.nombreDisplay)}</p>
-          <p class="text-sm text-muted mt-0.5">${escapeHtml(hospitalParto.localidad)} · a unos ${Math.round(hospitalParto.distanciaKm)} km en línea recta · ${escapeHtml(hospitalParto.nivel)}</p>
-          ${hospitalParto.provincia !== provCode ? `<p class="text-sm text-emerald-900 mt-2">Es el hospital de referencia con paritorio más cercano, aunque está en otra provincia.</p>` : ""}
+          <p class="text-xs font-semibold uppercase tracking-wider text-emerald-800 mb-1">Hospital de referencia de tu área</p>
+          <p class="font-semibold text-fg">${escapeHtml(hospitalArea)}</p>
+          <p class="text-sm text-fg leading-relaxed mt-1">Atiende el área sanitaria de Ávila y dispone de servicio de Obstetricia y Ginecología. Confírmalo con tu matrona o con el servicio de Obstetricia para tu embarazo. Si necesitas atención inmediata o se trata de una emergencia grave, llama al 112 y sigue sus indicaciones: coordinarán la asistencia y te dirigirán al recurso adecuado.</p>
         </div>`
-      : "";
-    const otrosConPartoProvincia = hospitalesConParto.filter(
-      (h) => h.provincia === provCode && hospitalParto && norm(h.nombreUrgencias) !== norm(hospitalParto.nombreUrgencias)
-    );
-    const tambienConParto = otrosConPartoProvincia.length
-      ? `<p class="text-sm text-emerald-900 bg-emerald-50 border border-emerald-200 rounded-lg p-3 mb-3">También con paritorio en tu provincia: ${otrosConPartoProvincia.map((h) => escapeHtml(h.nombreDisplay)).join(", ")}.</p>`
-      : "";
-    const avisoHospitales = `<p class="text-sm text-muted bg-white border border-border rounded-lg p-3 mb-3"><strong>Importante:</strong> no todos los hospitales atienden partos. La referencia es el hospital de nivel II o superior más cercano según los datos oficiales de la Junta; los demás se muestran como recursos hospitalarios generales.</p>`;
+      : `<div class="bg-emerald-50 border-2 border-emerald-600 rounded-lg p-4 mb-4">
+          <p class="text-xs font-semibold uppercase tracking-wider text-emerald-800 mb-1">Tu hospital de referencia para el parto</p>
+          <p class="text-sm text-fg leading-relaxed">Tu hospital de referencia se asigna según tu área sanitaria y el circuito asistencial de Sacyl; no se determina solo por distancia. Confírmalo con tu matrona o con el servicio de Obstetricia. Si necesitas atención inmediata o se trata de una emergencia grave, llama al 112 y sigue sus indicaciones: coordinarán la asistencia y te dirigirán al recurso adecuado.</p>
+        </div>`;
+    const avisoHospitales = `<p class="text-sm text-muted bg-white border border-border rounded-lg p-3 mb-3"><strong>Importante:</strong> no todos los hospitales atienden partos. Esta lista muestra los recursos hospitalarios generales registrados en tu provincia.</p>`;
     const otrosHospitales = hospitalesRenderizados.length === 0
       ? `<p class="text-sm text-muted">No hay otros hospitales registrados en tu provincia.</p>`
       : hospitalesRenderizados
-          .filter((h) => !nombresConParto.has(norm(h.nombre)))
           .map((h) => tarjeta(h.nombre, h.lineas))
           .join("");
-    hospitalesList.innerHTML = referenciaParto + tambienConParto + avisoHospitales + otrosHospitales;
+    hospitalesList.innerHTML = referenciaParto + avisoHospitales + otrosHospitales;
 
     // CENTROS DE SALUD (municipio -> zona -> provincia, con aviso de nivel)
     const centrosResult = obtenerCentrosConFallback(munNombre, provCode);

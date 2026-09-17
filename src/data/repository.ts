@@ -134,123 +134,298 @@ export function obtenerHospitalesSanitariosProvincia(provCodigo: string): Centro
   );
 }
 
-/**
- * Referencia para el parto — regla dinámica sobre datos oficiales de la JCyL.
- *
- * QUÉ hospitales se marcan no va a mano: se deriva del dataset oficial
- * "Plantilla atención urgente hospitalaria" (hospitales-plantilla-urgencias,
- * ya procesado en territorial.json). Es referencia para el parto todo
- * hospital con nivel de urgencias II o superior (II, III, III-IV, IV);
- * los de Nivel I se muestran como recursos hospitalarios generales.
- *
- * El dataset de urgencias usa nombres de complejo ("COMPLEJO ASISTENCIAL DE
- * ÁVILA") que no son el hospital físico que la gente conoce ("Hospital
- * Nuestra Señora de Sonsoles"). Para el nombre visible y las coordenadas,
- * cada complejo se reconcilia con el Registro oficial de centros sanitarios
- * (tipo HOSPITALES GENERALES, también en territorial.json). Las cadenas
- * `urgencias` y `registro` son verbatim de sus datasets oficiales —incluidas
- * las erratas del origen, como "VALLLADOLID" o "UNIVERITARIO"— y `display`
- * es solo presentación. Si la Junta añade un hospital de nivel II+, se
- * marcará automáticamente aunque aún no tenga reconciliación.
- */
-
-const NIVEL_REFERENCIA_PARTO = /^NIVEL\s+(II|III|IV)\b/;
-
-export function esNivelReferenciaParto(nivel: string): boolean {
-  return NIVEL_REFERENCIA_PARTO.test(normalize(nivel));
-}
-
-const RECONCILIACION_REGISTRO: Record<string, { registro: string; display: string }> = {
-  'COMPLEJO ASISTENCIAL DE AVILA': { registro: 'HOSPITAL NUESTRA SEÑORA DE SONSOLES', display: 'Hospital Nuestra Señora de Sonsoles' },
-  'COMPLEJO ASISTENCIAL DE BURGOS': { registro: 'HOSPITAL UNIVERSITARIO DE BURGOS COMPLEJO ASISTENCIAL UNIVER. DE BURGOS', display: 'Hospital Universitario de Burgos' },
-  'COMPLEJO ASISTENCIAL DE LEON': { registro: 'HOSPITAL DE LEON COMPLEJO ASISTENCIAL UNIVERSITARIO DE LEON', display: 'Hospital de León' },
-  'HOSPITAL EL BIERZO': { registro: 'HOSPITAL EL BIERZO', display: 'Hospital El Bierzo' },
-  'COMPLEJO ASISTENCIAL DE PALENCIA': { registro: 'HOSPITAL RIO CARRION COMPLEJO ASISTENCIAL UNIVERSITARIO DE PALENCIA', display: 'Hospital Río Carrión' },
-  'COMPLEJO ASISTENCIAL DE SALAMANCA': { registro: 'HOSPITAL UNIVERSITARIO DE SALAMANCA (COMPLEJO ASISTENCIAL UNIVERSITARIO DE', display: 'Hospital Universitario de Salamanca' },
-  'COMPLEJO ASISTENCIAL DE SEGOVIA': { registro: 'HOSPITAL GENERAL DE SEGOVIA COMPLEJO ASISTENCIAL UNIVERSITARIO DE SEGOVIA', display: 'Hospital General de Segovia' },
-  'COMPLEJO ASISTENCIAL DE SORIA': { registro: 'HOSPITAL SANTA BARBARA (COMPLEJO ASISTENCIAL UNIVERSITARIO DE SORIA)', display: 'Hospital Santa Bárbara' },
-  'COMPLEJO ASISTENCIAL DE ZAMORA': { registro: 'HOSPITAL VIRGEN DE LA CONCHA COMPLEJO ASISTENCIAL DE ZAMORA', display: 'Hospital Virgen de la Concha' },
-  'HOSPITAL CLINICO UNIVERITARIO DE VALLADOLID': { registro: 'HOSPITAL CLINICO UNIVERSITARIO DE VALLADOLID', display: 'Hospital Clínico Universitario de Valladolid' },
-  'HOSPITAL UNIVERSITARIO DEL RIO HORTEGA': { registro: 'HOSPITAL UNIVERSITARIO RIO HORTEGA', display: 'Hospital Universitario Río Hortega' },
-};
-
-/** Fallback de presentación para nombres oficiales en mayúsculas. */
-function tituloCasa(nombre: string): string {
-  const minusculas = new Set(['DE', 'DEL', 'LA', 'LAS', 'EL', 'LOS', 'Y', 'EN']);
-  return normalize(nombre)
-    .split(' ')
-    .map((palabra, i) => {
-      const lower = palabra.toLowerCase();
-      if (i > 0 && minusculas.has(palabra)) return lower;
-      return lower.charAt(0).toUpperCase() + lower.slice(1);
-    })
-    .join(' ');
-}
-
-/** Nombre de localidad bien escrito, tomado del listado oficial de municipios. */
-function nombreLocalidadBonito(localidad: string, provincia: string): string {
-  const municipio = municipios.find(
-    (m) => normalize(m.nombre) === normalize(localidad) && (!provincia || m.provincia === provincia)
-  );
-  return municipio?.nombre ?? tituloCasa(localidad);
-}
-
-export interface HospitalReferenciaParto {
-  /** Nombre oficial en el dataset de urgencias (clave de la regla dinámica). */
-  nombreUrgencias: string;
-  /** Nombre oficial en el registro de centros sanitarios, si hay reconciliación. */
-  nombreRegistro: string | null;
-  nombreDisplay: string;
-  provincia: string;
-  provinciaNombre: string;
-  localidad: string;
-  nivel: string;
-  coords: [number, number] | null;
-}
-
-/** Todos los hospitales que la regla dinámica marca como referencia de parto. */
-export function obtenerHospitalesReferenciaParto(): HospitalReferenciaParto[] {
-  return hospitalesList
-    .filter((hospital) => esNivelReferenciaParto(hospital.nivel))
-    .map((hospital) => {
-      const reconciliacion = RECONCILIACION_REGISTRO[normalize(hospital.nombre)];
-      const centroRegistro = reconciliacion
-        ? centrosList.find(
-            (c) =>
-              c.tipo?.trim() === 'HOSPITALES GENERALES' &&
-              normalize(c.nombre) === normalize(reconciliacion.registro)
-          )
-        : undefined;
-      return {
-        nombreUrgencias: hospital.nombre,
-        nombreRegistro: centroRegistro?.nombre ?? null,
-        nombreDisplay: reconciliacion?.display ?? tituloCasa(hospital.nombre),
-        provincia: hospital.provincia,
-        provinciaNombre: PROVINCIAS[hospital.provincia] ?? hospital.provinciaNombre,
-        localidad: centroRegistro
-          ? nombreLocalidadBonito(centroRegistro.localidad, hospital.provincia)
-          : PROVINCIAS[hospital.provincia] ?? hospital.provinciaNombre,
-        nivel: hospital.nivel,
-        coords: centroRegistro?.coords ?? null,
-      };
-    });
-}
 
 /**
- * Hospital de referencia para el parto más cercano al municipio, por
- * distancia geográfica real y sin límite de provincia. Es orientación
- * territorial, no la asignación sanitaria oficial individual.
+ * Hospital de referencia por area sanitaria - lista curada sobre registros
+ * oficiales, NO una regla por provincia ni por distancia.
+ *
+ * Fuente: dataset oficial de la JCyL "mapas-de-areas-de-salud-de-castilla-y-leon"
+ * (analisis.datosabiertos.jcyl.es): las 22 ZBS de la G.A.S. Avila (codigos de
+ * zona 170101-170122) y sus municipios verbatim, verificados el 2026-09-17.
+ * Incluye 8 municipios de Segovia cuya area sanitaria oficial es Avila.
+ * Esa gerencia asigna el Hospital Nuestra Senora de Sonsoles como referencia.
+ * Para cualquier otro municipio la web no afirma un hospital: pide confirmarlo
+ * con la matrona u Obstetricia.
  */
-export function obtenerHospitalReferenciaParto(municipioNombre: string) {
-  const municipio = obtenerMunicipio(municipioNombre);
-  if (!municipio?.coords) return null;
-  const [lat, lon] = municipio.coords;
-  const candidatos = obtenerHospitalesReferenciaParto().filter((hospital) => hospital.coords);
-  if (candidatos.length === 0) return null;
-  return candidatos
-    .map((hospital) => ({ ...hospital, distanciaKm: distanciaKm([lat, lon], hospital.coords as [number, number]) }))
-    .sort((a, b) => a.distanciaKm - b.distanciaKm)[0];
+const MUNICIPIOS_AREA_AVILA: ReadonlySet<string> = new Set([
+  "ADRADA  LA",
+  "ALDEHUELA  LA",
+  "ARENAL  EL",
+  "Adanero",
+  "Albornos",
+  "Aldeanueva de Santa Cruz",
+  "Aldeaseca",
+  "Amavida",
+  "Arenas de San Pedro",
+  "Arevalillo",
+  "Arévalo",
+  "Aveinte",
+  "Avellaneda",
+  "BARCO DE AVILA  EL",
+  "BARRACO  EL",
+  "BERLANAS  LAS",
+  "Barco de Ávila, El",
+  "Barraco, El",
+  "Barromán",
+  "Becedas",
+  "Becedillas",
+  "Bercial de Zapardiel",
+  "Bernuy-Zapardiel",
+  "Berrocalejo de Aragona",
+  "Blascomillán",
+  "Blasconuño de Matacabras",
+  "Blascosancho",
+  "Bohoyo",
+  "Bonilla de la Sierra",
+  "Brabos",
+  "Bularros",
+  "Burgohondo",
+  "Cabezas de Alambre",
+  "Cabezas del Pozo",
+  "Cabezas del Villar",
+  "Cabizuela",
+  "Canales",
+  "Candeleda",
+  "Cantiveros",
+  "Cardeñosa",
+  "Casas del Puerto",
+  "Casasola",
+  "Casavieja",
+  "Casillas",
+  "Castellanos de Zapardiel",
+  "Cebreros",
+  "Cepeda la Mora",
+  "Chamartín",
+  "Cillán",
+  "Cisla",
+  "Codorniz",
+  "Collado de Contreras",
+  "Collado del Mirón",
+  "Constanzana",
+  "Crespos",
+  "Cuevas del Valle",
+  "Diego del Carpio",
+  "Donhierro",
+  "Donjimeno",
+  "Donvidas",
+  "El Bohodón",
+  "El Losar del Barco",
+  "El Mirón",
+  "El Oso",
+  "El Parral",
+  "Espinosa de los Caballeros",
+  "FRESNO  EL",
+  "Flores de Ávila",
+  "Fontiveros",
+  "Fresnedilla",
+  "Fuente el Saúz",
+  "Fuentes de Año",
+  "Gallegos de Altamiros",
+  "Gallegos de Sobrinos",
+  "Garganta del Villar",
+  "Gavilanes",
+  "Gemuño",
+  "Gil García",
+  "Gilbuena",
+  "Gimialcón",
+  "Gotarrendura",
+  "Grandes y San Martín",
+  "Guisando",
+  "Gutierre-Muñoz",
+  "HORCAJADA  LA",
+  "HORNILLO  EL",
+  "HOYO DE PINARES  EL",
+  "Hernansancho",
+  "Herradón de Pinares",
+  "Herreros de Suso",
+  "Higuera de las Dueñas",
+  "Horcajo de las Torres",
+  "Hoyocasero",
+  "Hoyorredondo",
+  "Hoyos de Miguel Muñoz",
+  "Hoyos del Collado",
+  "Hoyos del Espino",
+  "Hurtumpascual",
+  "Junciana",
+  "La Carrera",
+  "La Colilla",
+  "La Hija de Dios",
+  "La Serrada",
+  "La Torre",
+  "Langa",
+  "Lanzahíta",
+  "Los Llanos de Tormes",
+  "Madrigal de las Altas Torres",
+  "Malpartida de Corneja",
+  "Mamblas",
+  "Mancera de Arriba",
+  "Manjabálago y Ortigosa de Rioalmar",
+  "Marlín",
+  "Martiherrero",
+  "Martín Muñoz de la Dehesa",
+  "Martín Muñoz de las Posadas",
+  "Martínez",
+  "Mediana de Voltoya",
+  "Medinilla",
+  "Mengamuñoz",
+  "Mesegar de Corneja",
+  "Mijares",
+  "Mingorría",
+  "Mironcillo",
+  "Mirueña de los Infanzones",
+  "Mombeltrán",
+  "Monsalupe",
+  "Montejo de Arévalo",
+  "Moraleja de Matacabras",
+  "Muñana",
+  "Muñico",
+  "Muñogalindo",
+  "Muñogrande",
+  "Muñomer del Peco",
+  "Muñopepe",
+  "Muñosancho",
+  "Muñotello",
+  "NAVAS DEL MARQUES  LAS",
+  "Narrillos del Rebollar",
+  "Narrillos del Álamo",
+  "Narros de Saldueña",
+  "Narros del Castillo",
+  "Narros del Puerto",
+  "Nava de Arévalo",
+  "Nava del Barco",
+  "Navacepedilla de Corneja",
+  "Navadijos",
+  "Navaescurial",
+  "Navahondilla",
+  "Navalacruz",
+  "Navalmoral",
+  "Navalonguilla",
+  "Navalosa",
+  "Navalperal de Pinares",
+  "Navalperal de Tormes",
+  "Navaluenga",
+  "Navaquesera",
+  "Navarredonda de Gredos",
+  "Navarredondilla",
+  "Navarrevisca",
+  "Navas del Marqués, Las",
+  "Navatalgordo",
+  "Navatejares",
+  "Neila de San Miguel",
+  "Niharra",
+  "Ojos-Albos",
+  "Orbita",
+  "Padiernos",
+  "Pajares de Adaja",
+  "Palacios de Goda",
+  "Papatrigo",
+  "Pascualcobo",
+  "Pedro Bernardo",
+  "Pedro-Rodríguez",
+  "Peguerinos",
+  "Peñalba de Ávila",
+  "Piedrahíta",
+  "Piedralaves",
+  "Poveda",
+  "Poyales del Hoyo",
+  "Pozanco",
+  "Pradosegar",
+  "Puerto Castilla",
+  "Rapariegos",
+  "Rasueros",
+  "Riocabado",
+  "Riofrío",
+  "Rivilla de Barajas",
+  "Salobral",
+  "Salvadiós",
+  "San Bartolomé de Béjar",
+  "San Bartolomé de Corneja",
+  "San Bartolomé de Pinares",
+  "San Cristóbal de la Vega",
+  "San Esteban de Zapardiel",
+  "San Esteban de los Patos",
+  "San Esteban del Valle",
+  "San García de Ingelmos",
+  "San Juan de Gredos",
+  "San Juan de la Encinilla",
+  "San Juan de la Nava",
+  "San Juan del Molinillo",
+  "San Juan del Olmo",
+  "San Lorenzo de Tormes",
+  "San Martín de la Vega del Alberche",
+  "San Martín del Pimpollar",
+  "San Miguel de Corneja",
+  "San Miguel de Serrezuela",
+  "San Pascual",
+  "San Pedro del Arroyo",
+  "San Vicente de Arévalo",
+  "Sanchidrián",
+  "Sanchorreja",
+  "Santa Cruz de Pinares",
+  "Santa Cruz del Valle",
+  "Santa María de los Caballeros",
+  "Santa María del Arroyo",
+  "Santa María del Berrocal",
+  "Santa María del Cubillo",
+  "Santa María del Tiétar",
+  "Santiago del Collado",
+  "Santiago del Tormes",
+  "Santo Domingo de las Posadas",
+  "Santo Tomé de Zabarcos",
+  "Serranillos",
+  "Sigeres",
+  "Sinlabajos",
+  "Solana de Rioalmar",
+  "Solana de Ávila",
+  "Solosancho",
+  "Sotalbo",
+  "Sotillo de la Adrada",
+  "TIEMBLO  EL",
+  "Tiñosillos",
+  "Tolbaños",
+  "Tolocirio",
+  "Tormellas",
+  "Tornadizos de Ávila",
+  "Tórtoles",
+  "Umbrías",
+  "Vadillo de la Sierra",
+  "Valdecasa",
+  "Vega de Santa María",
+  "Velayos",
+  "Villaflor",
+  "Villafranca de la Sierra",
+  "Villanueva de Gómez",
+  "Villanueva de Ávila",
+  "Villanueva del Aceral",
+  "Villanueva del Campillo",
+  "Villar de Corneja",
+  "Villarejo del Valle",
+  "Villatoro",
+  "Vita",
+  "Viñegra de Moraña",
+  "Zapardiel de la Cañada",
+  "Zapardiel de la Ribera",
+  "Ávila"
+]);
+
+/** Hospital de referencia verificado para el municipio, o null si no hay correspondencia oficial curada. */
+export function obtenerHospitalReferenciaArea(municipioNombre: string): string | null {
+  return MUNICIPIOS_AREA_AVILA.has(municipioNombre)
+    ? 'Hospital Nuestra Señora de Sonsoles'
+    : null;
 }
+
+/**
+ * NOTA (2026-09-17, correccion clinica de la matrona): la web ya no infiere
+ * el hospital de referencia para el parto. El hospital se asigna segun el
+ * area sanitaria y el circuito asistencial de Sacyl; no se determina por
+ * nivel de urgencias ni por distancia en linea recta, y debe confirmarse
+ * con la matrona o con el servicio de Obstetricia. Por eso se elimino la
+ * antigua regla "nivel II o superior mas cercano" y su algoritmo geometrico
+ * (obtenerHospitalReferenciaParto / obtenerHospitalesReferenciaParto /
+ * esNivelReferenciaParto / RECONCILIACION_REGISTRO): no volver a introducir
+ * una inferencia equivalente.
+ */
 
 /**
  * Obtiene centros de salud de una provincia (con coords),

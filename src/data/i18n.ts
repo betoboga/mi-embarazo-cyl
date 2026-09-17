@@ -118,8 +118,12 @@ export const arabicTranslations: Record<string, string> = {
   'Tu centro de salud': 'مركزك الصحي',
   'Cómo llegar': 'كيفية الوصول',
   'EN TU MUNICIPIO': 'في بلديتك',
-  'Referencia para el parto': 'مستشفى الإحالة للولادة',
   'Importante:': 'مهم:',
+  'Hospital de referencia de tu área': 'مستشفى الإحالة لمنطقتك',
+  'Atiende el área sanitaria de Ávila y dispone de servicio de Obstetricia y Ginecología. Confírmalo con tu matrona o con el servicio de Obstetricia para tu embarazo. Si necesitas atención inmediata o se trata de una emergencia grave, llama al 112 y sigue sus indicaciones: coordinarán la asistencia y te dirigirán al recurso adecuado.': 'يخدم المنطقة الصحية في أفيلا ويضم قسم التوليد وأمراض النساء. أكدي ذلك مع القابلة أو مع قسم التوليد لحملك. إذا كنت بحاجة إلى رعاية فورية أو كانت الحالة طارئة خطيرة، فاتصلي بالرقم 112 واتبعي تعليماتهم: سينسقون الرعاية ويوجهونك إلى المورد المناسب.',
+  'Tu hospital de referencia para el parto': 'مستشفى الإحالة الخاص بك للولادة',
+  'Tu hospital de referencia se asigna según tu área sanitaria y el circuito asistencial de Sacyl; no se determina solo por distancia. Confírmalo con tu matrona o con el servicio de Obstetricia. Si necesitas atención inmediata o se trata de una emergencia grave, llama al 112 y sigue sus indicaciones: coordinarán la asistencia y te dirigirán al recurso adecuado.': 'يُحدَّد مستشفى الإحالة الخاص بك وفق منطقتك الصحية ومسار الرعاية في ساكيل؛ ولا يُحدَّد بالمسافة وحدها. أكدي ذلك مع القابلة أو مع قسم التوليد. إذا كنت بحاجة إلى رعاية فورية أو كانت الحالة طارئة خطيرة، فاتصلي بالرقم 112 واتبعي تعليماتهم: سينسقون الرعاية ويوجهونك إلى المورد المناسب.',
+  'no todos los hospitales atienden partos. Esta lista muestra los recursos hospitalarios generales registrados en tu provincia.': 'ليست جميع المستشفيات تستقبل الولادات. تعرض هذه القائمة الموارد الاستشفائية العامة المسجلة في مقاطعتك.',
   'Transporte': 'المواصلات',
   'Desarrollo semanal': 'التطور الأسبوعي',
   'Codigo ZBS': 'رمز المنطقة الصحية',
@@ -127,8 +131,6 @@ export const arabicTranslations: Record<string, string> = {
   'No hay estaciones de autobús registradas cerca de tu municipio.': 'لا توجد محطات حافلات مسجلة بالقرب من بلديتك.',
   'No hay estación de autobuses en tu municipio. Estas son las más cercanas:': 'لا توجد محطة حافلات في بلديتك. هذه هي الأقرب:',
   'No hay un centro de guardia asociado en los datos disponibles.': 'لا يوجد مركز طوارئ مرتبط في البيانات المتاحة.',
-  'Es el hospital de referencia con paritorio más cercano, aunque está en otra provincia.': 'هو أقرب مستشفى إحالة يضم جناح ولادة، رغم أنه في مقاطعة أخرى.',
-  'no todos los hospitales atienden partos. La referencia es el hospital de nivel II o superior más cercano según los datos oficiales de la Junta; los demás se muestran como recursos hospitalarios generales.': 'ليست جميع المستشفيات تستقبل الولادات. مستشفى الإحالة هو أقرب مستشفى من المستوى الثاني أو أعلى وفق البيانات الرسمية لحكومة قشتالة وليون؛ أما الباقي فتُعرض كموارد استشفائية عامة.',
   'No hay otros hospitales registrados en tu provincia.': 'لا توجد مستشفيات أخرى مسجلة في مقاطعتك.',
   'No hay centros de salud en tu municipio. Mostrando los disponibles en tu Zona Básica:': 'لا توجد مراكز صحية في بلديتك. يتم عرض المتاح في منطقتك الصحية الأساسية:',
   'No hay centros de salud en tu municipio. Mostrando los disponibles en tu provincia:': 'لا توجد مراكز صحية في بلديتك. يتم عرض المتاح في مقاطعتك:',
@@ -414,8 +416,12 @@ export const englishTranslations: Record<string, string> = {
   'Tu centro de salud': 'Your health centre',
   'Cómo llegar': 'Get directions',
   'EN TU MUNICIPIO': 'IN YOUR MUNICIPALITY',
-  'Referencia para el parto': 'Referral hospital for birth',
   'Importante:': 'Important:',
+  'Hospital de referencia de tu área': 'Referral hospital for your area',
+  'Atiende el área sanitaria de Ávila y dispone de servicio de Obstetricia y Ginecología. Confírmalo con tu matrona o con el servicio de Obstetricia para tu embarazo. Si necesitas atención inmediata o se trata de una emergencia grave, llama al 112 y sigue sus indicaciones: coordinarán la asistencia y te dirigirán al recurso adecuado.': 'It serves the Ávila health area and has an Obstetrics and Gynecology department. Confirm it with your midwife or the Obstetrics department for your pregnancy. If you need immediate care or it is a serious emergency, call 112 and follow their instructions: they will coordinate care and direct you to the right resource.',
+  'Tu hospital de referencia para el parto': 'Your referral hospital for giving birth',
+  'Tu hospital de referencia se asigna según tu área sanitaria y el circuito asistencial de Sacyl; no se determina solo por distancia. Confírmalo con tu matrona o con el servicio de Obstetricia. Si necesitas atención inmediata o se trata de una emergencia grave, llama al 112 y sigue sus indicaciones: coordinarán la asistencia y te dirigirán al recurso adecuado.': 'Your referral hospital is assigned according to your health area and the Sacyl care pathway; it is not determined by distance alone. Confirm it with your midwife or the Obstetrics department. If you need immediate care or it is a serious emergency, call 112 and follow their instructions: they will coordinate care and direct you to the right resource.',
+  'no todos los hospitales atienden partos. Esta lista muestra los recursos hospitalarios generales registrados en tu provincia.': 'not all hospitals attend births. This list shows the general hospital resources registered in your province.',
   'Transporte': 'Transport',
   'Desarrollo semanal': 'Weekly development',
   'Codigo ZBS': 'BHA code',
@@ -441,8 +447,6 @@ export const englishTranslations: Record<string, string> = {
   'No hay estaciones de autobús registradas cerca de tu municipio.': 'There are no bus stations registered near your municipality.',
   'No hay estación de autobuses en tu municipio. Estas son las más cercanas:': 'There is no bus station in your municipality. These are the nearest:',
   'No hay un centro de guardia asociado en los datos disponibles.': 'There is no on-call centre linked in the available data.',
-  'Es el hospital de referencia con paritorio más cercano, aunque está en otra provincia.': 'It is the nearest referral hospital with a maternity ward, even though it is in another province.',
-  'no todos los hospitales atienden partos. La referencia es el hospital de nivel II o superior más cercano según los datos oficiales de la Junta; los demás se muestran como recursos hospitalarios generales.': 'not all hospitals attend births. The referral hospital is the nearest level II or higher hospital according to official data from the Junta; the others are shown as general hospital resources.',
   'No hay otros hospitales registrados en tu provincia.': 'There are no other hospitals registered in your province.',
   'No hay centros de salud en tu municipio. Mostrando los disponibles en tu Zona Básica:': 'There are no health centres in your municipality. Showing those available in your Basic Health Area:',
   'No hay centros de salud en tu municipio. Mostrando los disponibles en tu provincia:': 'There are no health centres in your municipality. Showing those available in your province:',
@@ -650,10 +654,6 @@ function translateText(text: string, translations: Record<string, string>): stri
   if (verTodas) return replaceOriginal(isEnglish ? `View all (${verTodas[1]})` : `عرض الكل (${verTodas[1]})`);
   const verMas = trimmed.match(/^Ver más \((\d+) (.+)\)$/);
   if (verMas) return replaceOriginal(isEnglish ? `View more (${verMas[1]} ${translateValue(verMas[2], translations)})` : `عرض المزيد (${verMas[1]} ${translateValue(verMas[2], translations)})`);
-  const parto = trimmed.match(/^(.+) · a unos (\d+) km en línea recta · (.+)$/);
-  if (parto) return replaceOriginal(isEnglish ? `${parto[1]} · about ${parto[2]} km as the crow flies · ${translateValue(parto[3], translations)}` : `${parto[1]} · على بُعد نحو ${parto[2]} كم في خط مستقيم · ${translateValue(parto[3], translations)}`);
-  const tambienParto = trimmed.match(/^También con paritorio en tu provincia: (.+)\.$/);
-  if (tambienParto) return replaceOriginal(isEnglish ? `Also with a maternity ward in your province: ${tambienParto[1]}.` : `مستشفيات أخرى فيها جناح ولادة في مقاطعتك: ${tambienParto[1]}.`);
   const ubicacion = trimmed.match(/^Tu ubicación aproximada: (.+)$/);
   if (ubicacion) return replaceOriginal(isEnglish ? `Your approximate location: ${ubicacion[1]}` : `موقعك التقريبي: ${ubicacion[1]}`);
   const nivel = trimmed.match(/^Nivel (.+)$/);
