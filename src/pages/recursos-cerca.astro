@@ -17,13 +17,20 @@ const confirmationPath = locale === 'es' ? '/gracias-recurso/' : `/${locale}/gra
 
     <section aria-labelledby="directorio-title" class="mb-12">
       <h2 id="directorio-title" class="text-2xl font-bold text-fg mb-4">Directorio</h2>
-      <div class="bg-bg-subtle border border-border rounded-xl p-6 sm:p-8 text-center">
-        <div class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto mb-4" aria-hidden="true">
-          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+      <article class="bg-card border border-border rounded-xl p-6 sm:p-7 shadow-sm">
+        <div class="flex flex-wrap items-center gap-2 mb-4">
+          <span class="inline-flex rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">Ávila</span>
+          <span class="inline-flex rounded-full bg-secondary/15 px-3 py-1 text-sm font-semibold text-fg">Lactancia materna y apoyo a familias</span>
         </div>
-        <h3 class="font-semibold text-fg mb-2">Estamos preparando el directorio</h3>
-        <p class="text-muted leading-relaxed max-w-lg mx-auto">Todavía no hay recursos publicados. Aquí podrás encontrar apoyo y actividades como pilates prenatal, matronatación o ejercicio acuático para embarazadas, ejercicio posparto y clases de preparación al parto. Cada propuesta se revisará antes de aparecer para evitar información incorrecta o desactualizada.</p>
-      </div>
+        <h3 class="text-xl font-bold text-fg">AMALAV - Asociación de Madres Lactantes de Ávila</h3>
+        <p class="mt-3 text-muted leading-relaxed">AMALAV trabaja para proteger y promover la lactancia materna como una forma óptima de alimentación para los bebés y como vínculo afectivo, y para acompañar a las familias presentes y futuras en este momento tan especial de sus vidas.</p>
+        <a href="https://amalav.blogspot.com/?m=1" target="_blank" rel="noopener noreferrer" class="mt-5 inline-flex items-center gap-2 font-semibold text-primary hover:text-primary-dark no-underline">
+          Visitar el recurso
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+          <span class="sr-only">(se abre en una nueva pestaña)</span>
+        </a>
+      </article>
+      <p class="mt-4 text-sm text-muted">El directorio seguirá creciendo con asociaciones, grupos, servicios y actividades revisados antes de publicarse.</p>
     </section>
 
     <section aria-labelledby="proponer-title" class="bg-card border-2 border-primary/20 rounded-xl p-6 sm:p-8">
