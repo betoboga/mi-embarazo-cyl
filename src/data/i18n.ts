@@ -1,6 +1,7 @@
 export const arabicTranslations: Record<string, string> = {
   'Zona': 'المنطقة',
   'Embarazo': 'الحمل',
+  'Recursos': 'الموارد',
   'Datos abiertos de Castilla y León': 'بيانات مفتوحة من قشتالة وليون',
   'Tu embarazo,': 'حملك،',
   'más cerca': 'أقرب إليك',
@@ -283,6 +284,11 @@ export const arabicTranslations: Record<string, string> = {
   'Recursos cerca de ti': 'موارد بالقرب منك',
   'Un directorio colaborativo de asociaciones, grupos y servicios de apoyo durante el embarazo.': 'دليل تعاوني للجمعيات والمجموعات وخدمات الدعم أثناء الحمل.',
   'Explorar y proponer recursos': 'استكشاف الموارد واقتراحها',
+  'Creado entre todas': 'من صنعنا جميعًا',
+  'Encuentra apoyo cerca de ti': 'ابحثي عن الدعم بالقرب منك',
+  'Descubre asociaciones, grupos y servicios para el embarazo. Si conoces uno que debería estar, ayúdanos a completar el directorio.': 'اكتشفي الجمعيات والمجموعات والخدمات الداعمة أثناء الحمل. إذا كنتِ تعرفين موردًا ينبغي إضافته، فساعدينا على استكمال الدليل.',
+  'Ver recursos': 'عرض الموارد',
+  'Aportar un recurso': 'إضافة مورد',
   'Jornadas de Acogida del hospital': 'أيام الاستقبال في المستشفى',
   'Algunos hospitales organizan visitas al paritorio para que puedas conocer los espacios, entender cómo funciona la atención y resolver tus dudas antes del parto. Pregunta a tu matrona o a tu hospital de referencia si ofrecen estas jornadas y cómo apuntarte.': 'تنظم بعض المستشفيات زيارات إلى جناح الولادة للتعرف على المكان وفهم كيفية تقديم الرعاية وطرح الأسئلة قبل الولادة. اسألي القابلة أو المستشفى المرجعي عما إذا كانت هذه الزيارات متاحة وكيفية التسجيل.',
   'Directorio colaborativo': 'دليل تعاوني',
@@ -318,6 +324,7 @@ export const arabicTranslations: Record<string, string> = {
 export const englishTranslations: Record<string, string> = {
   'Zona': 'Area',
   'Embarazo': 'Pregnancy',
+  'Recursos': 'Resources',
   'Datos abiertos de Castilla y León': 'Open data from Castile and León',
   'Datos abiertos de la Junta de Castilla y León.': 'Open data from the Government of Castile and León.',
   'Tu embarazo,': 'Your pregnancy,',
@@ -598,6 +605,11 @@ export const englishTranslations: Record<string, string> = {
   'Recursos cerca de ti': 'Resources near you',
   'Un directorio colaborativo de asociaciones, grupos y servicios de apoyo durante el embarazo.': 'A collaborative directory of associations, groups and support services during pregnancy.',
   'Explorar y proponer recursos': 'Explore and suggest resources',
+  'Creado entre todas': 'Created together',
+  'Encuentra apoyo cerca de ti': 'Find support near you',
+  'Descubre asociaciones, grupos y servicios para el embarazo. Si conoces uno que debería estar, ayúdanos a completar el directorio.': 'Discover associations, groups and services that support you during pregnancy. If you know one that should be listed, help us complete the directory.',
+  'Ver recursos': 'View resources',
+  'Aportar un recurso': 'Suggest a resource',
   'Jornadas de Acogida del hospital': 'Hospital welcome sessions',
   'Algunos hospitales organizan visitas al paritorio para que puedas conocer los espacios, entender cómo funciona la atención y resolver tus dudas antes del parto. Pregunta a tu matrona o a tu hospital de referencia si ofrecen estas jornadas y cómo apuntarte.': 'Some hospitals offer visits to the maternity ward so you can see the facilities, understand how care works and ask questions before giving birth. Ask your midwife or referral hospital whether they offer these sessions and how to sign up.',
   'Directorio colaborativo': 'Collaborative directory',
@@ -745,4 +757,4 @@ export function localizePage() {
     });
   });
   observer.observe(document.body, { childList: true, subtree: true, characterData: true });
-}
+    }
