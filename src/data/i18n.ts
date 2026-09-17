@@ -276,6 +276,41 @@ export const arabicTranslations: Record<string, string> = {
   'CENTROS MOVILES DE ASISTENCIA SANITARIA': 'وحدات رعاية صحية متنقلة',
   'OTROS PROVEEDORES DE ASIST. SANITARIA SIN INTERNAMIENTO': 'مقدمو رعاية صحية دون إقامة آخرون',
   'SERVICIOS SANITARIOS INTEGRADOS EN ORGANIZACION NO SANITARIA': 'خدمات صحية ضمن منظمة غير صحية',
+  'Recursos cerca de ti - CyLMaterna': 'موارد بالقرب منك - CyLMaterna',
+  'Directorio colaborativo de recursos de apoyo durante el embarazo en Castilla y León.': 'دليل تعاوني لموارد الدعم أثناء الحمل في قشتالة وليون.',
+  'Recursos cerca de ti': 'موارد بالقرب منك',
+  'Un directorio colaborativo de asociaciones, grupos y servicios de apoyo durante el embarazo.': 'دليل تعاوني للجمعيات والمجموعات وخدمات الدعم أثناء الحمل.',
+  'Explorar y proponer recursos': 'استكشاف الموارد واقتراحها',
+  'Jornadas de Acogida del hospital': 'أيام الاستقبال في المستشفى',
+  'Algunos hospitales organizan visitas al paritorio para que puedas conocer los espacios, entender cómo funciona la atención y resolver tus dudas antes del parto. Pregunta a tu matrona o a tu hospital de referencia si ofrecen estas jornadas y cómo apuntarte.': 'تنظم بعض المستشفيات زيارات إلى جناح الولادة للتعرف على المكان وفهم كيفية تقديم الرعاية وطرح الأسئلة قبل الولادة. اسألي القابلة أو المستشفى المرجعي عما إذا كانت هذه الزيارات متاحة وكيفية التسجيل.',
+  'Directorio colaborativo': 'دليل تعاوني',
+  'Asociaciones, grupos y servicios de apoyo para acompañarte durante el embarazo en Castilla y León.': 'جمعيات ومجموعات وخدمات دعم لمرافقتك أثناء الحمل في قشتالة وليون.',
+  'Directorio': 'الدليل',
+  'Estamos preparando el directorio': 'نعمل على إعداد الدليل',
+  'Todavía no hay recursos publicados. Cada propuesta se revisará antes de aparecer aquí para evitar información incorrecta o desactualizada.': 'لا توجد موارد منشورة بعد. ستُراجع كل مقترحات قبل ظهورها هنا لتجنب المعلومات الخاطئة أو القديمة.',
+  'Propón un recurso': 'اقترحي موردًا',
+  '¿Conoces una asociación, grupo o servicio útil? Envíanos sus datos. Revisaremos la propuesta antes de publicarla.': 'هل تعرفين جمعية أو مجموعة أو خدمة مفيدة؟ أرسلي لنا معلوماتها. سنراجع الاقتراح قبل نشره.',
+  'Nombre del recurso': 'اسم المورد',
+  'Por ejemplo, una asociación o grupo de apoyo': 'مثلاً جمعية أو مجموعة دعم',
+  'Municipio': 'البلدية',
+  'Provincia': 'المقاطعة',
+  'Selecciona una provincia': 'اختاري مقاطعة',
+  '¿Qué ofrece?': 'ماذا يقدم؟',
+  'Describe brevemente a quién ayuda y qué servicio ofrece': 'صفي بإيجاز من يساعد وما الخدمة التي يقدمها',
+  'Web o forma de contacto': 'الموقع أو وسيلة التواصل',
+  'Web, teléfono, correo o red social': 'موقع أو هاتف أو بريد إلكتروني أو شبكة اجتماعية',
+  'Tu correo electrónico': 'بريدك الإلكتروني',
+  'Solo lo usaremos si necesitamos aclarar la propuesta': 'سنستخدمه فقط إذا احتجنا إلى توضيح الاقتراح',
+  'No publicaremos tu correo electrónico.': 'لن ننشر بريدك الإلكتروني.',
+  'Confirmo que la información es correcta y puede ser revisada para su publicación.': 'أؤكد أن المعلومات صحيحة ويمكن مراجعتها للنشر.',
+  'Enviar propuesta': 'إرسال الاقتراح',
+  'Propuesta recibida - CyLMaterna': 'تم استلام الاقتراح - CyLMaterna',
+  'Hemos recibido tu propuesta de recurso.': 'لقد استلمنا اقتراحك لمورد.',
+  'Propuesta recibida': 'تم استلام الاقتراح',
+  'Gracias por ayudarnos a mejorar el directorio. Revisaremos la información antes de publicarla.': 'شكرًا لمساعدتنا في تحسين الدليل. سنراجع المعلومات قبل نشرها.',
+  'Volver a Recursos cerca de ti': 'العودة إلى موارد بالقرب منك',
+  'No rellenes este campo:': 'لا تملئي هذا الحقل:',
+
 };
 
 export const englishTranslations: Record<string, string> = {
@@ -554,6 +589,41 @@ export const englishTranslations: Record<string, string> = {
   'CENTROS MOVILES DE ASISTENCIA SANITARIA': 'MOBILE HEALTHCARE UNITS',
   'OTROS PROVEEDORES DE ASIST. SANITARIA SIN INTERNAMIENTO': 'OTHER OUTPATIENT HEALTHCARE PROVIDERS',
   'SERVICIOS SANITARIOS INTEGRADOS EN ORGANIZACION NO SANITARIA': 'HEALTH SERVICES WITHIN A NON-HEALTH ORGANISATION',
+  'Recursos cerca de ti - CyLMaterna': 'Resources near you - CyLMaterna',
+  'Directorio colaborativo de recursos de apoyo durante el embarazo en Castilla y León.': 'A collaborative directory of pregnancy support resources in Castile and León.',
+  'Recursos cerca de ti': 'Resources near you',
+  'Un directorio colaborativo de asociaciones, grupos y servicios de apoyo durante el embarazo.': 'A collaborative directory of associations, groups and support services during pregnancy.',
+  'Explorar y proponer recursos': 'Explore and suggest resources',
+  'Jornadas de Acogida del hospital': 'Hospital welcome sessions',
+  'Algunos hospitales organizan visitas al paritorio para que puedas conocer los espacios, entender cómo funciona la atención y resolver tus dudas antes del parto. Pregunta a tu matrona o a tu hospital de referencia si ofrecen estas jornadas y cómo apuntarte.': 'Some hospitals offer visits to the maternity ward so you can see the facilities, understand how care works and ask questions before giving birth. Ask your midwife or referral hospital whether they offer these sessions and how to sign up.',
+  'Directorio colaborativo': 'Collaborative directory',
+  'Asociaciones, grupos y servicios de apoyo para acompañarte durante el embarazo en Castilla y León.': 'Associations, groups and support services to help you through pregnancy in Castile and León.',
+  'Directorio': 'Directory',
+  'Estamos preparando el directorio': 'We are preparing the directory',
+  'Todavía no hay recursos publicados. Cada propuesta se revisará antes de aparecer aquí para evitar información incorrecta o desactualizada.': 'No resources have been published yet. Every suggestion will be reviewed before it appears here to avoid incorrect or outdated information.',
+  'Propón un recurso': 'Suggest a resource',
+  '¿Conoces una asociación, grupo o servicio útil? Envíanos sus datos. Revisaremos la propuesta antes de publicarla.': 'Do you know a useful association, group or service? Send us its details. We will review the suggestion before publishing it.',
+  'Nombre del recurso': 'Resource name',
+  'Por ejemplo, una asociación o grupo de apoyo': 'For example, an association or support group',
+  'Municipio': 'Municipality',
+  'Provincia': 'Province',
+  'Selecciona una provincia': 'Select a province',
+  '¿Qué ofrece?': 'What does it offer?',
+  'Describe brevemente a quién ayuda y qué servicio ofrece': 'Briefly describe who it helps and what service it offers',
+  'Web o forma de contacto': 'Website or contact details',
+  'Web, teléfono, correo o red social': 'Website, phone, email or social media',
+  'Tu correo electrónico': 'Your email address',
+  'Solo lo usaremos si necesitamos aclarar la propuesta': 'We will only use it if we need to clarify the suggestion',
+  'No publicaremos tu correo electrónico.': 'We will not publish your email address.',
+  'Confirmo que la información es correcta y puede ser revisada para su publicación.': 'I confirm that the information is correct and may be reviewed for publication.',
+  'Enviar propuesta': 'Send suggestion',
+  'Propuesta recibida - CyLMaterna': 'Suggestion received - CyLMaterna',
+  'Hemos recibido tu propuesta de recurso.': 'We have received your resource suggestion.',
+  'Propuesta recibida': 'Suggestion received',
+  'Gracias por ayudarnos a mejorar el directorio. Revisaremos la información antes de publicarla.': 'Thank you for helping us improve the directory. We will review the information before publishing it.',
+  'Volver a Recursos cerca de ti': 'Back to Resources near you',
+  'No rellenes este campo:': 'Do not fill in this field:',
+
 };
 
 function normalizeText(text: string): string {
@@ -601,7 +671,7 @@ const NON_TRANSLATABLE_TAGS = ['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEMPLATE', 'IFRAM
 
 function translateElement(element: Element, translations: Record<string, string>) {
   if (NON_TRANSLATABLE_TAGS.includes(element.tagName)) return;
-  for (const attribute of ['placeholder', 'aria-label', 'title']) {
+  for (const attribute of ['placeholder', 'aria-label', 'title', 'alt']) {
     const value = element.getAttribute(attribute);
     if (value) {
       const translated = translateText(value, translations);

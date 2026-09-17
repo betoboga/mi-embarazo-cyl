@@ -1,0 +1,49 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+<Layout title="Recursos cerca de ti - CyLMaterna" description="Directorio colaborativo de recursos de apoyo durante el embarazo en Castilla y León.">
+  <Header />
+  <main class="flex-1 max-w-3xl mx-auto px-4 py-10 sm:py-14 w-full">
+    <header class="mb-10">
+      <p class="text-sm font-semibold text-primary mb-2">Directorio colaborativo</p>
+      <h1 class="text-3xl sm:text-4xl font-bold text-fg mb-3">Recursos cerca de ti</h1>
+      <p class="text-muted text-lg leading-relaxed">Asociaciones, grupos y servicios de apoyo para acompañarte durante el embarazo en Castilla y León.</p>
+    </header>
+
+    <section aria-labelledby="directorio-title" class="mb-12">
+      <h2 id="directorio-title" class="text-2xl font-bold text-fg mb-4">Directorio</h2>
+      <div class="bg-bg-subtle border border-border rounded-xl p-6 sm:p-8 text-center">
+        <div class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto mb-4" aria-hidden="true">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        </div>
+        <h3 class="font-semibold text-fg mb-2">Estamos preparando el directorio</h3>
+        <p class="text-muted leading-relaxed max-w-lg mx-auto">Todavía no hay recursos publicados. Cada propuesta se revisará antes de aparecer aquí para evitar información incorrecta o desactualizada.</p>
+      </div>
+    </section>
+
+    <section aria-labelledby="proponer-title" class="bg-card border-2 border-primary/20 rounded-xl p-6 sm:p-8">
+      <h2 id="proponer-title" class="text-2xl font-bold text-fg mb-2">Propón un recurso</h2>
+      <p class="text-muted mb-7">¿Conoces una asociación, grupo o servicio útil? Envíanos sus datos. Revisaremos la propuesta antes de publicarla.</p>
+      <form name="propuesta-recurso" method="POST" action="/gracias-recurso" data-netlify="true" netlify-honeypot="bot-field" class="space-y-5">
+        <input type="hidden" name="form-name" value="propuesta-recurso" />
+        <p class="hidden"><label>No rellenes este campo: <input name="bot-field" /></label></p>
+        <div>
+          <label for="nombre-recurso" class="block text-sm font-semibold text-fg mb-2">Nombre del recurso</label>
+          <input id="nombre-recurso" name="nombre-recurso" required maxlength="120" autocomplete="organization" placeholder="Por ejemplo, una asociación o grupo de apoyo" class="w-full px-4 py-3 bg-white border-2 border-border rounded-xl focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10" />
+        </div>
+        <div class="grid sm:grid-cols-2 gap-5">
+          <div><label for="municipio" class="block text-sm font-semibold text-fg mb-2">Municipio</label><input id="municipio" name="municipio" required maxlength="100" autocomplete="address-level2" placeholder="Municipio" class="w-full px-4 py-3 bg-white border-2 border-border rounded-xl focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10" /></div>
+          <div><label for="provincia" class="block text-sm font-semibold text-fg mb-2">Provincia</label><select id="provincia" name="provincia" required class="w-full px-4 py-3 bg-white border-2 border-border rounded-xl focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"><option value="">Selecciona una provincia</option><option>Ávila</option><option>Burgos</option><option>León</option><option>Palencia</option><option>Salamanca</option><option>Segovia</option><option>Soria</option><option>Valladolid</option><option>Zamora</option></select></div>
+        </div>
+        <div><label for="descripcion" class="block text-sm font-semibold text-fg mb-2">¿Qué ofrece?</label><textarea id="descripcion" name="descripcion" required maxlength="1000" rows="5" placeholder="Describe brevemente a quién ayuda y qué servicio ofrece" class="w-full px-4 py-3 bg-white border-2 border-border rounded-xl focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"></textarea></div>
+        <div><label for="enlace" class="block text-sm font-semibold text-fg mb-2">Web o forma de contacto</label><input id="enlace" name="enlace" required maxlength="250" placeholder="Web, teléfono, correo o red social" class="w-full px-4 py-3 bg-white border-2 border-border rounded-xl focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10" /></div>
+        <div><label for="email-contacto" class="block text-sm font-semibold text-fg mb-2">Tu correo electrónico</label><input id="email-contacto" type="email" name="email-contacto" required maxlength="160" autocomplete="email" placeholder="Solo lo usaremos si necesitamos aclarar la propuesta" class="w-full px-4 py-3 bg-white border-2 border-border rounded-xl focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10" /><p class="text-xs text-muted mt-2">No publicaremos tu correo electrónico.</p></div>
+        <label class="flex items-start gap-3"><input type="checkbox" name="confirmacion" required class="mt-1 w-5 h-5 rounded border-border text-primary focus:ring-primary/20" /><span class="text-sm text-fg">Confirmo que la información es correcta y puede ser revisada para su publicación.</span></label>
+        <button type="submit" class="w-full sm:w-auto bg-primary hover:bg-primary-dark text-white font-semibold px-7 py-3 rounded-xl transition-colors">Enviar propuesta</button>
+      </form>
+    </section>
+  </main>
+  <Footer />
+</Layout>
