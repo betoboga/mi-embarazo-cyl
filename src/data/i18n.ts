@@ -701,11 +701,16 @@ function translateTextNode(node: Text, translations: Record<string, string>) {
   if (translated !== current) node.textContent = translated;
 }
 
-function localizeLinks(root: Element | Document, prefix: string) {
+function localizeNavigation(root: Element | Document, prefix: string) {
   root.querySelectorAll('a[href^="/"]:not([lang])').forEach((anchor) => {
     const href = anchor.getAttribute('href') || '';
     if (href.startsWith(`${prefix}/`) || href === prefix) return;
     anchor.setAttribute('href', `${prefix}${href}`);
+  });
+  root.querySelectorAll('form[action^="/"]').forEach((form) => {
+    const action = form.getAttribute('action') || '';
+    if (action.startsWith(`${prefix}/`) || action === prefix) return;
+    form.setAttribute('action', `${prefix}${action}`);
   });
 }
 
@@ -723,7 +728,7 @@ export function localizePage() {
   });
   document.querySelectorAll('body *').forEach((element) => translateElement(element, translations));
   const prefix = isEnglish ? '/en' : '/ar';
-  localizeLinks(document, prefix);
+  localizeNavigation(document, prefix);
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       if (mutation.type === 'characterData') {
@@ -733,7 +738,7 @@ export function localizePage() {
       mutation.addedNodes.forEach((node) => {
         if (node.nodeType === Node.ELEMENT_NODE) {
           translateElement(node as Element, translations);
-          localizeLinks(node as Element, prefix);
+          localizeNavigation(node as Element, prefix);
         }
         else if (node.nodeType === Node.TEXT_NODE) translateTextNode(node as Text, translations);
       });
