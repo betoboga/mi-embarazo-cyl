@@ -36,7 +36,7 @@ const confirmationPath = locale === 'es' ? '/gracias-recurso/' : `/${locale}/gra
     <section aria-labelledby="proponer-title" class="bg-card border-2 border-primary/20 rounded-xl p-6 sm:p-8">
       <h2 id="proponer-title" class="text-2xl font-bold text-fg mb-2">Propón un recurso</h2>
       <p class="text-muted mb-7">¿Conoces una asociación, grupo, servicio o actividad útil durante el embarazo o el posparto? Envíanos sus datos. Revisaremos la propuesta antes de publicarla.</p>
-      <form name="propuesta-recurso" method="POST" action={confirmationPath} data-netlify="true" netlify-honeypot="bot-field" class="space-y-5">
+      <form id="resource-form" name="propuesta-recurso" method="POST" action={confirmationPath} data-netlify="true" netlify-honeypot="bot-field" class="space-y-5">
         <input type="hidden" name="form-name" value="propuesta-recurso" />
         <p class="hidden"><label>No rellenes este campo: <input name="bot-field" /></label></p>
         <div>
@@ -69,4 +69,25 @@ const confirmationPath = locale === 'es' ? '/gracias-recurso/' : `/${locale}/gra
     </section>
   </main>
   <Footer />
+  <script>
+    const resourceForm = document.getElementById('resource-form') as HTMLFormElement | null;
+    resourceForm?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!resourceForm.reportValidity()) return;
+      const submitButton = resourceForm.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+      if (submitButton) submitButton.disabled = true;
+      try {
+        const response = await fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams(new FormData(resourceForm) as any).toString(),
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        window.location.assign(resourceForm.action);
+      } catch {
+        if (submitButton) submitButton.disabled = false;
+        resourceForm.submit();
+      }
+    });
+  </script>
 </Layout>
