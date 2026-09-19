@@ -15,20 +15,24 @@ const localizedPath = (path: string) => `${isArabic ? '/ar' : isEnglish ? '/en' 
     </a>
     <div class="flex items-center gap-1">
       <a href={localizedPath('/donde-vive')} class:list={[
-        "px-3 py-1.5 rounded-lg text-sm font-medium transition-colors no-underline",
+        "px-2 sm:px-3 py-1.5 rounded-lg text-sm font-medium transition-colors no-underline",
         pagePath.startsWith('/donde-vive') ? "bg-primary/10 text-primary" : "text-muted hover:text-fg hover:bg-bg-subtle"
       ]}>Zona</a>
+      <a href={localizedPath('/recursos-cerca')} class:list={[
+        "px-2 sm:px-3 py-1.5 rounded-lg text-sm font-medium transition-colors no-underline",
+        pagePath.startsWith('/recursos-cerca') ? "bg-primary/10 text-primary" : "text-muted hover:text-fg hover:bg-bg-subtle"
+      ]}>Recursos</a>
       <a href={localizedPath('/mi-embarazo')} class:list={[
-        "px-3 py-1.5 rounded-lg text-sm font-medium transition-colors no-underline",
+        "px-2 sm:px-3 py-1.5 rounded-lg text-sm font-medium transition-colors no-underline",
         pagePath.startsWith('/mi-embarazo') ? "bg-primary/10 text-primary" : "text-muted hover:text-fg hover:bg-bg-subtle"
       ]}>Embarazo</a>
            <a href={localizedPath('/estadisticas')} class:list={[
         "px-3 py-1.5 rounded-lg text-sm font-medium transition-colors no-underline",
         pagePath.startsWith('/estadisticas') ? "bg-primary/10 text-primary" : "text-muted hover:text-fg hover:bg-bg-subtle"
       ]}>Datos</a>
-      <a href={`${pagePath === '/' ? '/' : pagePath}`} class="px-2 py-1.5 rounded-lg text-sm font-medium text-muted hover:text-fg hover:bg-bg-subtle transition-colors no-underline" lang="es">ES</a>
-      <a href={`/ar${pagePath === '/' ? '/' : pagePath}`} class="px-2 py-1.5 rounded-lg text-sm font-medium text-muted hover:text-fg hover:bg-bg-subtle transition-colors no-underline" lang="ar">ع</a>
-      <a href={`/en${pagePath === '/' ? '/' : pagePath}`} class="px-2 py-1.5 rounded-lg text-sm font-medium text-muted hover:text-fg hover:bg-bg-subtle transition-colors no-underline" lang="en">EN</a>
+      <a href={`${pagePath === '/' ? '/' : pagePath}`} class="px-1.5 sm:px-2 py-1.5 rounded-lg text-sm font-medium text-muted hover:text-fg hover:bg-bg-subtle transition-colors no-underline" lang="es">ES</a>
+      <a href={`/ar${pagePath === '/' ? '/' : pagePath}`} class="px-1.5 sm:px-2 py-1.5 rounded-lg text-sm font-medium text-muted hover:text-fg hover:bg-bg-subtle transition-colors no-underline" lang="ar">ع</a>
+      <a href={`/en${pagePath === '/' ? '/' : pagePath}`} class="px-1.5 sm:px-2 py-1.5 rounded-lg text-sm font-medium text-muted hover:text-fg hover:bg-bg-subtle transition-colors no-underline" lang="en">EN</a>
     </div>
   </nav>
 </header>

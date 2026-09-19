@@ -126,6 +126,27 @@ import Footer from '../components/Footer.astro';
       </a>
       </div>
       </div>
+      <aside class="relative isolate overflow-hidden mt-10 rounded-3xl bg-gradient-to-br from-primary via-primary to-primary-dark px-6 py-8 sm:px-9 sm:py-10 text-white shadow-lg shadow-primary/15" aria-labelledby="recursos-cerca-title">
+        <div class="absolute -top-16 -right-12 h-44 w-44 rounded-full bg-white/10" aria-hidden="true"></div>
+        <div class="absolute -bottom-20 -left-12 h-48 w-48 rounded-full border-[28px] border-white/10" aria-hidden="true"></div>
+        <div class="relative grid gap-7 sm:grid-cols-[1fr_auto] sm:items-center">
+          <div class="max-w-xl">
+            <div class="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-sm font-semibold mb-4">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18zm0 0v-4m0-10V3m9 9h-4M7 12H3" /></svg>
+              Creado entre todas
+            </div>
+            <h2 id="recursos-cerca-title" class="text-2xl sm:text-3xl font-bold leading-tight">Encuentra apoyo cerca de ti</h2>
+            <p class="mt-3 leading-relaxed text-white/85">Descubre apoyo, actividades y ejercicio para el embarazo y el posparto. Si conoces un recurso que debería estar, ayúdanos a completar el directorio.</p>
+          </div>
+          <div class="flex flex-col gap-3 sm:min-w-52">
+            <a href="/recursos-cerca" class="group inline-flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 font-semibold text-primary no-underline transition-colors hover:bg-primary-light">
+              Ver recursos
+              <svg class="w-4 h-4 transition-transform group-hover:translate-x-1 rtl:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+            </a>
+            <a href="/recursos-cerca#proponer-title" class="inline-flex items-center justify-center rounded-xl border-2 border-white/45 px-5 py-3 font-semibold text-white no-underline transition-colors hover:bg-white/10">Aportar un recurso</a>
+          </div>
+        </div>
+      </aside>
       <div class="mt-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-bg-subtle border border-border rounded-xl px-4 py-3">
         <div>
           <p class="text-sm font-semibold text-fg">Información oficial sobre salud materno-infantil</p>

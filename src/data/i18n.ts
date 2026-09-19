@@ -1,6 +1,7 @@
 export const arabicTranslations: Record<string, string> = {
   'Zona': 'المنطقة',
   'Embarazo': 'الحمل',
+  'Recursos': 'الموارد',
   'Datos abiertos de Castilla y León': 'بيانات مفتوحة من قشتالة وليون',
   'Tu embarazo,': 'حملك،',
   'más cerca': 'أقرب إليك',
@@ -90,16 +91,261 @@ export const arabicTranslations: Record<string, string> = {
   'No hay hospitales registrados en tu provincia.': 'لا توجد مستشفيات مسجلة في مقاطعتك.',
   'No hay centros de salud con ubicación disponible cerca de ti.': 'لا توجد مراكز صحية ذات موقع متاح بالقرب منك.',
   'Nivel': 'المستوى',
-  'Tu ubicación': 'موقعك',
   'municipio': 'بلدية',
   'municipios': 'بلديات',
   'encontrado': 'تم العثور عليها',
   'encontrados': 'تم العثور عليها',
+  'Guía de ayuda durante el embarazo': 'دليل المساعدة أثناء الحمل',
+  'Signos y síntomas de alarma': 'علامات وأعراض الخطر',
+  'Consulta las señales de alarma y cuándo debes acudir al hospital durante el embarazo.': 'اطلعي على علامات الخطر ومتى يجب عليكِ التوجه إلى المستشفى أثناء الحمل.',
+  'Leer la información completa': 'قراءة المعلومات كاملة',
+  'Atención y seguimiento del embarazo': 'رعاية الحمل ومتابعته',
+  'Conoce las consultas, controles y ecografías que forman parte del seguimiento del embarazo.': 'تعرفي على المواعيد والفحوصات الدورية والتصوير بالموجات فوق الصوتية التي تشكل جزءاً من متابعة الحمل.',
+  '¿Has estado en contacto con sustancias peligrosas o factores de riesgo?': 'هل تعرضتِ لمواد خطرة أو عوامل خطر؟',
+  'Conoce el Servicio de Información Telefónica para la Embarazada (SITE) y cómo resolver tus dudas.': 'تعرفي على خدمة المعلومات الهاتفية للحامل (SITE) وكيفية الإجابة عن أسئلتك.',
+  'Consultar el servicio SITE': 'الاطلاع على خدمة SITE',
+  'Alimentación segura durante el embarazo': 'التغذية الآمنة أثناء الحمل',
+  'Consejos sencillos sobre higiene, alimentos seguros y nutrición.': 'نصائح بسيطة عن النظافة والأطعمة الآمنة والتغذية.',
+  'Consultar la guía': 'الاطلاع على الدليل',
+  'Información oficial sobre salud materno-infantil': 'معلومات رسمية عن صحة الأم والطفل',
+  'Recursos de la Junta de Castilla y León': 'موارد من حكومة قشتالة وليون',
+  'Consultar información': 'عرض المعلومات',
+  '(se abre en una nueva pestaña)': '(يُفتح في علامة تبويب جديدة)',
+  'Ver más': 'عرض المزيد',
+  'Ver menos': 'عرض أقل',
+  'Limpiar': 'مسح',
+  'Mi embarazo - CyLMaterna': 'حملي - CyLMaterna',
+  '¿Dónde vives?': 'أين تعيشين؟',
+  'Tu centro de salud': 'مركزك الصحي',
+  'Cómo llegar': 'كيفية الوصول',
+  'EN TU MUNICIPIO': 'في بلديتك',
+  'Importante:': 'مهم:',
+  'Hospital de referencia de tu área': 'مستشفى الإحالة لمنطقتك',
+  'Atiende el área sanitaria de Ávila y dispone de servicio de Obstetricia y Ginecología. Confírmalo con tu matrona o con el servicio de Obstetricia para tu embarazo. Si necesitas atención inmediata o se trata de una emergencia grave, llama al 112 y sigue sus indicaciones: coordinarán la asistencia y te dirigirán al recurso adecuado.': 'يخدم المنطقة الصحية في أفيلا ويضم قسم التوليد وأمراض النساء. أكدي ذلك مع القابلة أو مع قسم التوليد لحملك. إذا كنت بحاجة إلى رعاية فورية أو كانت الحالة طارئة خطيرة، فاتصلي بالرقم 112 واتبعي تعليماتهم: سينسقون الرعاية ويوجهونك إلى المورد المناسب.',
+  'Tu hospital de referencia para el parto': 'مستشفى الإحالة الخاص بك للولادة',
+  'Tu hospital de referencia se asigna según tu área sanitaria y el circuito asistencial de Sacyl; no se determina solo por distancia. Confírmalo con tu matrona o con el servicio de Obstetricia. Si necesitas atención inmediata o se trata de una emergencia grave, llama al 112 y sigue sus indicaciones: coordinarán la asistencia y te dirigirán al recurso adecuado.': 'يُحدَّد مستشفى الإحالة الخاص بك وفق منطقتك الصحية ومسار الرعاية في ساكيل؛ ولا يُحدَّد بالمسافة وحدها. أكدي ذلك مع القابلة أو مع قسم التوليد. إذا كنت بحاجة إلى رعاية فورية أو كانت الحالة طارئة خطيرة، فاتصلي بالرقم 112 واتبعي تعليماتهم: سينسقون الرعاية ويوجهونك إلى المورد المناسب.',
+  'no todos los hospitales atienden partos. Esta lista muestra los recursos hospitalarios generales registrados en tu provincia.': 'ليست جميع المستشفيات تستقبل الولادات. تعرض هذه القائمة الموارد الاستشفائية العامة المسجلة في مقاطعتك.',
+  'Transporte': 'المواصلات',
+  'Desarrollo semanal': 'التطور الأسبوعي',
+  'Codigo ZBS': 'رمز المنطقة الصحية',
+  'No hay farmacias registradas en tu municipio ni en su Zona Básica de Salud.': 'لا توجد صيدليات مسجلة في بلديتك أو في منطقتها الصحية الأساسية.',
+  'No hay estaciones de autobús registradas cerca de tu municipio.': 'لا توجد محطات حافلات مسجلة بالقرب من بلديتك.',
+  'No hay estación de autobuses en tu municipio. Estas son las más cercanas:': 'لا توجد محطة حافلات في بلديتك. هذه هي الأقرب:',
+  'No hay un centro de guardia asociado en los datos disponibles.': 'لا يوجد مركز طوارئ مرتبط في البيانات المتاحة.',
+  'No hay otros hospitales registrados en tu provincia.': 'لا توجد مستشفيات أخرى مسجلة في مقاطعتك.',
+  'No hay centros de salud en tu municipio. Mostrando los disponibles en tu Zona Básica:': 'لا توجد مراكز صحية في بلديتك. يتم عرض المتاح في منطقتك الصحية الأساسية:',
+  'No hay centros de salud en tu municipio. Mostrando los disponibles en tu provincia:': 'لا توجد مراكز صحية في بلديتك. يتم عرض المتاح في مقاطعتك:',
+  'en tu municipio': 'في بلديتك',
+  'en tu Zona Básica': 'في منطقتك الصحية الأساسية',
+  'en tu provincia': 'في مقاطعتك',
+  'Datos abiertos de la Junta de Castilla y León.': 'بيانات مفتوحة من حكومة قشتالة وليون.',
+  'Teléfono Joven de asesoramiento e información sobre sexualidad y sida:': 'هاتف الشباب للاستشارة والمعلومات حول الجنس والإيدز:',
+  'Durante el embarazo, ciertos síntomas pueden indicar complicaciones y requieren de atención médica.': 'أثناء الحمل، قد تشير بعض الأعراض إلى مضاعفات وتتطلب رعاية طبية.',
+  'Síntomas que requieren atención médica': 'أعراض تتطلب رعاية طبية',
+  'Sangrado vaginal:': 'نزيف مهبلي:',
+  'un leve manchado puede ser normal, pero ante un sangrado abundante acompañado de dolor es importante acudir a urgencias hospitalarias, especialmente durante el tercer trimestre.': 'قد تكون البقع الخفيفة طبيعية، لكن النزيف الغزير المصحوب بألم يستوجب التوجه إلى طوارئ المستشفى، خاصة خلال الثلث الثالث.',
+  'Dolor abdominal intenso o persistente.': 'ألم شديد أو مستمر في البطن.',
+  'Fiebre (temperatura superior a 38º)': 'حمى (درجة حرارة تتجاوز 38 درجة)',
+  'Dolor de cabeza intenso y cambios en la visión': 'صداع شديد وتغيرات في الرؤية',
+  'Mareos desmayos o pérdida de conciencia': 'دوار أو إغماء أو فقدان الوعي',
+  'Hinchazón súbita de manos, cara o pies, especialmente si se acompaña de dolor de cabeza o cambios en la visión.': 'تورم مفاجئ في اليدين أو الوجه أو القدمين، خاصة إذا ترافق مع صداع أو تغيرات في الرؤية.',
+  'Disminución de movimientos fetales, a partir de la semana 20.': 'قلة حركات الجنين، اعتباراً من الأسبوع 20.',
+  'Contracciones regulares o dolorosas antes de la semana 37': 'انقباضات منتظمة أو مؤلمة قبل الأسبوع 37',
+  'Vómitos incontrolables persistentes': 'قيء مستمر لا يمكن السيطرة عليه',
+  'Sensación de pérdida de líquido': 'الشعور بتسرب السائل',
+  'Pensamientos acerca de hacerse daños o hacerle daño al bebé': 'أفكار حول إيذاء نفسك أو إيذاء الطفل',
+  'A partir de la semana 37:': 'اعتباراً من الأسبوع 37:',
+  'Contracciones': 'الانقباضات',
+  'Si es mi primer hijo:': 'إذا كان هذا طفلي الأول:',
+  'regulares cada 3-4 minutos, que duran entre 30 y 60 segundos y que no ceden tras al menos 1 hora.': 'منتظمة كل 3-4 دقائق، تستمر ما بين 30 و60 ثانية ولا تتوقف بعد ساعة واحدة على الأقل.',
+  'Si ya he tenido un parto o más:': 'إذا سبق أن أنجبتُ من قبل:',
+  'cuando sean regulares cada 3-4 minutos y no ceden, especialmente si aumentan de intensidad o si tardo 1h o más en llegar al hospital de referencia.': 'عندما تكون منتظمة كل 3-4 دقائق ولا تتوقف، خاصة إذا اشتدت أو إذا احتجت ساعة أو أكثر للوصول إلى مستشفى الإحالة.',
+  'Si noto pérdida de líquido --> observo el color del líquido:': 'إذا لاحظتُ تسرب سائل --> أراقب لون السائل:',
+  'Líquido claro/transparente:': 'سائل صافٍ/شفاف:',
+  'preparo las cosas y voy tranquilamente al hospital': 'أجهّز أغراضي وأذهب بهدوء إلى المستشفى',
+  'Líquido verde, marrón o mal olor:': 'سائل أخضر أو بني أو كريه الرائحة:',
+  'debo ir con urgencia al hospital': 'يجب أن أذهب إلى المستشفى فوراً',
+  'Si se mueve menos de lo normal o no se mueve': 'إذا كان الجنين يتحرك أقل من المعتاد أو لا يتحرك',
+  'Si sangrado vaginal (ligero flujo o moco sanguinolento es normal)': 'في حالة النزيف المهبلي (الإفرازات الخفيفة أو المخاط الممزوج بالدم أمر طبيعي)',
+  'Recuerda que debes conocer tu fecha de última regla y si tu embarazo tiene algún factor de riesgo para poder facilitar la atención.': 'تذكري أنه يجب أن تعرفي تاريخ آخر دورة شهرية وما إذا كان حملك يتضمن عوامل خطر، حتى يمكن تقديم الرعاية المناسبة.',
+  'Intenta planificar el traslado al hospital con antelación, sobre todo si vives en una zona rural y recuerda llevar tu documentación médica (especialmente si te has controlado el embarazo en otro hospital).': 'حاولي التخطيط للانتقال إلى المستشفى مسبقاً، خاصة إذا كنتِ تعيشين في منطقة ريفية، وتذكري إحضار وثائقك الطبية (خاصة إذا كنتِ تتابعين حملك في مستشفى آخر).',
+  'En caso de haber llevado el control en el extranjero, nos sería especialmente útil tener los informes impresos y traducidos.': 'إذا أجريتِ المتابعة في الخارج، سيكون من المفيد جداً أن تكون التقارير مطبوعة ومترجمة.',
+  'El proceso de atención al embarazo desde atención primaria actualmente se desarrolla con un enfoque multidisciplinar, centrado en las necesidades de la mujer, la familia y garantizando la continuidad en la asistencia.': 'تُقدَّم رعاية الحمل في الرعاية الأولية حالياً بنهج متعدد التخصصات، يركز على احتياجات المرأة والأسرة ويضمن استمرارية الرعاية.',
+  'El seguimiento del embarazo se lleva a cabo entre atención primaria y atención especializada, con los compañeros ginecólogos en el hospital. Además, se irán realizando varios controles analíticos durante el embarazo.': 'تتم متابعة الحمل بين الرعاية الأولية والرعاية المتخصصة، مع أطباء النساء والتوليد في المستشفى. كما تُجرى عدة تحاليل مخبرية أثناء الحمل.',
+  'Consulta preconcepcional': 'استشارة ما قبل الحمل',
+  'Acudir a la consulta de la matrona si se está': 'مراجعة عيادة القابلة إذا كنتِ',
+  'planeando': 'تخططين',
+  'embarazo es ideal para conocer su estado de salud previo, la existencia de enfermedades que requieran un control adecuado e iniciar acciones de educación sanitaria.': 'للحمل أمر مثالي للتعرف على حالتك الصحية السابقة، ووجود أمراض تتطلب متابعة مناسبة، وبدء التثقيف الصحي.',
+  'Se deben iniciar medidas de prevención de los defectos del tubo neural entre 3-4 meses': 'يجب البدء بإجراءات الوقاية من عيوب الأنبوب العصبي قبل 3-4 أشهر',
+  'antes': 'قبل',
+  'de la concepción (toma de': 'الحمل (تناول',
+  'ácido fólico y yodo': 'حمض الفوليك واليود',
+  'El objetivo de esta consulta es prevenir las complicaciones y un mejor desarrollo del embarazo.': 'الهدف من هذه الاستشارة هو الوقاية من المضاعفات وتحسين مسار الحمل.',
+  'Primera consulta de la matrona': 'أول موعد مع القابلة',
+  '¿Cuándo?': 'متى؟',
+  'En cuanto te enteras de que estás embarazada.': 'فور معرفتك بأنك حامل.',
+  'El resto de las consultas serán citadas por tu matrona correspondiente.': 'ستقوم القابلة المسؤولة عنك بتحديد باقي المواعيد.',
+  'Citas en la consulta de Obstetricia (en el hospital)': 'مواعيد في عيادة التوليد (في المستشفى)',
+  'En embarazos de bajo riesgo se llevarán a cabo tres ecografías, su asistencia es de vital importancia.': 'في حالات الحمل منخفضة الخطورة تُجرى ثلاثة فحوصات بالموجات فوق الصوتية، وحضورها في غاية الأهمية.',
+  'Información importante sobre el seguimiento': 'معلومات مهمة عن المتابعة',
+  'Sin olvidar las analíticas de control.': 'دون نسيان التحاليل الدورية.',
+  'Si has empezado a controlar el embarazo tarde y vienes de hacerlo en otro centro, contacta cuanto antes con la matrona de tu centro de salud.': 'إذا بدأتِ متابعة حملك متأخراً وكنتِ تتابعين في مركز آخر، تواصلي في أقرب وقت مع قابلة مركزك الصحي.',
+  'Además puedes consultar en cualquier momento con tu matrona información sobre clases de educación maternal, prenatal y clases de preparación al parto.': 'يمكنك أيضاً سؤال القابلة في أي وقت عن دروس التثقيف الأمومي ودروس التحضير للولادة.',
+  'Para conocer detalladamente cuál va a ser el seguimiento de tu embarazo ponte en contacto con tu matrona de referencia.': 'لمعرفة تفاصيل متابعة حملك بالتفصيل، تواصلي مع القابلة المرجعية الخاصة بك.',
+  '¿Cuál es mi matrona de referencia?': 'من هي القابلة المرجعية الخاصة بي؟',
+  'Servicio de Información Telefónica para la Embarazada (SITE)': 'خدمة المعلومات الهاتفية للحامل (SITE)',
+  'El SITE': 'SITE',
+  'es un servicio de información sobre factores de riesgo para el desarrollo del niño antes del nacimiento.': 'هي خدمة معلومات عن عوامل الخطر على نمو الطفل قبل الولادة.',
+  'Las embarazadas pueden recibir información telefónica llamando al teléfono': 'يمكن للحوامل الحصول على معلومات عبر الهاتف بالاتصال بالرقم',
+  'en horario de 9 a 15 horas de lunes a viernes': 'من الساعة 9 صباحاً حتى 3 عصراً، من الاثنين إلى الجمعة',
+  'Serán atendidas por médicos especialistas pertenecientes al grupo científico de la asociación Estudio Colaborativo Español de Malformaciones Congénitas (ECEMC), quienes responderán sobre los peligros para el embrión o feto de los diferentes agentes ambientales (químicos/tratamientos farmacológicos, físicos, biológicos, …) que pueden afectar a la mujer embarazada, así como sobre aquellas otras cuestiones relacionadas con el cuidado y atención del embarazo.': 'يتم الرد من قبل أطباء متخصصين من المجموعة العلمية لجمعية الدراسة التعاونية الإسبانية للتشوهات الخلقية (ECEMC)، ويجيبون عن أسئلة حول أخطار العوامل البيئية المختلفة (الكيميائية/العلاجات الدوائية والفيزيائية والبيولوجية، …) التي يمكن أن تؤثر على الحامل والجنين، وكذلك عن الأسئلة الأخرى المتعلقة برعاية الحمل.',
+  'Información de contacto': 'معلومات الاتصال',
+  'Teléfono SITE:': 'هاتف SITE:',
+  'Horario: de 9 a 15 horas, de lunes a viernes': 'المواعيد: من 9 صباحاً إلى 3 عصراً، من الاثنين إلى الجمعة',
+  'Pautas sencillas para cuidar tu alimentación y prevenir riesgos.': 'إرشادات بسيطة للعناية بتغذيتك والوقاية من المخاطر.',
+  'El embarazo es un proceso fisiológico en el que cobra especial importancia llevar una vida saludable. Una alimentación equilibrada y segura y un nivel y tipo de actividad física adecuada, evitando el sedentarismo, favorecen la salud de la madre y del futuro bebé.': 'الحمل عملية فسيولوجية تكتسب فيها الحياة الصحية أهمية خاصة. فالتغذية المتوازنة والآمنة والنشاط البدني المناسب، مع تجنب قلة الحركة، تعزز صحة الأم والطفل المقبل.',
+  'Es importante para todas las personas conocer unas medidas básicas de higiene. Durante el embarazo es importante tomar unas medidas básicas higiénico-dietéticas y evitar el consumo de ciertos alimentos para prevenir riesgos que, aunque poco frecuentes, pueden tener consecuencias negativas para el feto o la mujer gestante.': 'من المهم للجميع معرفة إجراءات النظافة الأساسية. وأثناء الحمل من المهم اتباع إجراءات صحية وغذائية أساسية وتجنب بعض الأطعمة للوقاية من مخاطر، وإن كانت غير شائعة، قد تكون لها عواقب سلبية على الجنين أو الحامل.',
+  'Medidas básicas de higiene alimentaria': 'إجراءات النظافة الغذائية الأساسية',
+  'Lávate las manos con jabón y agua caliente, al menos durante 20 segundos, antes y después de manipular los alimentos, tras contactar con cualquier material sucio (pañales, residuos, animales) y especialmente después de usar el cuarto de baño.': 'اغسلي يديك بالصابون والماء الدافئ لمدة 20 ثانية على الأقل، قبل وبعد التعامل مع الطعام، وبعد ملامسة أي مواد متسخة (حفاضات، نفايات، حيوانات)، وخاصة بعد استخدام الحمام.',
+  'Las manos, las superficies y los utensilios de cocina utilizados se deben lavar a fondo después de manipular carnes, pescados, huevos, frutas y vegetales no lavados y cualquier otro alimento crudo.': 'يجب غسل اليدين والأسطح وأدوات المطبخ المستخدمة جيداً بعد التعامل مع اللحوم والأسماك والبيض والفواكه والخضروات غير المغسولة وأي طعام نيء آخر.',
+  'Guarda los alimentos cocinados en el frigorífico, colócalos adecuadamente, separados y lejos de los quesos y los alimentos crudos, procura que se consuman en poco tiempo y mantenlos en recipientes cerrados. Si los compras ya cocinados, respeta la fecha de consumo preferente/caducidad que se indica en la etiqueta.': 'احفظي الأطعمة المطهوة في الثلاجة، وضعيها بشكل مناسب، منفصلة وبعيدة عن الأجبان والأطعمة النيئة، واحرصي على استهلاكها في وقت قريب واحفظيها في أوعية مغلقة. وإذا اشتريتها مطهوة جاهزة، فالتزمي بتاريخ الاستهلاك/الانتهاء المذكور على الملصق.',
+  'Asegúrate de que tu frigorífico mantiene la temperatura correcta (5 ºC o inferior).': 'تأكدي من أن ثلاجتك تحافظ على درجة الحرارة الصحيحة (5 درجات مئوية أو أقل).',
+  'Sigue las instrucciones del etiquetado de los alimentos precocinados para calentarlos adecuadamente.': 'اتبعي تعليمات الملصق على الأطعمة المطهوة مسبقاً لتسخينها بشكل صحيح.',
+  'Precauciones con los alimentos': 'احتياطات مع الأطعمة',
+  'Lee detenidamente el etiquetado de los alimentos, especialmente las advertencias y condiciones de uso.': 'اقرئي ملصقات الأطعمة بعناية، خاصة التحذيرات وشروط الاستخدام.',
+  'Lava las frutas, verduras y hierbas aromáticas crudas. Si decides emplear productos químicos (por ejemplo, lejía), consulta la etiqueta para saber aquellos que se pueden utilizar y ten en cuenta las indicaciones para su correcto uso.': 'اغسلي الفواكه والخضروات والأعشاب النيئة. وإذا قررتِ استخدام منتجات كيميائية (مثل المبيّض)، فراجعي الملصق لمعرفة ما يمكن استخدامه واتبعي تعليمات الاستخدام الصحيح.',
+  'Cocina completamente la carne y el pescado. Para comprobar que se ha cocinado adecuadamente, puedes fijarte en que cambie el color en el centro del producto (a más de 70 ºC durante al menos dos minutos).': 'اطهي اللحم والسمك جيداً. وللتأكد من نضجهما، لاحظي تغير اللون في وسط المنتج (على أكثر من 70 درجة مئوية لمدة دقيقتين على الأقل).',
+  'Las sobras de comida debes refrigerarlas lo antes posible; no deben estar más de 2 horas a temperatura ambiente. Antes de su consumo, asegúrate de calentarlas a alta temperatura (a más de 70 ºC durante al menos dos minutos).': 'برّدي بقايا الطعام في أقرب وقت ممكن؛ ولا تتركيها أكثر من ساعتين في درجة حرارة الغرفة. وقبل تناولها، سخنيها على درجة حرارة عالية (أكثر من 70 درجة مئوية لمدة دقيقتين على الأقل).',
+  'Si utilizas microondas para cocinar o recalentar los alimentos, sigue las instrucciones del fabricante para elegir el tiempo y potencia adecuados, asegurando que se alcanza la temperatura mencionada anteriormente.': 'إذا استخدمتِ الميكروويف لطهي الطعام أو إعادة تسخينه، فاتبعي تعليمات الشركة المصنعة لاختيار الوقت والقدرة المناسبين، مع التأكد من الوصول إلى درجة الحرارة المذكورة أعلاه.',
+  'Toma sólo aquellos complementos alimenticios que te indique tu médica o médico.': 'لا تتناولي سوى المكملات الغذائية التي يوصي بها طبيبك.',
+  'Modera el consumo de cafeína de cualquier fuente (café, té, chocolate, bebidas de cola, yerba mate...).': 'قللي من استهلاك الكافيين من أي مصدر (القهوة، الشاي، الشوكولاتة، مشروبات الكولا، المتة...).',
+  'Alimentos y bebidas que debes evitar': 'أطعمة ومشروبات يجب تجنبها',
+  'Alimentos crudos': 'أطعمة نيئة',
+  'Leche cruda y quesos frescos o de pasta blanda (Brie, Camembert, tipo Burgos o quesos latinos, mozzarella y quesos azules) si en la etiqueta no se indica que estén hechos con leche pasteurizada.': 'الحليب الخام والأجبان الطرية أو الطازجة (بري، كامامبير، نوع بورغوس أو الأجبان اللاتينية، الموتزاريلا والأجبان الزرقاء) إذا لم يُذكر على الملصق أنها مصنوعة من حليب مبستر.',
+  'Brotes crudos (soja, alfalfa...).': 'البراعم النيئة (الصويا، البرسيم...).',
+  'Huevos crudos o preparaciones elaboradas con huevo crudo (salsas y mayonesas caseras, mousses, merengues y pasteles caseros, tiramisú, helados caseros, ponches de huevo...).': 'البيض النيء أو الأطباق المحضرة ببيض نيء (الصلصات والمايونيز المنزلي، الموس، المرينغ والحلويات المنزلية، التيراميسو، المثلجات المنزلية، مشروبات البيض...).',
+  'Carne cruda (carpaccios, steak tartar...) o poco hecha.': 'اللحم النيء (كارباتشيو، ستيك تارتار...) أو قليل النضج.',
+  'Pescado crudo (sushi, sashimi, ceviche, carpaccios), pescado ahumado refrigerado o marinado, así como ostras, almejas o mejillones crudos.': 'السمك النيء (سوشي، ساشيمي، سيفيتشي، كارباتشيو)، والسمك المدخن المبرد أو المتبل، وكذلك المحار والبلح النيء.',
+  'Frutas y hortalizas crudas que no se hayan pelado o lavado y desinfectado previamente (incluyendo ensaladas embolsadas, preparadas y las consumidas fuera de casa).': 'الفواكه والخضروات النيئة التي لم تُقشر أو تُغسل وتُعقم مسبقاً (بما في ذلك السلطات المعبأة والجاهزة وتلك المستهلكة خارج المنزل).',
+  'Otros alimentos': 'أطعمة أخرى',
+  'Pez espada o emperador, atún rojo (Thunnus thynnus), tiburón (cazón, marrajo, tintorera, ...) y lucio.': 'سمك أبو سيف، والتونة ذات الزعانف الزرقاء (Thunnus thynnus)، والقرش (وغيره...)، وسمك الفرخ.',
+  'Carne de caza silvestre (animales abatidos en la caza como el jabalí, venado, ...).': 'لحم الصيد البري (الحيوانات المصطادة مثل الخنزير البري والغزال...).',
+  'Productos cárnicos loncheados y quesos loncheados o quesos rallados industriales. Quita la corteza de todos los quesos.': 'اللحوم المصنعة الشرائح والأجبان الشرائح أو المبشورة صناعياً. أزيلي قشرة جميع الأجبان.',
+  'Patés que se vendan refrigerados.': 'الباستة (الباتيه) المباعة مبردة.',
+  'Si no estás inmunizada frente a la toxoplasmosis (consulta a tu médica o médico), evita el consumo de productos cárnicos crudos curados (chorizo, salchichón, salami, jamón curado...). Estos alimentos sí pueden consumirse después de cocinarse a más de 70 ºC durante 2 minutos en el centro del producto (en croquetas, rehogados, pizzas, ...).': 'إذا لم تكوني محصنة ضد داء المقوسات (استشيري طبيبك)، فتجنبي منتجات اللحوم النيئة المعالجة (النقانق، السلامي، اللحم المقدد...). يمكن تناول هذه الأطعمة بعد طهيها على أكثر من 70 درجة مئوية لمدة دقيقتين في وسط المنتج (في الكروكيت، المقليات، البيتزا...).',
+  'Algunos alimentos envasados': 'بعض الأطعمة المعبأة',
+  'Sándwiches y otros alimentos envasados listos para consumir que contengan vegetales, huevo, carne, fiambres, pescado y derivados.': 'السندويشات وغيرها من الأطعمة المعبأة الجاهزة للأكل التي تحتوي على خضروات أو بيض أو لحم أو لحوم باردة أو سمك ومشتقاته.',
+  'No consumas directamente frutas y verduras congeladas envasadas si en el etiquetado indica que se deben cocinar (batido con espinacas congeladas, por ejemplo).': 'لا تستهلكي الفواكه والخضروات المجمدة المعبأة مباشرة إذا كان الملصق يشير إلى ضرورة طهيها (مخفوق بالسبانخ المجمدة، مثلاً).',
+  'Si consumes zumos envasados, deben estar pasteurizados.': 'إذا تناولتِ عصائر معبأة، فيجب أن تكون مبسترة.',
+  'Bebidas': 'مشروبات',
+  'No tomes bebidas alcohólicas, ni productos que lleven alcohol. Cualquier consumo conlleva un riesgo para el desarrollo del feto.': 'لا تشربي المشروبات الكحولية ولا المنتجات المحتوية على الكحول. فأي استهلاك يشكل خطراً على نمو الجنين.',
+  'Evita bebidas azucaradas y energéticas.': 'تجنبي المشروبات المحلاة ومشروبات الطاقة.',
+  'Consume los zumos recién exprimidos, no los preparados con antelación ni los conservados.': 'تناولي العصائر الطازجة المعصورة حديثاً، لا المحضرة مسبقاً أو المخزنة.',
+  'Algunos consejos nutricionales': 'بعض النصائح الغذائية',
+  'Es esencial seguir una alimentación saludable y segura durante el embarazo. Algunas pautas sencillas para lograrlo son:': 'من الضروري اتباع نظام غذائي صحي وآمن أثناء الحمل. وبعض الإرشادات البسيطة لتحقيق ذلك هي:',
+  'Para beber, lo mejor es el agua. Se recomienda beber entre 2 y 2,5 litros de agua al día (de 8 a 10 vasos). Ten en cuenta que una parte ya está en los alimentos que consumes durante el día y que los días de calor y si haces actividad física debes beber un poco más.': 'للشرب، الماء هو الأفضل. يُنصح بشرب ما بين 2 و2.5 لتر من الماء يومياً (8 إلى 10 أكواب). ضعي في اعتبارك أن جزءاً منه موجود أصلاً في الأطعمة التي تتناولينها خلال اليوم، وأنه في الأيام الحارة وعند ممارسة نشاط بدني يجب أن تشربي أكثر قليلاً.',
+  'Modera el consumo de sal y no superes los 5 g al día, contando la sal añadida en el cocinado y la incluida en los alimentos que compras. Revisa su etiquetado antes de adquirirlos.': 'قللي من استهلاك الملح ولا تتجاوزي 5 غرامات يومياً، بما في ذلك الملح المضاف في الطهي والموجود في الأطعمة المشتراة. راجعي الملصقات قبل شرائها.',
+  'Consume al menos 5 raciones de frutas y hortalizas al día, siempre peladas, lavadas o cocinadas, para cubrir las necesidades de algunos nutrientes esenciales como vitaminas, minerales y fibra.': 'تناولي ما لا يقل عن 5 حصص من الفواكه والخضروات يومياً، مقشرة أو مغسولة أو مطهوة دائماً، لتغطية احتياجات بعض العناصر الغذائية الأساسية كالفيتامينات والمعادن والألياف.',
+  'Elige preparaciones saludables de los alimentos (cocción, al vapor, a la plancha...), con aceite de oliva virgen y evita el consumo de fritos.': 'اختاري طرقاً صحية لإعداد الطعام (السلق، البخار، الشوي...) بزيت الزيتون البكر، وتجنبي المقليات.',
+  'Consume principalmente y siempre que sea posible alimentos vegetales frescos, locales y de temporada, como frutas y verduras, cereales preferiblemente integrales, legumbres, pescados, frutos secos, aceite de oliva..., reduciendo el consumo de carnes rojas y procesadas y productos con alto contenido en sal, grasas y azúcares añadidos.': 'تناولي أساساً، وكلما أمكن، أطعمة نباتية طازجة ومحلية وموسمية، كالفواكه والخضروات، والحبوب ويفضل الكاملة، والبقوليات، والأسماك، والمكسرات، وزيت الزيتون... مع تقليل استهلاك اللحوم الحمراء والمصنعة والمنتجات الغنية بالملح والدهون والسكريات المضافة.',
+  'Come pescado 3 o 4 veces a la semana, principalmente pescado azul, ya que aporta ácidos grasos omega-3 y otros nutrientes esenciales, necesarios para el buen desarrollo del feto, excepto pez espada o emperador, atún rojo, tiburón y lucio, por su riesgo de contenido en mercurio.': 'تناولي السمك 3 أو 4 مرات أسبوعياً، وخاصة السمك الأزرق (الدهني)، لأنه يوفر أحماض أوميغا 3 الدهنية وعناصر غذائية أساسية أخرى لازمة لنمو الجنين، باستثناء سمك أبو سيف والتونة ذات الزعانف الزرقاء والقرش والفرخ، لخطر احتوائها على الزئبق.',
+  'Distribuye las comidas a lo largo del día de forma regular, aunque el número total de comidas que realices dependerá de tus necesidades. Toma un desayuno, una comida no muy abundante, una merienda ligera y cena pronto (puedes tomar una pieza de fruta o un lácteo antes de acostarte).': 'وزعي وجباتك على مدار اليوم بشكل منتظم، وإن كان عدد الوجبات الكلي يعتمد على احتياجاتك. تناولي فطوراً، وغداءً غير دسم، ووجبة خفيفة عصراً، وعشاءً مبكراً (يمكنك تناول قطعة فاكهة أو منتج ألبان قبل النوم).',
+  'Estos consejos son generales. El control del embarazo, incluidas las recomendaciones nutricionales en cada caso, debe realizarlo un profesional sanitario. Sigue sus indicaciones sobre una alimentación saludable y solicita información sobre qué tipo de actividad física puedes realizar.': 'هذه النصائح عامة. ويجب أن يقوم مختص صحي بمتابعة الحمل، بما في ذلك التوصيات الغذائية لكل حالة. اتبعي إرشاداته حول التغذية الصحية واسأليه عن نوع النشاط البدني الذي يمكنك ممارسته.',
+  'Esta información es orientativa y no sustituye las indicaciones de tu matrona, obstetra u otro profesional sanitario.': 'هذه المعلومات استرشادية ولا تحل محل إرشادات القابلة أو طبيب التوليد أو أي مختص صحي آخر.',
+  'CENTROS DE ATENCION PRIMARIA: CENTROS DE SALUD': 'الرعاية الأولية: مراكز صحية',
+  'CONSULTORIOS DE ATENCION PRIMARIA': 'عيادات الرعاية الأولية',
+  'HOSPITALES GENERALES': 'مستشفيات عامة',
+  'HOSPITAL DE MEDIA Y LARGA ESTANCIA': 'مستشفى إقامة متوسطة وطويلة',
+  'HOSPITALES ESPECIALIZADOS': 'مستشفيات متخصصة',
+  'HOSPITALES DE SALUD MENTAL Y TRATAMIENTO DE TOXICOMANIAS': 'مستشفيات الصحة النفسية وعلاج الإدمان',
+  'ESPECIALIZADOS: CENTROS DE DIAGNOSTICO': 'تخصصي: مراكز التشخيص',
+  'ESPECIALIZADOS: CENTROS DE TRANSFUSION': 'تخصصي: مراكز نقل الدم',
+  'ESPECIALIZADOS: CENTROS DE DIALISIS': 'تخصصي: مراكز غسيل الكلى',
+  'ESPECIALIZADOS: BANCOS DE TEJIDOS': 'تخصصي: بنوك الأنسجة',
+  'ESPECIALIZADOS: CENTROS DE CIRUGIA MAYOR AMBULATORIA': 'تخصصي: مراكز الجراحة الكبرى للمرضى الخارجيين',
+  'ESPECIALIZADOS: CENTROS DE SALUD MENTAL': 'تخصصي: مراكز الصحة النفسية',
+  'ESPECIALIZADOS: CLINICAS DENTALES': 'تخصصي: عيادات الأسنان',
+  'ESPECIALIZADOS: CENTROS DE REPRODUCCION HUMANA ASISTIDA': 'تخصصي: مراكز الإنجاب بمساعدة طبية',
+  'ESPECIALIZADOS: CENTROS DE INTERRUPCION VOLUNTARIA DEL EMBARAZO': 'تخصصي: مراكز الإنهاء الطوعي للحمل',
+  'ESPECIALIZADOS: CENTROS DE RECONOCIMIENTO': 'تخصصي: مراكز الفحص الطبي',
+  'OTROS CENTROS ESPECIALIZADOS': 'مراكز تخصصية أخرى',
+  'CENTROS POLIVALENTES': 'مراكز متعددة الأغراض',
+  'CONSULTAS MEDICAS': 'عيادات طبية',
+  'CONSULTAS DE OTROS PROFESIONALES SANITARIOS': 'عيادات مهنيين صحيين آخرين',
+  'ESTABLECIMIENTO DE OPTICA': 'محل نظارات',
+  'ESTABLECIMIENTO DE ORTOPEDIA': 'محل مستلزمات تقويم العظام',
+  'ESTABLECIMIENTO DE AUDIOPROTESIS': 'مركز سمعيات',
+  'ESTABLECIMIENTOS SANITARIOS (OPTICAS, ORTOPEDIAS, AUDIOPROTESIS)': 'منشآت صحية (نظارات، تقويم عظام، سمعيات)',
+  'CENTROS MOVILES DE ASISTENCIA SANITARIA': 'وحدات رعاية صحية متنقلة',
+  'OTROS PROVEEDORES DE ASIST. SANITARIA SIN INTERNAMIENTO': 'مقدمو رعاية صحية دون إقامة آخرون',
+  'SERVICIOS SANITARIOS INTEGRADOS EN ORGANIZACION NO SANITARIA': 'خدمات صحية ضمن منظمة غير صحية',
+  'Directorio colaborativo de apoyo, actividades y ejercicio durante el embarazo y el posparto en Castilla y León.': 'دليل تعاوني للدعم والأنشطة والتمارين أثناء الحمل وما بعد الولادة في قشتالة وليون.',
+  'Descubre apoyo, actividades y ejercicio para el embarazo y el posparto. Si conoces un recurso que debería estar, ayúdanos a completar el directorio.': 'اكتشفي الدعم والأنشطة والتمارين للحمل وما بعد الولادة. إذا كنتِ تعرفين موردًا ينبغي إضافته، فساعدينا على استكمال الدليل.',
+  'Asociaciones, grupos, servicios, actividades y ejercicio para acompañarte durante el embarazo y el posparto en Castilla y León.': 'جمعيات ومجموعات وخدمات وأنشطة وتمارين لمرافقتك أثناء الحمل وما بعد الولادة في قشتالة وليون.',
+  'Todavía no hay recursos publicados. Aquí podrás encontrar apoyo y actividades como pilates prenatal, matronatación o ejercicio acuático para embarazadas, ejercicio posparto y clases de preparación al parto. Cada propuesta se revisará antes de aparecer para evitar información incorrecta o desactualizada.': 'لا توجد موارد منشورة بعد. ستجدين هنا الدعم والأنشطة مثل بيلاتس ما قبل الولادة، والسباحة للحوامل أو التمارين المائية، وتمارين ما بعد الولادة، ودروس التحضير للولادة. سيُراجع كل اقتراح قبل ظهوره لتجنب المعلومات الخاطئة أو القديمة.',
+  '¿Conoces una asociación, grupo, servicio o actividad útil durante el embarazo o el posparto? Envíanos sus datos. Revisaremos la propuesta antes de publicarla.': 'هل تعرفين جمعية أو مجموعة أو خدمة أو نشاطًا مفيدًا أثناء الحمل أو ما بعد الولادة؟ أرسلي لنا معلوماته. سنراجع الاقتراح قبل نشره.',
+  'Por ejemplo, pilates prenatal o un grupo de apoyo': 'مثلاً بيلاتس ما قبل الولادة أو مجموعة دعم',
+  'Tipo de recurso': 'نوع المورد',
+  'Selecciona un tipo': 'اختاري نوعًا',
+  'Asociación, grupo o servicio de apoyo': 'جمعية أو مجموعة أو خدمة دعم',
+  'Pilates prenatal u otra actividad para embarazadas': 'بيلاتس ما قبل الولادة أو نشاط آخر للحوامل',
+  'Matronatación o ejercicio acuático para embarazadas': 'السباحة للحوامل أو التمارين المائية',
+  'Ejercicio posparto': 'تمارين ما بعد الولادة',
+  'Clases de preparación al parto': 'دروس التحضير للولادة',
+  'Otro recurso': 'مورد آخر',
+  'También puedes proponer otras actividades de ejercicio y bienestar durante el embarazo o el posparto.': 'يمكنك أيضًا اقتراح أنشطة أخرى للتمارين والعافية أثناء الحمل أو ما بعد الولادة.',
+  'Describe a quién va dirigido, qué ofrece y, si es una actividad, cuándo se realiza': 'صفي لمن هو موجه، وما الذي يقدمه، وإذا كان نشاطًا، فمتى يُقام',
+  'Lactancia materna y apoyo a familias': 'الرضاعة الطبيعية ودعم الأسر',
+  'AMALAV trabaja para proteger y promover la lactancia materna como una forma óptima de alimentación para los bebés y como vínculo afectivo, y para acompañar a las familias presentes y futuras en este momento tan especial de sus vidas.': 'تعمل AMALAV على حماية الرضاعة الطبيعية وتعزيزها بوصفها وسيلة مثلى لتغذية الأطفال ورابطة عاطفية، وعلى مرافقة الأسر الحالية والمستقبلية في هذه المرحلة المميزة من حياتهم.',
+  'Visitar el recurso': 'زيارة المورد',
+  '(se abre en una nueva pestaña)': '(يُفتح في علامة تبويب جديدة)',
+  'El directorio seguirá creciendo con asociaciones, grupos, servicios y actividades revisados antes de publicarse.': 'سيستمر الدليل في النمو بإضافة جمعيات ومجموعات وخدمات وأنشطة تُراجع قبل نشرها.',
+  'Recursos cerca de ti - CyLMaterna': 'موارد بالقرب منك - CyLMaterna',
+  'Directorio colaborativo de recursos de apoyo durante el embarazo en Castilla y León.': 'دليل تعاوني لموارد الدعم أثناء الحمل في قشتالة وليون.',
+  'Recursos cerca de ti': 'موارد بالقرب منك',
+  'Un directorio colaborativo de asociaciones, grupos y servicios de apoyo durante el embarazo.': 'دليل تعاوني للجمعيات والمجموعات وخدمات الدعم أثناء الحمل.',
+  'Explorar y proponer recursos': 'استكشاف الموارد واقتراحها',
+  'Creado entre todas': 'من صنعنا جميعًا',
+  'Encuentra apoyo cerca de ti': 'ابحثي عن الدعم بالقرب منك',
+  'Descubre asociaciones, grupos y servicios para el embarazo. Si conoces uno que debería estar, ayúdanos a completar el directorio.': 'اكتشفي الجمعيات والمجموعات والخدمات الداعمة أثناء الحمل. إذا كنتِ تعرفين موردًا ينبغي إضافته، فساعدينا على استكمال الدليل.',
+  'Ver recursos': 'عرض الموارد',
+  'Aportar un recurso': 'إضافة مورد',
+  'Jornadas de Acogida del hospital': 'أيام الاستقبال في المستشفى',
+  'Algunos hospitales organizan visitas al paritorio para que puedas conocer los espacios, entender cómo funciona la atención y resolver tus dudas antes del parto. Pregunta a tu matrona o a tu hospital de referencia si ofrecen estas jornadas y cómo apuntarte.': 'تنظم بعض المستشفيات زيارات إلى جناح الولادة للتعرف على المكان وفهم كيفية تقديم الرعاية وطرح الأسئلة قبل الولادة. اسألي القابلة أو المستشفى المرجعي عما إذا كانت هذه الزيارات متاحة وكيفية التسجيل.',
+  'Directorio colaborativo': 'دليل تعاوني',
+  'Asociaciones, grupos y servicios de apoyo para acompañarte durante el embarazo en Castilla y León.': 'جمعيات ومجموعات وخدمات دعم لمرافقتك أثناء الحمل في قشتالة وليون.',
+  'Directorio': 'الدليل',
+  'Estamos preparando el directorio': 'نعمل على إعداد الدليل',
+  'Todavía no hay recursos publicados. Cada propuesta se revisará antes de aparecer aquí para evitar información incorrecta o desactualizada.': 'لا توجد موارد منشورة بعد. ستُراجع كل مقترحات قبل ظهورها هنا لتجنب المعلومات الخاطئة أو القديمة.',
+  'Propón un recurso': 'اقترحي موردًا',
+  '¿Conoces una asociación, grupo o servicio útil? Envíanos sus datos. Revisaremos la propuesta antes de publicarla.': 'هل تعرفين جمعية أو مجموعة أو خدمة مفيدة؟ أرسلي لنا معلوماتها. سنراجع الاقتراح قبل نشره.',
+  'Nombre del recurso': 'اسم المورد',
+  'Por ejemplo, una asociación o grupo de apoyo': 'مثلاً جمعية أو مجموعة دعم',
+  'Municipio': 'البلدية',
+  'Provincia': 'المقاطعة',
+  'Selecciona una provincia': 'اختاري مقاطعة',
+  '¿Qué ofrece?': 'ماذا يقدم؟',
+  'Describe brevemente a quién ayuda y qué servicio ofrece': 'صفي بإيجاز من يساعد وما الخدمة التي يقدمها',
+  'Web o forma de contacto': 'الموقع أو وسيلة التواصل',
+  'Web, teléfono, correo o red social': 'موقع أو هاتف أو بريد إلكتروني أو شبكة اجتماعية',
+  'Tu correo electrónico': 'بريدك الإلكتروني',
+  'Solo lo usaremos si necesitamos aclarar la propuesta': 'سنستخدمه فقط إذا احتجنا إلى توضيح الاقتراح',
+  'No publicaremos tu correo electrónico.': 'لن ننشر بريدك الإلكتروني.',
+  'Confirmo que la información es correcta y puede ser revisada para su publicación.': 'أؤكد أن المعلومات صحيحة ويمكن مراجعتها للنشر.',
+  'Enviar propuesta': 'إرسال الاقتراح',
+  'Propuesta recibida - CyLMaterna': 'تم استلام الاقتراح - CyLMaterna',
+  'Hemos recibido tu propuesta de recurso.': 'لقد استلمنا اقتراحك لمورد.',
+  'Propuesta recibida': 'تم استلام الاقتراح',
+  'Gracias por ayudarnos a mejorar el directorio. Revisaremos la información antes de publicarla.': 'شكرًا لمساعدتنا في تحسين الدليل. سنراجع المعلومات قبل نشرها.',
+  'Volver a Recursos cerca de ti': 'العودة إلى موارد بالقرب منك',
+  'No rellenes este campo:': 'لا تملئي هذا الحقل:',
+
 };
 
 export const englishTranslations: Record<string, string> = {
   'Zona': 'Area',
   'Embarazo': 'Pregnancy',
+  'Recursos': 'Resources',
   'Datos abiertos de Castilla y León': 'Open data from Castile and León',
   'Datos abiertos de la Junta de Castilla y León.': 'Open data from the Government of Castile and León.',
   'Tu embarazo,': 'Your pregnancy,',
@@ -173,31 +419,352 @@ export const englishTranslations: Record<string, string> = {
   'municipio': 'municipality',
   'municipios': 'municipalities',
   'Teléfono Joven de asesoramiento e información sobre sexualidad y sida:': 'Youth helpline for advice and information about sexuality and HIV/AIDS:',
+  'Guía de ayuda durante el embarazo': 'Help guide during pregnancy',
+  'Signos y síntomas de alarma': 'Warning signs and symptoms',
+  'Consulta las señales de alarma y cuándo debes acudir al hospital durante el embarazo.': 'Check the warning signs and when you should go to hospital during pregnancy.',
+  'Leer la información completa': 'Read the full information',
+  'Atención y seguimiento del embarazo': 'Pregnancy care and follow-up',
+  'Conoce las consultas, controles y ecografías que forman parte del seguimiento del embarazo.': 'Learn about the appointments, check-ups and scans that are part of pregnancy follow-up.',
+  '¿Has estado en contacto con sustancias peligrosas o factores de riesgo?': 'Have you been in contact with dangerous substances or risk factors?',
+  'Conoce el Servicio de Información Telefónica para la Embarazada (SITE) y cómo resolver tus dudas.': 'Learn about the Telephone Information Service for Pregnant Women (SITE) and how to get your questions answered.',
+  'Consultar el servicio SITE': 'Check the SITE service',
+  'Alimentación segura durante el embarazo': 'Safe eating during pregnancy',
+  'Consejos sencillos sobre higiene, alimentos seguros y nutrición.': 'Simple advice on hygiene, safe food and nutrition.',
+  'Consultar la guía': 'Read the guide',
+  'Información oficial sobre salud materno-infantil': 'Official information on maternal and child health',
+  'Recursos de la Junta de Castilla y León': 'Resources from the Regional Government of Castile and León',
+  'Consultar información': 'View information',
+  '(se abre en una nueva pestaña)': '(opens in a new tab)',
+  'Ver más': 'View more',
+  'Ver menos': 'View less',
+  'Limpiar': 'Clear',
+  'Mi embarazo - CyLMaterna': 'My pregnancy - CyLMaterna',
+  'Dónde vives - CyLMaterna': 'Where you live - CyLMaterna',
+  '¿Dónde vives?': 'Where do you live?',
+  'Tu centro de salud': 'Your health centre',
+  'Cómo llegar': 'Get directions',
+  'EN TU MUNICIPIO': 'IN YOUR MUNICIPALITY',
+  'Importante:': 'Important:',
+  'Hospital de referencia de tu área': 'Referral hospital for your area',
+  'Atiende el área sanitaria de Ávila y dispone de servicio de Obstetricia y Ginecología. Confírmalo con tu matrona o con el servicio de Obstetricia para tu embarazo. Si necesitas atención inmediata o se trata de una emergencia grave, llama al 112 y sigue sus indicaciones: coordinarán la asistencia y te dirigirán al recurso adecuado.': 'It serves the Ávila health area and has an Obstetrics and Gynecology department. Confirm it with your midwife or the Obstetrics department for your pregnancy. If you need immediate care or it is a serious emergency, call 112 and follow their instructions: they will coordinate care and direct you to the right resource.',
+  'Tu hospital de referencia para el parto': 'Your referral hospital for giving birth',
+  'Tu hospital de referencia se asigna según tu área sanitaria y el circuito asistencial de Sacyl; no se determina solo por distancia. Confírmalo con tu matrona o con el servicio de Obstetricia. Si necesitas atención inmediata o se trata de una emergencia grave, llama al 112 y sigue sus indicaciones: coordinarán la asistencia y te dirigirán al recurso adecuado.': 'Your referral hospital is assigned according to your health area and the Sacyl care pathway; it is not determined by distance alone. Confirm it with your midwife or the Obstetrics department. If you need immediate care or it is a serious emergency, call 112 and follow their instructions: they will coordinate care and direct you to the right resource.',
+  'no todos los hospitales atienden partos. Esta lista muestra los recursos hospitalarios generales registrados en tu provincia.': 'not all hospitals attend births. This list shows the general hospital resources registered in your province.',
+  'Transporte': 'Transport',
+  'Desarrollo semanal': 'Weekly development',
+  'Codigo ZBS': 'BHA code',
+  'Conoce tu zona': 'Get to know your area',
+  'Descubre tus recursos': 'Discover your resources',
+  'Tu Zona Básica de Salud, centro de salud, consultorios y recursos cercanos.': 'Your Basic Health Area, health centre, local clinics and nearby resources.',
+  'Farmacias, hospitales, transporte y atención urgente en tu territorio.': 'Pharmacies, hospitals, transport and urgent care in your area.',
+  'Sobre el proyecto': 'About the project',
+  'Empieza ahora': 'Start now',
+  'Introduce tu municipio y descubre todo lo que necesitas saber.': 'Enter your municipality and discover everything you need to know.',
+  'Información de datos abiertos. No sustituye el consejo médico.': 'Open-data information. It does not replace medical advice.',
+  'Selecciona tu municipio y la app identifica tu zona sanitaria automáticamente.': 'Select your municipality and the app automatically identifies your health area.',
+  'Comprueba la ortografía o prueba con otro municipio de Castilla y León.': 'Check the spelling or try another municipality in Castile and León.',
+  'Vivir un embarazo en una zona rural puede significar tener que desplazarse para acceder a determinados servicios.': 'Being pregnant in a rural area can mean having to travel to access certain services.',
+  'reúne información pública para ayudarte a conocer mejor tu entorno sanitario durante el embarazo en Castilla y León.': 'brings together public information to help you get to know your health environment during pregnancy in Castile and León.',
+  'Consulta siempre las indicaciones de tu matrona o profesional sanitario. Esta información es complementaria.': 'Always follow the advice of your midwife or healthcare professional. This information is complementary.',
+  'No te preocupes. Puedes seguir estos pasos para saber dónde acudir durante tu embarazo:': 'Don\'t worry. You can follow these steps to find out where to go during your pregnancy:',
+  'localiza el centro de salud o consultorio más cercano a tu municipio.': 'find the health centre or clinic nearest to your municipality.',
+  'pregunta por la matrona y explica que estás embarazada para que te indiquen cómo pedir cita.': 'ask for the midwife and explain that you are pregnant so they can tell you how to book an appointment.',
+  'lleva tu tarjeta sanitaria y, si la tienes, la información de tu embarazo.': 'bring your health card and, if you have it, your pregnancy information.',
+  'No hay farmacias en tu municipio. Estas son las más cercanas dentro de tu Zona Básica de Salud:': 'There are no pharmacies in your municipality. These are the nearest within your Basic Health Area:',
+  'No hay farmacias registradas en tu municipio ni en su Zona Básica de Salud.': 'There are no pharmacies registered in your municipality or its Basic Health Area.',
+  'No hay estaciones de autobús registradas cerca de tu municipio.': 'There are no bus stations registered near your municipality.',
+  'No hay estación de autobuses en tu municipio. Estas son las más cercanas:': 'There is no bus station in your municipality. These are the nearest:',
+  'No hay un centro de guardia asociado en los datos disponibles.': 'There is no on-call centre linked in the available data.',
+  'No hay otros hospitales registrados en tu provincia.': 'There are no other hospitals registered in your province.',
+  'No hay centros de salud en tu municipio. Mostrando los disponibles en tu Zona Básica:': 'There are no health centres in your municipality. Showing those available in your Basic Health Area:',
+  'No hay centros de salud en tu municipio. Mostrando los disponibles en tu provincia:': 'There are no health centres in your municipality. Showing those available in your province:',
+  'en tu municipio': 'in your municipality',
+  'en tu Zona Básica': 'in your Basic Health Area',
+  'en tu provincia': 'in your province',
+  'Desarrollo semanal continuo': 'Ongoing weekly development',
+  'Durante el embarazo, ciertos síntomas pueden indicar complicaciones y requieren de atención médica.': 'During pregnancy, certain symptoms can indicate complications and require medical attention.',
+  'Síntomas que requieren atención médica': 'Symptoms that require medical attention',
+  'Sangrado vaginal:': 'Vaginal bleeding:',
+  'un leve manchado puede ser normal, pero ante un sangrado abundante acompañado de dolor es importante acudir a urgencias hospitalarias, especialmente durante el tercer trimestre.': 'light spotting can be normal, but heavy bleeding with pain means you should go to a hospital emergency department, especially during the third trimester.',
+  'Dolor abdominal intenso o persistente.': 'Severe or persistent abdominal pain.',
+  'Fiebre (temperatura superior a 38º)': 'Fever (temperature above 38º)',
+  'Dolor de cabeza intenso y cambios en la visión': 'Severe headache and changes in vision',
+  'Mareos desmayos o pérdida de conciencia': 'Dizziness, fainting or loss of consciousness',
+  'Hinchazón súbita de manos, cara o pies, especialmente si se acompaña de dolor de cabeza o cambios en la visión.': 'Sudden swelling of the hands, face or feet, especially if accompanied by headache or changes in vision.',
+  'Disminución de movimientos fetales, a partir de la semana 20.': 'Reduced fetal movements, from week 20 onwards.',
+  'Contracciones regulares o dolorosas antes de la semana 37': 'Regular or painful contractions before week 37',
+  'Vómitos incontrolables persistentes': 'Persistent uncontrollable vomiting',
+  'Sensación de pérdida de líquido': 'A feeling of leaking fluid',
+  'Pensamientos acerca de hacerse daños o hacerle daño al bebé': 'Thoughts about harming yourself or the baby',
+  'A partir de la semana 37:': 'From week 37 onwards:',
+  'Contracciones': 'Contractions',
+  'Si es mi primer hijo:': 'If this is my first baby:',
+  'regulares cada 3-4 minutos, que duran entre 30 y 60 segundos y que no ceden tras al menos 1 hora.': 'regular every 3-4 minutes, lasting between 30 and 60 seconds and not easing after at least 1 hour.',
+  'Si ya he tenido un parto o más:': 'If I have already given birth before:',
+  'cuando sean regulares cada 3-4 minutos y no ceden, especialmente si aumentan de intensidad o si tardo 1h o más en llegar al hospital de referencia.': 'when they are regular every 3-4 minutes and do not ease, especially if they get stronger or if it takes me 1 hour or more to get to the referral hospital.',
+  'Si noto pérdida de líquido --> observo el color del líquido:': 'If I notice fluid leaking --> I check the colour of the fluid:',
+  'Líquido claro/transparente:': 'Clear/transparent fluid:',
+  'preparo las cosas y voy tranquilamente al hospital': 'I get my things ready and go calmly to the hospital',
+  'Líquido verde, marrón o mal olor:': 'Green, brown or bad-smelling fluid:',
+  'debo ir con urgencia al hospital': 'I must go to the hospital urgently',
+  'Si se mueve menos de lo normal o no se mueve': 'If the baby moves less than usual or does not move',
+  'Si sangrado vaginal (ligero flujo o moco sanguinolento es normal)': 'If there is vaginal bleeding (light flow or blood-streaked mucus is normal)',
+  'Recuerda que debes conocer tu fecha de última regla y si tu embarazo tiene algún factor de riesgo para poder facilitar la atención.': 'Remember that you should know the date of your last period and whether your pregnancy has any risk factors, so that you can be cared for.',
+  'Intenta planificar el traslado al hospital con antelación, sobre todo si vives en una zona rural y recuerda llevar tu documentación médica (especialmente si te has controlado el embarazo en otro hospital).': 'Try to plan the journey to the hospital in advance, especially if you live in a rural area, and remember to bring your medical records (especially if your pregnancy has been monitored at another hospital).',
+  'En caso de haber llevado el control en el extranjero, nos sería especialmente útil tener los informes impresos y traducidos.': 'If your check-ups were done abroad, it would be especially useful to have the reports printed and translated.',
+  'El proceso de atención al embarazo desde atención primaria actualmente se desarrolla con un enfoque multidisciplinar, centrado en las necesidades de la mujer, la familia y garantizando la continuidad en la asistencia.': 'Pregnancy care in primary care currently takes a multidisciplinary approach, centred on the needs of the woman and the family and guaranteeing continuity of care.',
+  'El seguimiento del embarazo se lleva a cabo entre atención primaria y atención especializada, con los compañeros ginecólogos en el hospital. Además, se irán realizando varios controles analíticos durante el embarazo.': 'Pregnancy follow-up is shared between primary care and specialist care, with the gynaecologists at the hospital. Several blood tests will also be carried out during the pregnancy.',
+  'Consulta preconcepcional': 'Preconception consultation',
+  'Acudir a la consulta de la matrona si se está': 'Going to the midwife consultation if you are',
+  'planeando': 'planning',
+  'embarazo es ideal para conocer su estado de salud previo, la existencia de enfermedades que requieran un control adecuado e iniciar acciones de educación sanitaria.': 'a pregnancy is ideal to learn about your previous state of health, any illnesses that need proper monitoring, and to start health education.',
+  'Se deben iniciar medidas de prevención de los defectos del tubo neural entre 3-4 meses': 'Measures to prevent neural tube defects should be started 3-4 months',
+  'antes': 'before',
+  'de la concepción (toma de': 'conception (taking',
+  'ácido fólico y yodo': 'folic acid and iodine',
+  'El objetivo de esta consulta es prevenir las complicaciones y un mejor desarrollo del embarazo.': 'The aim of this consultation is to prevent complications and support a healthy pregnancy.',
+  'Primera consulta de la matrona': 'First midwife appointment',
+  '¿Cuándo?': 'When?',
+  'En cuanto te enteras de que estás embarazada.': 'As soon as you find out you are pregnant.',
+  'El resto de las consultas serán citadas por tu matrona correspondiente.': 'The remaining appointments will be scheduled by your midwife.',
+  'Citas en la consulta de Obstetricia (en el hospital)': 'Appointments at the Obstetrics clinic (at the hospital)',
+  'En embarazos de bajo riesgo se llevarán a cabo tres ecografías, su asistencia es de vital importancia.': 'In low-risk pregnancies three ultrasound scans will be carried out; attending them is vitally important.',
+  'Información importante sobre el seguimiento': 'Important information about follow-up',
+  'Sin olvidar las analíticas de control.': 'Without forgetting the routine blood tests.',
+  'Si has empezado a controlar el embarazo tarde y vienes de hacerlo en otro centro, contacta cuanto antes con la matrona de tu centro de salud.': 'If you started your pregnancy check-ups late and were having them at another centre, contact the midwife at your health centre as soon as possible.',
+  'Además puedes consultar en cualquier momento con tu matrona información sobre clases de educación maternal, prenatal y clases de preparación al parto.': 'You can also ask your midwife at any time about antenatal education classes and birth preparation classes.',
+  'Para conocer detalladamente cuál va a ser el seguimiento de tu embarazo ponte en contacto con tu matrona de referencia.': 'To find out in detail what your pregnancy follow-up will look like, get in touch with your assigned midwife.',
+  '¿Cuál es mi matrona de referencia?': 'Who is my assigned midwife?',
+  'Servicio de Información Telefónica para la Embarazada (SITE)': 'Telephone Information Service for Pregnant Women (SITE)',
+  'El SITE': 'The SITE',
+  'es un servicio de información sobre factores de riesgo para el desarrollo del niño antes del nacimiento.': 'is an information service about risk factors for the baby’s development before birth.',
+  'Las embarazadas pueden recibir información telefónica llamando al teléfono': 'Pregnant women can get information by phone, calling',
+  'en horario de 9 a 15 horas de lunes a viernes': 'from 9 am to 3 pm, Monday to Friday',
+  'Serán atendidas por médicos especialistas pertenecientes al grupo científico de la asociación Estudio Colaborativo Español de Malformaciones Congénitas (ECEMC), quienes responderán sobre los peligros para el embrión o feto de los diferentes agentes ambientales (químicos/tratamientos farmacológicos, físicos, biológicos, …) que pueden afectar a la mujer embarazada, así como sobre aquellas otras cuestiones relacionadas con el cuidado y atención del embarazo.': 'Calls are answered by specialist doctors from the scientific group of the Spanish Collaborative Study of Congenital Malformations (ECEMC), who answer questions about the dangers to the embryo or fetus from different environmental agents (chemicals/drug treatments, physical, biological, …) that can affect pregnant women, as well as other questions related to pregnancy care.',
+  'Información de contacto': 'Contact information',
+  'Teléfono SITE:': 'SITE phone:',
+  'Horario: de 9 a 15 horas, de lunes a viernes': 'Hours: 9 am to 3 pm, Monday to Friday',
+  'Pautas sencillas para cuidar tu alimentación y prevenir riesgos.': 'Simple guidelines to look after your diet and prevent risks.',
+  'El embarazo es un proceso fisiológico en el que cobra especial importancia llevar una vida saludable. Una alimentación equilibrada y segura y un nivel y tipo de actividad física adecuada, evitando el sedentarismo, favorecen la salud de la madre y del futuro bebé.': 'Pregnancy is a physiological process in which a healthy lifestyle is especially important. A balanced and safe diet and an appropriate level and type of physical activity, avoiding a sedentary lifestyle, benefit the health of the mother and the future baby.',
+  'Es importante para todas las personas conocer unas medidas básicas de higiene. Durante el embarazo es importante tomar unas medidas básicas higiénico-dietéticas y evitar el consumo de ciertos alimentos para prevenir riesgos que, aunque poco frecuentes, pueden tener consecuencias negativas para el feto o la mujer gestante.': 'It is important for everyone to know some basic hygiene measures. During pregnancy it is important to follow basic hygiene and dietary measures and to avoid certain foods to prevent risks which, although uncommon, can have negative consequences for the fetus or the pregnant woman.',
+  'Medidas básicas de higiene alimentaria': 'Basic food hygiene measures',
+  'Lávate las manos con jabón y agua caliente, al menos durante 20 segundos, antes y después de manipular los alimentos, tras contactar con cualquier material sucio (pañales, residuos, animales) y especialmente después de usar el cuarto de baño.': 'Wash your hands with soap and hot water, for at least 20 seconds, before and after handling food, after contact with any dirty material (nappies, waste, animals) and especially after using the bathroom.',
+  'Las manos, las superficies y los utensilios de cocina utilizados se deben lavar a fondo después de manipular carnes, pescados, huevos, frutas y vegetales no lavados y cualquier otro alimento crudo.': 'Hands, surfaces and kitchen utensils used must be washed thoroughly after handling meat, fish, eggs, unwashed fruit and vegetables and any other raw food.',
+  'Guarda los alimentos cocinados en el frigorífico, colócalos adecuadamente, separados y lejos de los quesos y los alimentos crudos, procura que se consuman en poco tiempo y mantenlos en recipientes cerrados. Si los compras ya cocinados, respeta la fecha de consumo preferente/caducidad que se indica en la etiqueta.': 'Keep cooked food in the fridge, placed properly, separate from and away from cheeses and raw foods; try to eat it soon and keep it in closed containers. If you buy it already cooked, respect the use-by/best-before date on the label.',
+  'Asegúrate de que tu frigorífico mantiene la temperatura correcta (5 ºC o inferior).': 'Make sure your fridge keeps the correct temperature (5 ºC or lower).',
+  'Sigue las instrucciones del etiquetado de los alimentos precocinados para calentarlos adecuadamente.': 'Follow the label instructions on pre-cooked foods to heat them properly.',
+  'Precauciones con los alimentos': 'Precautions with food',
+  'Lee detenidamente el etiquetado de los alimentos, especialmente las advertencias y condiciones de uso.': 'Read food labels carefully, especially the warnings and conditions of use.',
+  'Lava las frutas, verduras y hierbas aromáticas crudas. Si decides emplear productos químicos (por ejemplo, lejía), consulta la etiqueta para saber aquellos que se pueden utilizar y ten en cuenta las indicaciones para su correcto uso.': 'Wash raw fruit, vegetables and herbs. If you decide to use chemical products (for example, bleach), check the label to find out which ones can be used and follow the instructions for correct use.',
+  'Cocina completamente la carne y el pescado. Para comprobar que se ha cocinado adecuadamente, puedes fijarte en que cambie el color en el centro del producto (a más de 70 ºC durante al menos dos minutos).': 'Cook meat and fish thoroughly. To check they are properly cooked, you can look for the colour to change in the centre of the product (above 70 ºC for at least two minutes).',
+  'Las sobras de comida debes refrigerarlas lo antes posible; no deben estar más de 2 horas a temperatura ambiente. Antes de su consumo, asegúrate de calentarlas a alta temperatura (a más de 70 ºC durante al menos dos minutos).': 'Refrigerate leftovers as soon as possible; they should not be at room temperature for more than 2 hours. Before eating them, make sure to heat them to a high temperature (above 70 ºC for at least two minutes).',
+  'Si utilizas microondas para cocinar o recalentar los alimentos, sigue las instrucciones del fabricante para elegir el tiempo y potencia adecuados, asegurando que se alcanza la temperatura mencionada anteriormente.': 'If you use a microwave to cook or reheat food, follow the manufacturer’s instructions to choose the right time and power, making sure the temperature mentioned above is reached.',
+  'Toma sólo aquellos complementos alimenticios que te indique tu médica o médico.': 'Only take the food supplements that your doctor recommends.',
+  'Modera el consumo de cafeína de cualquier fuente (café, té, chocolate, bebidas de cola, yerba mate...).': 'Moderate your caffeine intake from any source (coffee, tea, chocolate, cola drinks, yerba mate...).',
+  'Alimentos y bebidas que debes evitar': 'Food and drinks you should avoid',
+  'Alimentos crudos': 'Raw foods',
+  'Leche cruda y quesos frescos o de pasta blanda (Brie, Camembert, tipo Burgos o quesos latinos, mozzarella y quesos azules) si en la etiqueta no se indica que estén hechos con leche pasteurizada.': 'Raw milk and fresh or soft cheeses (Brie, Camembert, Burgos-type or Latin-style cheeses, mozzarella and blue cheeses) if the label does not state they are made with pasteurised milk.',
+  'Brotes crudos (soja, alfalfa...).': 'Raw sprouts (soy, alfalfa...).',
+  'Huevos crudos o preparaciones elaboradas con huevo crudo (salsas y mayonesas caseras, mousses, merengues y pasteles caseros, tiramisú, helados caseros, ponches de huevo...).': 'Raw eggs or preparations made with raw egg (homemade sauces and mayonnaise, mousses, meringues and homemade cakes, tiramisu, homemade ice cream, eggnogs...).',
+  'Carne cruda (carpaccios, steak tartar...) o poco hecha.': 'Raw (carpaccio, steak tartare...) or undercooked meat.',
+  'Pescado crudo (sushi, sashimi, ceviche, carpaccios), pescado ahumado refrigerado o marinado, así como ostras, almejas o mejillones crudos.': 'Raw fish (sushi, sashimi, ceviche, carpaccio), chilled smoked or marinated fish, as well as raw oysters, clams or mussels.',
+  'Frutas y hortalizas crudas que no se hayan pelado o lavado y desinfectado previamente (incluyendo ensaladas embolsadas, preparadas y las consumidas fuera de casa).': 'Raw fruit and vegetables that have not been peeled or washed and disinfected first (including bagged, prepared salads and those eaten away from home).',
+  'Otros alimentos': 'Other foods',
+  'Pez espada o emperador, atún rojo (Thunnus thynnus), tiburón (cazón, marrajo, tintorera, ...) y lucio.': 'Swordfish, bluefin tuna (Thunnus thynnus), shark (dogfish, porbeagle, ...) and pike.',
+  'Carne de caza silvestre (animales abatidos en la caza como el jabalí, venado, ...).': 'Wild game meat (hunted animals such as wild boar, deer, ...).',
+  'Productos cárnicos loncheados y quesos loncheados o quesos rallados industriales. Quita la corteza de todos los quesos.': 'Sliced meat products and sliced or industrially grated cheeses. Remove the rind from all cheeses.',
+  'Patés que se vendan refrigerados.': 'Pâtés sold chilled.',
+  'Si no estás inmunizada frente a la toxoplasmosis (consulta a tu médica o médico), evita el consumo de productos cárnicos crudos curados (chorizo, salchichón, salami, jamón curado...). Estos alimentos sí pueden consumirse después de cocinarse a más de 70 ºC durante 2 minutos en el centro del producto (en croquetas, rehogados, pizzas, ...).': 'If you are not immune to toxoplasmosis (check with your doctor), avoid cured raw meat products (chorizo, salchichón, salami, cured ham...). These foods can be eaten after cooking above 70 ºC for 2 minutes in the centre of the product (in croquettes, stir-fries, pizzas, ...).',
+  'Algunos alimentos envasados': 'Some packaged foods',
+  'Sándwiches y otros alimentos envasados listos para consumir que contengan vegetales, huevo, carne, fiambres, pescado y derivados.': 'Sandwiches and other ready-to-eat packaged foods containing vegetables, egg, meat, cold cuts, fish and derivatives.',
+  'No consumas directamente frutas y verduras congeladas envasadas si en el etiquetado indica que se deben cocinar (batido con espinacas congeladas, por ejemplo).': 'Do not eat packaged frozen fruit and vegetables straight from the pack if the label says they must be cooked (a smoothie with frozen spinach, for example).',
+  'Si consumes zumos envasados, deben estar pasteurizados.': 'If you drink packaged juices, they must be pasteurised.',
+  'Bebidas': 'Drinks',
+  'No tomes bebidas alcohólicas, ni productos que lleven alcohol. Cualquier consumo conlleva un riesgo para el desarrollo del feto.': 'Do not drink alcoholic beverages or products containing alcohol. Any consumption carries a risk to the development of the fetus.',
+  'Evita bebidas azucaradas y energéticas.': 'Avoid sugary and energy drinks.',
+  'Consume los zumos recién exprimidos, no los preparados con antelación ni los conservados.': 'Drink freshly squeezed juices, not ones prepared in advance or stored.',
+  'Algunos consejos nutricionales': 'Some nutritional advice',
+  'Es esencial seguir una alimentación saludable y segura durante el embarazo. Algunas pautas sencillas para lograrlo son:': 'It is essential to follow a healthy and safe diet during pregnancy. Some simple guidelines to achieve this are:',
+  'Para beber, lo mejor es el agua. Se recomienda beber entre 2 y 2,5 litros de agua al día (de 8 a 10 vasos). Ten en cuenta que una parte ya está en los alimentos que consumes durante el día y que los días de calor y si haces actividad física debes beber un poco más.': 'For drinking, water is best. It is recommended to drink between 2 and 2.5 litres of water a day (8 to 10 glasses). Bear in mind that some of it is already in the food you eat during the day, and that on hot days and if you do physical activity you should drink a little more.',
+  'Modera el consumo de sal y no superes los 5 g al día, contando la sal añadida en el cocinado y la incluida en los alimentos que compras. Revisa su etiquetado antes de adquirirlos.': 'Moderate your salt intake and do not exceed 5 g a day, counting the salt added in cooking and that included in the foods you buy. Check their labels before buying them.',
+  'Consume al menos 5 raciones de frutas y hortalizas al día, siempre peladas, lavadas o cocinadas, para cubrir las necesidades de algunos nutrientes esenciales como vitaminas, minerales y fibra.': 'Eat at least 5 portions of fruit and vegetables a day, always peeled, washed or cooked, to cover the need for some essential nutrients such as vitamins, minerals and fibre.',
+  'Elige preparaciones saludables de los alimentos (cocción, al vapor, a la plancha...), con aceite de oliva virgen y evita el consumo de fritos.': 'Choose healthy ways of preparing food (boiling, steaming, grilling...), with virgin olive oil, and avoid fried food.',
+  'Consume principalmente y siempre que sea posible alimentos vegetales frescos, locales y de temporada, como frutas y verduras, cereales preferiblemente integrales, legumbres, pescados, frutos secos, aceite de oliva..., reduciendo el consumo de carnes rojas y procesadas y productos con alto contenido en sal, grasas y azúcares añadidos.': 'Eat mainly, and whenever possible, fresh, local and seasonal plant foods, such as fruit and vegetables, preferably wholegrain cereals, pulses, fish, nuts, olive oil..., reducing your consumption of red and processed meats and products high in salt, fats and added sugars.',
+  'Come pescado 3 o 4 veces a la semana, principalmente pescado azul, ya que aporta ácidos grasos omega-3 y otros nutrientes esenciales, necesarios para el buen desarrollo del feto, excepto pez espada o emperador, atún rojo, tiburón y lucio, por su riesgo de contenido en mercurio.': 'Eat fish 3 or 4 times a week, mainly oily fish, as it provides omega-3 fatty acids and other essential nutrients needed for the good development of the fetus, except swordfish, bluefin tuna, shark and pike, because of their mercury content risk.',
+  'Distribuye las comidas a lo largo del día de forma regular, aunque el número total de comidas que realices dependerá de tus necesidades. Toma un desayuno, una comida no muy abundante, una merienda ligera y cena pronto (puedes tomar una pieza de fruta o un lácteo antes de acostarte).': 'Spread your meals regularly throughout the day, although the total number of meals will depend on your needs. Have breakfast, a not-too-large lunch, a light snack and an early dinner (you can have a piece of fruit or a dairy product before bed).',
+  'Estos consejos son generales. El control del embarazo, incluidas las recomendaciones nutricionales en cada caso, debe realizarlo un profesional sanitario. Sigue sus indicaciones sobre una alimentación saludable y solicita información sobre qué tipo de actividad física puedes realizar.': 'This advice is general. Pregnancy monitoring, including nutritional recommendations in each case, must be done by a healthcare professional. Follow their guidance on healthy eating and ask what kind of physical activity you can do.',
+  'Esta información es orientativa y no sustituye las indicaciones de tu matrona, obstetra u otro profesional sanitario.': 'This information is guidance only and does not replace the advice of your midwife, obstetrician or other healthcare professional.',
+  'CENTROS DE ATENCION PRIMARIA: CENTROS DE SALUD': 'PRIMARY CARE: HEALTH CENTRES',
+  'CONSULTORIOS DE ATENCION PRIMARIA': 'PRIMARY CARE LOCAL CLINICS',
+  'HOSPITALES GENERALES': 'GENERAL HOSPITALS',
+  'HOSPITAL DE MEDIA Y LARGA ESTANCIA': 'MEDIUM AND LONG-STAY HOSPITAL',
+  'HOSPITALES ESPECIALIZADOS': 'SPECIALIST HOSPITALS',
+  'HOSPITALES DE SALUD MENTAL Y TRATAMIENTO DE TOXICOMANIAS': 'MENTAL HEALTH AND ADDICTION TREATMENT HOSPITALS',
+  'ESPECIALIZADOS: CENTROS DE DIAGNOSTICO': 'SPECIALIST: DIAGNOSTIC CENTRES',
+  'ESPECIALIZADOS: CENTROS DE TRANSFUSION': 'SPECIALIST: TRANSFUSION CENTRES',
+  'ESPECIALIZADOS: CENTROS DE DIALISIS': 'SPECIALIST: DIALYSIS CENTRES',
+  'ESPECIALIZADOS: BANCOS DE TEJIDOS': 'SPECIALIST: TISSUE BANKS',
+  'ESPECIALIZADOS: CENTROS DE CIRUGIA MAYOR AMBULATORIA': 'SPECIALIST: MAJOR OUTPATIENT SURGERY CENTRES',
+  'ESPECIALIZADOS: CENTROS DE SALUD MENTAL': 'SPECIALIST: MENTAL HEALTH CENTRES',
+  'ESPECIALIZADOS: CLINICAS DENTALES': 'SPECIALIST: DENTAL CLINICS',
+  'ESPECIALIZADOS: CENTROS DE REPRODUCCION HUMANA ASISTIDA': 'SPECIALIST: ASSISTED REPRODUCTION CENTRES',
+  'ESPECIALIZADOS: CENTROS DE INTERRUPCION VOLUNTARIA DEL EMBARAZO': 'SPECIALIST: VOLUNTARY PREGNANCY TERMINATION CENTRES',
+  'ESPECIALIZADOS: CENTROS DE RECONOCIMIENTO': 'SPECIALIST: MEDICAL EXAMINATION CENTRES',
+  'OTROS CENTROS ESPECIALIZADOS': 'OTHER SPECIALIST CENTRES',
+  'CENTROS POLIVALENTES': 'MULTIPURPOSE CENTRES',
+  'CONSULTAS MEDICAS': 'MEDICAL CONSULTATION ROOMS',
+  'CONSULTAS DE OTROS PROFESIONALES SANITARIOS': 'OTHER HEALTHCARE PROFESSIONAL CONSULTATIONS',
+  'ESTABLECIMIENTO DE OPTICA': 'OPTICIAN',
+  'ESTABLECIMIENTO DE ORTOPEDIA': 'ORTHOPAEDIC SUPPLIES STORE',
+  'ESTABLECIMIENTO DE AUDIOPROTESIS': 'HEARING AID CENTRE',
+  'ESTABLECIMIENTOS SANITARIOS (OPTICAS, ORTOPEDIAS, AUDIOPROTESIS)': 'HEALTH ESTABLISHMENTS (OPTICIANS, ORTHOPAEDICS, HEARING AIDS)',
+  'CENTROS MOVILES DE ASISTENCIA SANITARIA': 'MOBILE HEALTHCARE UNITS',
+  'OTROS PROVEEDORES DE ASIST. SANITARIA SIN INTERNAMIENTO': 'OTHER OUTPATIENT HEALTHCARE PROVIDERS',
+  'SERVICIOS SANITARIOS INTEGRADOS EN ORGANIZACION NO SANITARIA': 'HEALTH SERVICES WITHIN A NON-HEALTH ORGANISATION',
+  'Directorio colaborativo de apoyo, actividades y ejercicio durante el embarazo y el posparto en Castilla y León.': 'A collaborative directory of support, activities and exercise during pregnancy and postpartum in Castile and León.',
+  'Descubre apoyo, actividades y ejercicio para el embarazo y el posparto. Si conoces un recurso que debería estar, ayúdanos a completar el directorio.': 'Discover support, activities and exercise for pregnancy and postpartum. If you know a resource that should be listed, help us complete the directory.',
+  'Asociaciones, grupos, servicios, actividades y ejercicio para acompañarte durante el embarazo y el posparto en Castilla y León.': 'Associations, groups, services, activities and exercise to support you during pregnancy and postpartum in Castile and León.',
+  'Todavía no hay recursos publicados. Aquí podrás encontrar apoyo y actividades como pilates prenatal, matronatación o ejercicio acuático para embarazadas, ejercicio posparto y clases de preparación al parto. Cada propuesta se revisará antes de aparecer para evitar información incorrecta o desactualizada.': 'No resources have been published yet. Here you will find support and activities such as prenatal Pilates, swimming or water exercise for pregnant women, postpartum exercise and birth preparation classes. Every suggestion will be reviewed before it appears to avoid incorrect or outdated information.',
+  '¿Conoces una asociación, grupo, servicio o actividad útil durante el embarazo o el posparto? Envíanos sus datos. Revisaremos la propuesta antes de publicarla.': 'Do you know a useful association, group, service or activity for pregnancy or postpartum? Send us its details. We will review the suggestion before publishing it.',
+  'Por ejemplo, pilates prenatal o un grupo de apoyo': 'For example, prenatal Pilates or a support group',
+  'Tipo de recurso': 'Type of resource',
+  'Selecciona un tipo': 'Select a type',
+  'Asociación, grupo o servicio de apoyo': 'Association, group or support service',
+  'Pilates prenatal u otra actividad para embarazadas': 'Prenatal Pilates or another activity for pregnant women',
+  'Matronatación o ejercicio acuático para embarazadas': 'Swimming or water exercise for pregnant women',
+  'Ejercicio posparto': 'Postpartum exercise',
+  'Clases de preparación al parto': 'Birth preparation classes',
+  'Otro recurso': 'Other resource',
+  'También puedes proponer otras actividades de ejercicio y bienestar durante el embarazo o el posparto.': 'You can also suggest other exercise and wellbeing activities during pregnancy or postpartum.',
+  'Describe a quién va dirigido, qué ofrece y, si es una actividad, cuándo se realiza': 'Describe who it is for, what it offers and, if it is an activity, when it takes place',
+  'Lactancia materna y apoyo a familias': 'Breastfeeding and family support',
+  'AMALAV trabaja para proteger y promover la lactancia materna como una forma óptima de alimentación para los bebés y como vínculo afectivo, y para acompañar a las familias presentes y futuras en este momento tan especial de sus vidas.': 'AMALAV works to protect and promote breastfeeding as an optimal way to feed babies and as an emotional bond, and to support current and future families at this very special time in their lives.',
+  'Visitar el recurso': 'Visit the resource',
+  '(se abre en una nueva pestaña)': '(opens in a new tab)',
+  'El directorio seguirá creciendo con asociaciones, grupos, servicios y actividades revisados antes de publicarse.': 'The directory will continue to grow with associations, groups, services and activities reviewed before publication.',
+  'Recursos cerca de ti - CyLMaterna': 'Resources near you - CyLMaterna',
+  'Directorio colaborativo de recursos de apoyo durante el embarazo en Castilla y León.': 'A collaborative directory of pregnancy support resources in Castile and León.',
+  'Recursos cerca de ti': 'Resources near you',
+  'Un directorio colaborativo de asociaciones, grupos y servicios de apoyo durante el embarazo.': 'A collaborative directory of associations, groups and support services during pregnancy.',
+  'Explorar y proponer recursos': 'Explore and suggest resources',
+  'Creado entre todas': 'Created together',
+  'Encuentra apoyo cerca de ti': 'Find support near you',
+  'Descubre asociaciones, grupos y servicios para el embarazo. Si conoces uno que debería estar, ayúdanos a completar el directorio.': 'Discover associations, groups and services that support you during pregnancy. If you know one that should be listed, help us complete the directory.',
+  'Ver recursos': 'View resources',
+  'Aportar un recurso': 'Suggest a resource',
+  'Jornadas de Acogida del hospital': 'Hospital welcome sessions',
+  'Algunos hospitales organizan visitas al paritorio para que puedas conocer los espacios, entender cómo funciona la atención y resolver tus dudas antes del parto. Pregunta a tu matrona o a tu hospital de referencia si ofrecen estas jornadas y cómo apuntarte.': 'Some hospitals offer visits to the maternity ward so you can see the facilities, understand how care works and ask questions before giving birth. Ask your midwife or referral hospital whether they offer these sessions and how to sign up.',
+  'Directorio colaborativo': 'Collaborative directory',
+  'Asociaciones, grupos y servicios de apoyo para acompañarte durante el embarazo en Castilla y León.': 'Associations, groups and support services to help you through pregnancy in Castile and León.',
+  'Directorio': 'Directory',
+  'Estamos preparando el directorio': 'We are preparing the directory',
+  'Todavía no hay recursos publicados. Cada propuesta se revisará antes de aparecer aquí para evitar información incorrecta o desactualizada.': 'No resources have been published yet. Every suggestion will be reviewed before it appears here to avoid incorrect or outdated information.',
+  'Propón un recurso': 'Suggest a resource',
+  '¿Conoces una asociación, grupo o servicio útil? Envíanos sus datos. Revisaremos la propuesta antes de publicarla.': 'Do you know a useful association, group or service? Send us its details. We will review the suggestion before publishing it.',
+  'Nombre del recurso': 'Resource name',
+  'Por ejemplo, una asociación o grupo de apoyo': 'For example, an association or support group',
+  'Municipio': 'Municipality',
+  'Provincia': 'Province',
+  'Selecciona una provincia': 'Select a province',
+  '¿Qué ofrece?': 'What does it offer?',
+  'Describe brevemente a quién ayuda y qué servicio ofrece': 'Briefly describe who it helps and what service it offers',
+  'Web o forma de contacto': 'Website or contact details',
+  'Web, teléfono, correo o red social': 'Website, phone, email or social media',
+  'Tu correo electrónico': 'Your email address',
+  'Solo lo usaremos si necesitamos aclarar la propuesta': 'We will only use it if we need to clarify the suggestion',
+  'No publicaremos tu correo electrónico.': 'We will not publish your email address.',
+  'Confirmo que la información es correcta y puede ser revisada para su publicación.': 'I confirm that the information is correct and may be reviewed for publication.',
+  'Enviar propuesta': 'Send suggestion',
+  'Propuesta recibida - CyLMaterna': 'Suggestion received - CyLMaterna',
+  'Hemos recibido tu propuesta de recurso.': 'We have received your resource suggestion.',
+  'Propuesta recibida': 'Suggestion received',
+  'Gracias por ayudarnos a mejorar el directorio. Revisaremos la información antes de publicarla.': 'Thank you for helping us improve the directory. We will review the information before publishing it.',
+  'Volver a Recursos cerca de ti': 'Back to Resources near you',
+  'No rellenes este campo:': 'Do not fill in this field:',
+
 };
 
-function translateText(text: string, translations: Record<string, string>): string {
-  const trimmed = text.trim();
-  const week = trimmed.match(/^Semana (\d+)( de 40)?$/);
-  if (week) return text.replace(trimmed, `${translations === englishTranslations ? 'Week' : 'الأسبوع'} ${week[1]}${week[2] ? translations === englishTranslations ? ' of 40' : ' من 40' : ''}`);
-  const resultCount = trimmed.match(/^(\d+) municipio(s)? encontrado(s)?$/);
-  if (resultCount) return text.replace(trimmed, translations === englishTranslations ? `${resultCount[1]} ${Number(resultCount[1]) === 1 ? 'municipality' : 'municipalities'} found` : `تم العثور على ${resultCount[1]} بلدية`);
-  const showing = trimmed.match(/^Mostrando (\d+) de (\d+) puntos en el mapa\.$/);
-  if (showing) return text.replace(trimmed, translations === englishTranslations ? `Showing ${showing[1]} of ${showing[2]} points on the map.` : `عرض ${showing[1]} من ${showing[2]} نقطة على الخريطة.`);
-  const translated = translations[trimmed];
-  if (!translated) return text;
-  return text.replace(trimmed, translated);
+function normalizeText(text: string): string {
+  return text.trim().replace(/\s+/g, ' ');
 }
 
+function translateValue(value: string, translations: Record<string, string>): string {
+  const normalized = normalizeText(value);
+  return translations[normalized] ?? value;
+}
+
+function translateText(text: string, translations: Record<string, string>): string {
+  const isEnglish = translations === englishTranslations;
+  const trimmed = normalizeText(text);
+  if (!trimmed) return text;
+  const replaceOriginal = (translated: string) => text.replace(text.trim(), translated);
+  const week = trimmed.match(/^Semana (\d+)( de 40)?$/);
+  if (week) return replaceOriginal(isEnglish ? `Week ${week[1]}${week[2] ? ' of 40' : ''}` : `الأسبوع ${week[1]}${week[2] ? ' من 40' : ''}`);
+  const resultCount = trimmed.match(/^(\d+) municipio(s)? encontrado(s)?$/);
+  if (resultCount) return replaceOriginal(isEnglish ? `${resultCount[1]} ${Number(resultCount[1]) === 1 ? 'municipality' : 'municipalities'} found` : `تم العثور على ${resultCount[1]} بلدية`);
+  const showing = trimmed.match(/^Mostrando (\d+) de (\d+) puntos en el mapa\.$/);
+  if (showing) return replaceOriginal(isEnglish ? `Showing ${showing[1]} of ${showing[2]} points on the map.` : `عرض ${showing[1]} من ${showing[2]} نقطة على الخريطة.`);
+  const verTodas = trimmed.match(/^Ver todas \((\d+)\)$/);
+  if (verTodas) return replaceOriginal(isEnglish ? `View all (${verTodas[1]})` : `عرض الكل (${verTodas[1]})`);
+  const verMas = trimmed.match(/^Ver más \((\d+) (.+)\)$/);
+  if (verMas) return replaceOriginal(isEnglish ? `View more (${verMas[1]} ${translateValue(verMas[2], translations)})` : `عرض المزيد (${verMas[1]} ${translateValue(verMas[2], translations)})`);
+  const ubicacion = trimmed.match(/^Tu ubicación aproximada: (.+)$/);
+  if (ubicacion) return replaceOriginal(isEnglish ? `Your approximate location: ${ubicacion[1]}` : `موقعك التقريبي: ${ubicacion[1]}`);
+  const nivel = trimmed.match(/^Nivel (.+)$/);
+  if (nivel) return replaceOriginal(isEnglish ? `Level ${nivel[1]}` : `المستوى ${nivel[1]}`);
+  const zona = trimmed.match(/^Zona (\S+)$/);
+  if (zona) return replaceOriginal(isEnglish ? `Zone ${zona[1]}` : `المنطقة ${zona[1]}`);
+  const codigo = trimmed.match(/^Código (\S+)$/);
+  if (codigo) return replaceOriginal(isEnglish ? `Code ${codigo[1]}` : `الرمز ${codigo[1]}`);
+  const translated = translations[trimmed];
+  if (!translated) return text;
+  return replaceOriginal(translated);
+}
+
+const NON_TRANSLATABLE_TAGS = ['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEMPLATE', 'IFRAME'];
+
 function translateElement(element: Element, translations: Record<string, string>) {
-  for (const attribute of ['placeholder', 'aria-label', 'title']) {
+  if (NON_TRANSLATABLE_TAGS.includes(element.tagName)) return;
+  for (const attribute of ['placeholder', 'aria-label', 'title', 'alt']) {
     const value = element.getAttribute(attribute);
-    if (value) element.setAttribute(attribute, translateText(value, translations));
+    if (value) {
+      const translated = translateText(value, translations);
+      if (translated !== value) element.setAttribute(attribute, translated);
+    }
   }
-  const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+  const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, {
+    acceptNode: (node) => {
+      const parent = (node as Text).parentElement;
+      return parent && NON_TRANSLATABLE_TAGS.includes(parent.tagName)
+        ? NodeFilter.FILTER_REJECT
+        : NodeFilter.FILTER_ACCEPT;
+    },
+  });
   const textNodes: Text[] = [];
   while (walker.nextNode()) textNodes.push(walker.currentNode as Text);
   textNodes.forEach((node) => {
-    node.textContent = translateText(node.textContent || '', translations);
+    const current = node.textContent || '';
+    const translated = translateText(current, translations);
+    if (translated !== current) node.textContent = translated;
+  });
+}
+
+function translateTextNode(node: Text, translations: Record<string, string>) {
+  const current = node.textContent || '';
+  const translated = translateText(current, translations);
+  if (translated !== current) node.textContent = translated;
+}
+
+function localizeNavigation(root: Element | Document, prefix: string) {
+  root.querySelectorAll('a[href^="/"]:not([lang])').forEach((anchor) => {
+    const href = anchor.getAttribute('href') || '';
+    if (href.startsWith(`${prefix}/`) || href === prefix) return;
+    anchor.setAttribute('href', `${prefix}${href}`);
+  });
+  root.querySelectorAll('form[action^="/"]').forEach((form) => {
+    const action = form.getAttribute('action') || '';
+    if (action.startsWith(`${prefix}/`) || action === prefix) return;
+    form.setAttribute('action', `${prefix}${action}`);
   });
 }
 
@@ -214,12 +781,22 @@ export function localizePage() {
     if (content) meta.setAttribute('content', translateText(content, translations));
   });
   document.querySelectorAll('body *').forEach((element) => translateElement(element, translations));
+  const prefix = isEnglish ? '/en' : '/ar';
+  localizeNavigation(document, prefix);
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
+      if (mutation.type === 'characterData') {
+        translateTextNode(mutation.target as Text, translations);
+        return;
+      }
       mutation.addedNodes.forEach((node) => {
-        if (node.nodeType === Node.ELEMENT_NODE) translateElement(node as Element, translations);
+        if (node.nodeType === Node.ELEMENT_NODE) {
+          translateElement(node as Element, translations);
+          localizeNavigation(node as Element, prefix);
+        }
+        else if (node.nodeType === Node.TEXT_NODE) translateTextNode(node as Text, translations);
       });
     });
   });
-  observer.observe(document.body, { childList: true, subtree: true });
-}
+  observer.observe(document.body, { childList: true, subtree: true, characterData: true });
+    }

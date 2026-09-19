@@ -2,15 +2,16 @@
 import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
-  import {
-    obtenerFarmaciasConFallback,
-    obtenerEstacionesMunicipio,
-    obtenerEstacionesCercanas,
-    obtenerHospitalesProvincia,
-    obtenerCentrosConFallback,
-    obtenerZbsMunicipio,
-    obtenerMunicipio,
-  } from "../data/repository";
+import {
+  obtenerFarmaciasConFallback,
+  obtenerEstacionesCercanas,
+  obtenerHospitalesProvincia,
+  obtenerHospitalesSanitariosProvincia,
+  obtenerZbs,
+  obtenerCentrosConFallback,
+  obtenerZbsMunicipio,
+  obtenerMunicipio,
+} from "../data/repository";
 ---
 
 <Layout title="Tu zona sanitaria - CyLMaterna">
@@ -162,6 +163,11 @@ import Footer from "../components/Footer.astro";
             <span class="inline-flex items-center gap-1.5"
               ><span
                 class="w-2.5 h-2.5 rounded-full inline-block"
+                style="background:#d97706"></span> Tu centro de salud</span
+            >
+            <span class="inline-flex items-center gap-1.5"
+              ><span
+                class="w-2.5 h-2.5 rounded-full inline-block"
                 style="background:#2563eb"></span> Estaciones de autobús</span
             >
             <span class="inline-flex items-center gap-1.5"
@@ -210,9 +216,12 @@ import Footer from "../components/Footer.astro";
 <script>
   import {
     obtenerFarmaciasConFallback,
-    obtenerEstacionesMunicipio,
     obtenerHospitalesProvincia,
+    obtenerHospitalesSanitariosProvincia,
+    obtenerHospitalReferenciaArea,
+    obtenerZbs,
     obtenerCentrosConFallback,
+    obtenerCentrosProvincia,
     obtenerZbsMunicipio,
     obtenerMunicipio,
     obtenerEstacionesCercanas,
@@ -296,11 +305,14 @@ import Footer from "../components/Footer.astro";
     const munNombre = state.municipio || "Sin datos";
     const provNombre = state.provincia || "Sin datos";
     subtitle.textContent = `${munNombre}, ${provNombre}`;
+    municipioBlock.classList.remove("hidden");
 
     // FARMACIAS (con fallback a la ZBS si el municipio no tiene ninguna)
     const farmResult = obtenerFarmaciasConFallback(munNombre);
     const farmacias = farmResult.farmacias;
-    if (farmacias.length > 0) {
+    if (farmacias.length === 0) {
+      farmaciasList.innerHTML = `<p class="text-sm text-muted">No hay farmacias registradas en tu municipio ni en su Zona Básica de Salud.</p>`;
+    } else {
       const aviso =
         farmResult.nivel === "zona"
           ? `<p class="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg p-3 mb-3">No hay farmacias en tu municipio. Estas son las más cercanas dentro de tu Zona Básica de Salud:</p>`
@@ -349,19 +361,81 @@ import Footer from "../components/Footer.astro";
           .join("");
     }
 
+    // ZONA BÁSICA DE SALUD
+    const zbsResult = obtenerZbsMunicipio(munNombre);
+    if (zbsResult && zbsResult.codigos.length > 0) {
+      const zonas = zbsResult.codigos.map((codigo, index) => {
+        const zona = obtenerZbs(codigo);
+        const nombre = zona?.nombre || zbsResult.nombres[index] || `Zona ${codigo}`;
+        const centrosZona = zona?.centros || [];
+        const detalles = centrosZona.length > 0
+          ? centrosZona.map((centro) => tarjeta(centro.nombre, [centro.direccion, centro.localidad])).join("")
+          : `<p class="text-sm text-muted mt-2">No hay un centro de guardia asociado en los datos disponibles.</p>`;
+        return `<div><p class="font-semibold text-fg">${escapeHtml(nombre)}</p><p class="text-xs text-muted mb-2">Código ${escapeHtml(codigo)}</p>${detalles}</div>`;
+      });
+      zbsList.innerHTML = zonas.join("");
+      zbsBlock.classList.remove("hidden");
+    } else {
+      guiaSinZbs.classList.remove("hidden");
+    }
+
     // PROVINCIA
     const municipioObj = obtenerMunicipio(munNombre);
     const provCode = municipioObj?.provincia || "";
 
-    // HOSPITALES (solo nombre + nivel, no hay dirección/teléfono reales)
+    // HOSPITALES: la web no deduce el hospital de referencia para el parto.
+    // Se asigna segun el area sanitaria y el circuito asistencial de Sacyl
+    // (no por nivel de urgencias ni por distancia) y debe confirmarse con la
+    // matrona u Obstetricia. Se muestra la nota orientativa aprobada por la
+    // revision clinica y, debajo, la lista general de hospitales.
+    const norm = (t: string) =>
+      (t || "").toLocaleUpperCase("es").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " ").trim();
     const hospitales = obtenerHospitalesProvincia(provCode);
-    if (hospitales.length === 0) {
-      hospitalesList.innerHTML = `<p class="text-sm text-muted">No hay hospitales registrados en tu provincia.</p>`;
-    } else {
-      hospitalesList.innerHTML = hospitales
-        .map((h) => tarjeta(h.nombre, [h.nivel ? `Nivel ${h.nivel}` : ""]))
-        .join("");
-    }
+    const hospitalesSanitarios = obtenerHospitalesSanitariosProvincia(provCode);
+    // El mismo hospital fisico puede aparecer en los dos datasets con nombres
+    // ligeramente distintos ("HOSPITAL DE MEDINA DEL CAMPO" en urgencias vs
+    // "HOSPITAL MEDINA DEL CAMPO" en el registro): deduplicamos por nombre
+    // normalizado sin articulos y conservamos la ficha del registro, que
+    // lleva direccion y localidad.
+    const normHospital = (t: string) =>
+      norm(t).replace(/\b(DE|DEL|LA|EL|LOS|LAS)\b/g, "").replace(/\s+/g, " ").trim();
+    const hospitalesRenderizados = [
+      ...hospitales.map((h) => ({
+        nombre: h.nombre,
+        // Conservamos el nivel en el registro interno, pero no lo mostramos
+        // en las fichas del listado general de hospitales.
+        lineas: [],
+      })),
+      ...hospitalesSanitarios.map((h) => ({
+        nombre: h.nombre,
+        lineas: [h.direccion, h.localidad],
+      })),
+    ].filter((hospital, index, lista) =>
+      lista.findLastIndex((otro) => normHospital(otro.nombre) === normHospital(hospital.nombre)) === index
+    );
+    // La correspondencia municipio -> hospital de referencia es una lista
+    // curada de registros oficiales (area sanitaria de Avila -> Hospital
+    // Nuestra Senora de Sonsoles), no una inferencia por provincia ni
+    // distancia. Donde no hay correspondencia verificada, la web pide
+    // confirmarlo con la matrona u Obstetricia.
+    const hospitalArea = obtenerHospitalReferenciaArea(munNombre);
+    const referenciaParto = hospitalArea
+      ? `<div class="bg-emerald-50 border-2 border-emerald-600 rounded-lg p-4 mb-4">
+          <p class="text-xs font-semibold uppercase tracking-wider text-emerald-800 mb-1">Hospital de referencia de tu área</p>
+          <p class="font-semibold text-fg">${escapeHtml(hospitalArea)}</p>
+          <p class="text-sm text-fg leading-relaxed mt-1">Atiende el área sanitaria de Ávila y dispone de servicio de Obstetricia y Ginecología. Confírmalo con tu matrona o con el servicio de Obstetricia para tu embarazo. Si necesitas atención inmediata o se trata de una emergencia grave, llama al 112 y sigue sus indicaciones: coordinarán la asistencia y te dirigirán al recurso adecuado.</p>
+        </div>`
+      : `<div class="bg-emerald-50 border-2 border-emerald-600 rounded-lg p-4 mb-4">
+          <p class="text-xs font-semibold uppercase tracking-wider text-emerald-800 mb-1">Tu hospital de referencia para el parto</p>
+          <p class="text-sm text-fg leading-relaxed">Tu hospital de referencia se asigna según tu área sanitaria y el circuito asistencial de Sacyl; no se determina solo por distancia. Confírmalo con tu matrona o con el servicio de Obstetricia. Si necesitas atención inmediata o se trata de una emergencia grave, llama al 112 y sigue sus indicaciones: coordinarán la asistencia y te dirigirán al recurso adecuado.</p>
+        </div>`;
+    const avisoHospitales = `<p class="text-sm text-muted bg-white border border-border rounded-lg p-3 mb-3"><strong>Importante:</strong> no todos los hospitales atienden partos. Esta lista muestra los recursos hospitalarios generales registrados en tu provincia.</p>`;
+    const otrosHospitales = hospitalesRenderizados.length === 0
+      ? `<p class="text-sm text-muted">No hay otros hospitales registrados en tu provincia.</p>`
+      : hospitalesRenderizados
+          .map((h) => tarjeta(h.nombre, h.lineas))
+          .join("");
+    hospitalesList.innerHTML = referenciaParto + avisoHospitales + otrosHospitales;
 
     // CENTROS DE SALUD (municipio -> zona -> provincia, con aviso de nivel)
     const centrosResult = obtenerCentrosConFallback(munNombre, provCode);
@@ -413,21 +487,30 @@ import Footer from "../components/Footer.astro";
       nombre: string;
       tipo: string;
       detalle: string;
+      propio: boolean;
     }> = [];
 
-    console.log(
-      "DEBUG centros con coords:",
-      centrosResult.centros.filter((c) => c.coords).length,
-      "ejemplo:",
-      centrosResult.centros.find((c) => c.coords)?.coords,
-    );
-    console.log(
-      "DEBUG estaciones con coords:",
-      estaciones.filter((e) => e.coords).length,
-      "ejemplo:",
-      estaciones.find((e) => e.coords)?.coords,
-    );
-    for (const c of centrosResult.centros) {
+    // En el mapa mostramos todos los centros de la provincia (el filtro de
+    // 20 km de más abajo deja solo los cercanos), no solo los del municipio.
+    // Los del propio municipio van destacados con otro color.
+    const claveCentro = (c: { nombre: string; localidad?: string }) =>
+      `${c.nombre}|${c.localidad || ""}`.toLowerCase();
+    const clavesPropias =
+      centrosResult.nivel === "municipio"
+        ? new Set(centrosResult.centros.map(claveCentro))
+        : new Set<string>();
+    const clavesVistas = new Set<string>();
+    const centrosParaMapa = [
+      ...centrosResult.centros,
+      ...obtenerCentrosProvincia(provCode),
+    ].filter((c) => {
+      const clave = claveCentro(c);
+      if (clavesVistas.has(clave)) return false;
+      clavesVistas.add(clave);
+      return true;
+    });
+
+    for (const c of centrosParaMapa) {
       if (c.coords && dentroDeCyL(c.coords[0], c.coords[1])) {
         puntosMapa.push({
           lat: c.coords[0],
@@ -435,6 +518,7 @@ import Footer from "../components/Footer.astro";
           nombre: c.nombre,
           tipo: "centro",
           detalle: c.tipo || "",
+          propio: clavesPropias.has(claveCentro(c)),
         });
       }
     }
@@ -446,18 +530,12 @@ import Footer from "../components/Footer.astro";
           nombre: "Estación de autobuses",
           tipo: "estacion",
           detalle: e.direccion || "",
+          propio: false,
         });
       }
     }
 
     const LIMITE_MAPA = 60;
-    /*     const puntosMapaVisibles = puntosMapa.slice(0, LIMITE_MAPA);
-    console.log(
-      "DEBUG puntosMapa:",
-      puntosMapa.length,
-      "visibles:",
-      puntosMapaVisibles.length,
-    ); */
     const origenMarcador = municipioObj?.coords || null;
 
     function distanciaKmMapa(a: [number, number], b: [number, number]): number {
@@ -484,20 +562,20 @@ import Footer from "../components/Footer.astro";
       // muestra los 5 más cercanos que haya, aunque estén más lejos.
       puntosMapaVisibles = (
         dentroDelRadio.length > 0 ? dentroDelRadio : conDistancia.slice(0, 5)
-      ).map((x) => x.p);
+      )
+        .slice(0, LIMITE_MAPA)
+        .map((x) => x.p);
     } else {
-      puntosMapaVisibles = puntosMapa.slice(0, 60);
+      puntosMapaVisibles = puntosMapa.slice(0, LIMITE_MAPA);
     }
+    // Los centros del propio municipio se dibujan los últimos para que
+    // queden por encima del resto de marcadores.
+    puntosMapaVisibles = puntosMapaVisibles.sort(
+      (a, b) => Number(a.propio) - Number(b.propio),
+    );
 
     if (puntosMapaVisibles.length > 0) {
       mapaBlock.classList.remove("hidden");
-
-      if (puntosMapa.length > LIMITE_MAPA) {
-        const aviso = document.createElement("p");
-        aviso.className = "text-xs text-muted mb-2";
-        aviso.textContent = `Mostrando ${LIMITE_MAPA} de ${puntosMapa.length} puntos en el mapa.`;
-        mapaBlock.insertBefore(aviso, document.getElementById("map"));
-      }
 
       const link = document.createElement("link");
       link.rel = "stylesheet";
@@ -507,10 +585,6 @@ import Footer from "../components/Footer.astro";
       const script = document.createElement("script");
       script.src = "https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js";
       script.onload = () => {
-        console.log(
-          "DEBUG maplibre cargado:",
-          typeof (window as any).maplibregl,
-        );
         const maplibregl = (window as any).maplibregl;
         const mapEl = document.getElementById("map") as HTMLElement;
 
@@ -538,43 +612,22 @@ import Footer from "../components/Footer.astro";
         mapa.addControl(new maplibregl.NavigationControl(), "top-right");
 
         const bounds = new maplibregl.LngLatBounds();
-        if (origenMarcador) {
-          bounds.extend([origenMarcador[1], origenMarcador[0]]);
-
-          const elOrigen = document.createElement("div");
-          elOrigen.style.cssText = `
-            width: 22px; height: 22px;
-            background: #dc2626;
-            border: 3px solid white;
-            border-radius: 50%;
-            box-shadow: 0 0 0 4px rgba(220,38,38,0.25), 0 2px 6px rgba(0,0,0,0.4);
-          `;
-
-          new maplibregl.Marker({ element: elOrigen, anchor: "center" })
-            .setLngLat([origenMarcador[1], origenMarcador[0]])
-            .setPopup(
-              new maplibregl.Popup({ offset: 14 }).setHTML(
-                `<p style="font-weight:600;margin:0">${escapeHtml(munNombre)}</p><p style="font-size:12px;color:#64748b;margin:0">Tu ubicación</p>`,
-              ),
-            )
-            .addTo(mapa);
-        }
-
         puntosMapaVisibles.forEach((p) => {
           bounds.extend([p.lon, p.lat]);
 
           const esCentro = p.tipo === "centro";
-          const color = esCentro ? "#0f766e" : "#2563eb";
+          const color = esCentro ? (p.propio ? "#d97706" : "#0f766e") : "#2563eb";
           const icono = esCentro ? "🏥" : "🚌";
+          const tamano = p.propio ? 38 : 30;
 
           const el = document.createElement("div");
           el.style.cssText = `
-            width: 30px; height: 30px;
+            width: ${tamano}px; height: ${tamano}px;
             background: ${color};
             border: 2px solid white;
             border-radius: 50% 50% 50% 0;
             transform: rotate(-45deg);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            box-shadow: ${p.propio ? "0 0 0 4px rgba(217,119,6,0.35), " : ""}0 2px 5px rgba(0,0,0,0.5);
             cursor: pointer;
             display: flex; align-items: center; justify-content: center;
           `;
@@ -587,6 +640,7 @@ import Footer from "../components/Footer.astro";
           const comoLlegarUrl = `https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lon}`;
           const popupHtml = `
             <div style="min-width:180px">
+              ${p.propio ? '<p style="font-size:11px;font-weight:700;color:#d97706;margin:0 0 2px">EN TU MUNICIPIO</p>' : ""}
               <p style="font-weight:600;margin:0 0 2px">${escapeHtml(p.nombre)}</p>
               <p style="font-size:12px;color:#64748b;margin:0 0 8px">${escapeHtml(p.detalle)}</p>
               <a href="${comoLlegarUrl}" target="_blank" rel="noopener"
@@ -601,23 +655,33 @@ import Footer from "../components/Footer.astro";
             .addTo(mapa);
         });
 
+        if (origenMarcador) {
+          bounds.extend([origenMarcador[1], origenMarcador[0]]);
+
+          const elOrigen = document.createElement("div");
+          elOrigen.className = "marcador-ubicacion";
+          elOrigen.setAttribute("aria-label", `Tu ubicación aproximada: ${munNombre}`);
+          elOrigen.style.cssText = `
+            width: 26px; height: 26px;
+            background: #dc2626;
+            border: 4px solid white;
+            border-radius: 50%;
+            box-shadow: 0 0 0 5px rgba(220,38,38,0.4), 0 3px 8px rgba(0,0,0,0.55);
+            z-index: 1000;
+          `;
+
+          new maplibregl.Marker({ element: elOrigen, anchor: "center" })
+            .setLngLat([origenMarcador[1], origenMarcador[0]])
+            .setPopup(
+              new maplibregl.Popup({ offset: 14 }).setHTML(
+                `<p style="font-weight:600;margin:0">${escapeHtml(munNombre)}</p><p style="font-size:12px;color:#64748b;margin:0">Tu ubicación</p>`,
+              ),
+            )
+            .addTo(mapa);
+        }
+
+
         if (puntosMapaVisibles.length > 1) {
-          console.log(
-            "DEBUG primeros 5 puntos:",
-            puntosMapaVisibles
-              .slice(0, 5)
-              .map((p) => `${p.nombre}: [${p.lat}, ${p.lon}]`),
-          );
-          if (origenMarcador)
-            console.log("DEBUG origen (Tormellas):", origenMarcador);
-          console.log(
-            "DEBUG primeros 5 puntos:",
-            JSON.stringify(
-              puntosMapaVisibles
-                .slice(0, 5)
-                .map((p) => ({ nombre: p.nombre, lat: p.lat, lon: p.lon })),
-            ),
-          );
           mapa.fitBounds(bounds, { padding: 15, maxZoom: 19 });
         }
       };

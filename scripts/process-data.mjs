@@ -67,6 +67,10 @@ const PROV_NAME_TO_CODE = {};
 for (const [k, v] of Object.entries(PROVINCIAS)) {
   PROV_NAME_TO_CODE[normalize(v)] = k;
 }
+// El dataset oficial "hospitales-plantilla-urgencias" escribe la provincia
+// "VALLLADOLID" (con tres eles). Sin este alias, los hospitales de Valladolid
+// se descartaban silenciosamente al no mapear a ningún código.
+PROV_NAME_TO_CODE["VALLLADOLID"] = "47";
 
 function parseCoords(coordStr) {
   if (!coordStr) return null;
@@ -254,8 +258,15 @@ for (const row of hospRaw) {
   const nivel = (row["NIVEL"] || "").trim();
   const provCode = PROV_NAME_TO_CODE[normalize(provincia)] || "";
 
-  if (hospital && provCode && !hospitalesMap.has(hospital)) {
-    hospitalesMap.set(hospital, { nombre: hospital, provincia: provCode, provinciaNombre: provincia, nivel });
+  // El mismo hospital aparece en varias filas (una por nivel/categoría de
+  // personal): nos quedamos con el nivel más alto, no con el primero.
+  const RANGO_NIVEL = { "NIVEL I": 1, "NIVEL II": 2, "NIVEL III": 3, "NIVEL III-IV": 4, "NIVEL IV": 5 };
+  if (hospital && provCode) {
+    const previo = hospitalesMap.get(hospital);
+    const rango = RANGO_NIVEL[normalize(nivel)] || 0;
+    if (!previo || rango > (RANGO_NIVEL[normalize(previo.nivel)] || 0)) {
+      hospitalesMap.set(hospital, { nombre: hospital, provincia: provCode, provinciaNombre: provincia, nivel });
+    }
   }
 }
 

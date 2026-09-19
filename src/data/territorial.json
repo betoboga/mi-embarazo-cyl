@@ -8,7 +8,7 @@
     "totalConsultorios": 3960,
     "totalFarmacias": 1590,
     "totalEstacionesBus": 34,
-    "totalHospitales": 11,
+    "totalHospitales": 14,
     "totalPoblacionZbs": 0
   },
   "provincias": {
@@ -194724,6 +194724,24 @@
       "provincia": "49",
       "provinciaNombre": "ZAMORA",
       "nivel": "Nivel II"
+    },
+    {
+      "nombre": "HOSPITAL CLÍNICO UNIVERITARIO DE VALLADOLID",
+      "provincia": "47",
+      "provinciaNombre": "VALLADOLID",
+      "nivel": "Nivel III-IV"
+    },
+    {
+      "nombre": "HOSPITAL UNIVERSITARIO DEL RÍO HORTEGA",
+      "provincia": "47",
+      "provinciaNombre": "VALLADOLID",
+      "nivel": "Nivel III-IV"
+    },
+    {
+      "nombre": "HOSPITAL DE MEDINA DEL CAMPO",
+      "provincia": "47",
+      "provinciaNombre": "VALLADOLID",
+      "nivel": "Nivel I"
     }
   ],
   "poblacion": []
