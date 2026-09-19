@@ -11,9 +11,9 @@ const localizedPath = (path: string) => `${isArabic ? '/ar' : isEnglish ? '/en' 
       <svg class="w-7 h-7 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
       </svg>
-      <span class="hidden sm:inline tracking-tight">CyLMaterna</span>
+      <span class="tracking-tight">CyLMaterna</span>
     </a>
-    <div class="flex items-center gap-1">
+    <div class="hidden sm:flex items-center gap-1">
       <a href={localizedPath('/donde-vive')} class:list={[
         "px-2 sm:px-3 py-1.5 rounded-lg text-sm font-medium transition-colors no-underline",
         pagePath.startsWith('/donde-vive') ? "bg-primary/10 text-primary" : "text-muted hover:text-fg hover:bg-bg-subtle"
@@ -34,5 +34,50 @@ const localizedPath = (path: string) => `${isArabic ? '/ar' : isEnglish ? '/en' 
       <a href={`/ar${pagePath === '/' ? '/' : pagePath}`} class="px-1.5 sm:px-2 py-1.5 rounded-lg text-sm font-medium text-muted hover:text-fg hover:bg-bg-subtle transition-colors no-underline" lang="ar">ع</a>
       <a href={`/en${pagePath === '/' ? '/' : pagePath}`} class="px-1.5 sm:px-2 py-1.5 rounded-lg text-sm font-medium text-muted hover:text-fg hover:bg-bg-subtle transition-colors no-underline" lang="en">EN</a>
     </div>
+    <details class="sm:hidden relative group" id="mobile-nav">
+      <summary class="list-none [&::-webkit-details-marker]:hidden flex items-center justify-center w-10 h-10 rounded-lg text-fg hover:bg-bg-subtle transition-colors cursor-pointer" aria-label="Menú">
+        <svg class="w-6 h-6 group-open:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+        <svg class="w-6 h-6 hidden group-open:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </summary>
+      <div class="absolute end-0 top-full mt-1 w-48 rounded-xl border border-border bg-card shadow-lg p-2 flex flex-col gap-1">
+        <a href={localizedPath('/donde-vive')} class:list={[
+          "block px-3 py-2 rounded-lg text-sm font-medium transition-colors no-underline",
+          pagePath.startsWith('/donde-vive') ? "bg-primary/10 text-primary" : "text-muted hover:text-fg hover:bg-bg-subtle"
+        ]}>Zona</a>
+        <a href={localizedPath('/recursos-cerca')} class:list={[
+          "block px-3 py-2 rounded-lg text-sm font-medium transition-colors no-underline",
+          pagePath.startsWith('/recursos-cerca') ? "bg-primary/10 text-primary" : "text-muted hover:text-fg hover:bg-bg-subtle"
+        ]}>Recursos</a>
+        <a href={localizedPath('/mi-embarazo')} class:list={[
+          "block px-3 py-2 rounded-lg text-sm font-medium transition-colors no-underline",
+          pagePath.startsWith('/mi-embarazo') ? "bg-primary/10 text-primary" : "text-muted hover:text-fg hover:bg-bg-subtle"
+        ]}>Embarazo</a>
+        <a href={localizedPath('/estadisticas')} class:list={[
+          "block px-3 py-2 rounded-lg text-sm font-medium transition-colors no-underline",
+          pagePath.startsWith('/estadisticas') ? "bg-primary/10 text-primary" : "text-muted hover:text-fg hover:bg-bg-subtle"
+        ]}>Estadísticas</a>
+        <div class="flex items-center gap-1 border-t border-border mt-1 pt-1">
+          <a href={`${pagePath === '/' ? '/' : pagePath}`} class="px-2 py-1.5 rounded-lg text-sm font-medium text-muted hover:text-fg hover:bg-bg-subtle transition-colors no-underline" lang="es">ES</a>
+          <a href={`/ar${pagePath === '/' ? '/' : pagePath}`} class="px-2 py-1.5 rounded-lg text-sm font-medium text-muted hover:text-fg hover:bg-bg-subtle transition-colors no-underline" lang="ar">ع</a>
+          <a href={`/en${pagePath === '/' ? '/' : pagePath}`} class="px-2 py-1.5 rounded-lg text-sm font-medium text-muted hover:text-fg hover:bg-bg-subtle transition-colors no-underline" lang="en">EN</a>
+        </div>
+      </div>
+    </details>
   </nav>
 </header>
+
+<script>
+  const mobileNav = document.getElementById('mobile-nav');
+  if (mobileNav) {
+    document.addEventListener('click', (event) => {
+      if (mobileNav.open && !mobileNav.contains(event.target as Node)) mobileNav.open = false;
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && mobileNav.open) mobileNav.open = false;
+    });
+  }
+</script>
