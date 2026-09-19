@@ -1,5 +1,6 @@
 export const arabicTranslations: Record<string, string> = {
   'Zona': 'المنطقة',
+  'Menú': 'القائمة',
   'Embarazo': 'الحمل',
   'Recursos': 'الموارد',
   'Estadísticas': 'الإحصائيات',
@@ -365,6 +366,7 @@ export const arabicTranslations: Record<string, string> = {
 
 export const englishTranslations: Record<string, string> = {
   'Zona': 'Area',
+  'Menú': 'Menu',
   'Embarazo': 'Pregnancy',
   'Recursos': 'Resources',
   'Estadísticas': 'Statistics',
@@ -842,3 +844,4 @@ export function localizePage() {
   });
   observer.observe(document.body, { childList: true, subtree: true, characterData: true });
     }
+
