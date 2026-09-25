@@ -208,7 +208,7 @@ export const arabicTranslations: Record<string, string> = {
   'En cuanto te enteras de que estás embarazada.': 'فور معرفتك بأنك حامل.',
   'El resto de las consultas serán citadas por tu matrona correspondiente.': 'ستقوم القابلة المسؤولة عنك بتحديد باقي المواعيد.',
   'Citas en la consulta de Obstetricia (en el hospital)': 'مواعيد في عيادة التوليد (في المستشفى)',
-  'En embarazos de bajo riesgo se llevarán a cabo tres ecografías, su asistencia es de vital importancia.': 'في حالات الحمل منخفضة الخطورة تُجرى ثلاثة فحوصات بالموجات فوق الصوتية، وحضورها في غاية الأهمية.',
+  'En embarazos de bajo riesgo se llevará a cabo una primera consulta para datar el embarazo sobre la semana 8, otra en la semana 12 muy importante para estimar los riesgos del embarazo que determinarán la necesidad o no de controles adicionales, a las 20 semanas la ecografía morfológica imprescindible para estudiar detalladamente la anatomía fetal, en la semana 36 en la que se controla el crecimiento y bienestar fetal y a las 40 semanas suelen dar la primera cita para fisiopatología fetal': 'في حالات الحمل منخفضة الخطورة، تُجرى استشارة أولى لتحديد عمر الحمل نحو الأسبوع الثامن، وأخرى في الأسبوع الثاني عشر وهي مهمة جدًا لتقدير مخاطر الحمل التي ستحدد الحاجة إلى متابعات إضافية من عدمها، وفي الأسبوع العشرين يُجرى الفحص المورفولوجي بالموجات فوق الصوتية، وهو ضروري لدراسة تشريح الجنين بالتفصيل، وفي الأسبوع السادس والثلاثين يُفحص نمو الجنين وسلامته، وفي الأسبوع الأربعين يُحدَّد عادةً الموعد الأول لطب الفيزيولوجيا المرضية للجنين',
   'Información importante sobre el seguimiento': 'معلومات مهمة عن المتابعة',
   'Sin olvidar las analíticas de control.': 'دون نسيان التحاليل الدورية.',
   'Si has empezado a controlar el embarazo tarde y vienes de hacerlo en otro centro, contacta cuanto antes con la matrona de tu centro de salud.': 'إذا بدأتِ متابعة حملك متأخراً وكنتِ تتابعين في مركز آخر، تواصلي في أقرب وقت مع قابلة مركزك الصحي.',
@@ -572,7 +572,7 @@ export const englishTranslations: Record<string, string> = {
   'En cuanto te enteras de que estás embarazada.': 'As soon as you find out you are pregnant.',
   'El resto de las consultas serán citadas por tu matrona correspondiente.': 'The remaining appointments will be scheduled by your midwife.',
   'Citas en la consulta de Obstetricia (en el hospital)': 'Appointments at the Obstetrics clinic (at the hospital)',
-  'En embarazos de bajo riesgo se llevarán a cabo tres ecografías, su asistencia es de vital importancia.': 'In low-risk pregnancies three ultrasound scans will be carried out; attending them is vitally important.',
+  'En embarazos de bajo riesgo se llevará a cabo una primera consulta para datar el embarazo sobre la semana 8, otra en la semana 12 muy importante para estimar los riesgos del embarazo que determinarán la necesidad o no de controles adicionales, a las 20 semanas la ecografía morfológica imprescindible para estudiar detalladamente la anatomía fetal, en la semana 36 en la que se controla el crecimiento y bienestar fetal y a las 40 semanas suelen dar la primera cita para fisiopatología fetal': 'In low-risk pregnancies, a first consultation to date the pregnancy will take place around week 8; another at week 12, which is very important for estimating pregnancy risks that will determine whether additional check-ups are needed; at 20 weeks, the morphological ultrasound scan, essential for examining fetal anatomy in detail; at week 36, when fetal growth and well-being are checked; and at 40 weeks, the first appointment for fetal pathophysiology is usually given.',
   'Información importante sobre el seguimiento': 'Important information about follow-up',
   'Sin olvidar las analíticas de control.': 'Without forgetting the routine blood tests.',
   'Si has empezado a controlar el embarazo tarde y vienes de hacerlo en otro centro, contacta cuanto antes con la matrona de tu centro de salud.': 'If you started your pregnancy check-ups late and were having them at another centre, contact the midwife at your health centre as soon as possible.',
@@ -844,4 +844,3 @@ export function localizePage() {
   });
   observer.observe(document.body, { childList: true, subtree: true, characterData: true });
     }
-
